@@ -1,0 +1,45 @@
+###############################################
+# Syntax coloring Map For LIN Master library
+###############################################
+
+###################################
+# Classes and Datatypes (KEYWORD1)
+###################################
+
+# instances
+LIN_Slave_HardwareSerial_ESP32	KEYWORD1
+
+
+###################################
+# Methods and Functions (KEYWORD2)
+###################################
+
+# class variables
+nameLIN				KEYWORD2
+
+# class methods
+begin				KEYWORD2
+end				KEYWORD2
+resetError			KEYWORD2
+getError			KEYWORD2
+registerMasterRequestHandler	KEYWORD2
+registerSlaveResponseHandler	KEYWORD2
+handler				KEYWORD2
+
+
+###################################
+# Constants (LITERAL1)
+###################################
+
+LIN_V1				LITERAL1
+LIN_V2				LITERAL1
+
+NO_ERROR			LITERAL1
+ERROR_STATE			LITERAL1
+ERROR_BREAK			LITERAL1
+ERROR_SYNC			LITERAL1
+ERROR_TIMEOUT			LITERAL1
+ERROR_CHK			LITERAL1
+ERROR_MISC			LITERAL1
+
+##################### END #####################
