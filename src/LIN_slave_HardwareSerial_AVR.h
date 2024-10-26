@@ -76,22 +76,22 @@ class LIN_Slave_HardwareSerial_AVR : public LIN_Slave_Base
   private:
 
     #if defined(HAVE_HWSERIAL0)
-      /// @brief Static callback function for AVR Serial0 error
+      /// @brief Static callback function for AVR Serial0 receive ISR
       static bool _onSerialReceive0(uint8_t byte, uint8_t status);
     #endif
   
     #if defined(HAVE_HWSERIAL1)
-      /// @brief Static callback function for AVR Serial1 error
+      /// @brief Static callback function for AVR Serial1 receive ISR
       static bool _onSerialReceive1(uint8_t byte, uint8_t status);
     #endif
   
     #if defined(HAVE_HWSERIAL2)
-      /// @brief Static callback function for AVR Serial2 error
+      /// @brief Static callback function for AVR Serial2 receive ISR
       static bool _onSerialReceive2(uint8_t byte, uint8_t status);
     #endif
   
     #if defined(HAVE_HWSERIAL3)
-      /// @brief Static callback function for AVR Serial3 error
+      /// @brief Static callback function for AVR Serial3 receive ISR
       static bool _onSerialReceive3(uint8_t byte, uint8_t status);
     #endif
 	

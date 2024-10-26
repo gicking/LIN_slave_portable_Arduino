@@ -34,12 +34,6 @@
 
 #include <Arduino.h>
 
-// for AVR use NeoHWSerial for debugging to avoid conflict with HardwareSerial
-#if defined(LIN_SLAVE_DEBUG_SERIAL) && defined(ARDUINO_ARCH_AVR) 
-  #define HardwareSerial_h        // prevent Arduino HardwareSerial from being included
-  #include <NeoHWSerial.h>
-#endif
-
 
 /*-----------------------------------------------------------------------------
   GLOBAL CLASS
@@ -168,7 +162,7 @@ class LIN_Slave_Base
 
 
     /// @brief Handle LIN protocol and call user-defined frame handlers
-    void handler(void);
+    virtual void handler(void);
 
 }; // class LIN_Slave_Base
 

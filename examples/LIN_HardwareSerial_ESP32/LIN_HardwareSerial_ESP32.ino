@@ -1,8 +1,6 @@
 /*********************
 
-Example code for LIN slave node for ESP32
-
-This code runs a LIN slave node using HardwareSerial interface on ESP32
+Example code for LIN slave node using ESP32 HardwareSerial interface
 
 Supported (=successfully tested) boards:
  - ESP32 Wroom-32UE       https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/
@@ -17,6 +15,7 @@ Supported (=successfully tested) boards:
 #define PIN_ERROR     23        // indicate LIN return status
 #define PIN_LIN_RX    25        // receive pin for LIN
 #define PIN_LIN_TX    26        // transmit pin for LIN
+
 
 // setup LIN node
 LIN_Slave_HardwareSerial_ESP32  LIN_slave_node(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave");

@@ -162,8 +162,8 @@ void LIN_Slave_HardwareSerial_AVR::_resetBreakFlag()
 LIN_Slave_HardwareSerial_AVR::LIN_Slave_HardwareSerial_AVR(NeoHWSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[]) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
 {  
-  // store pointer to used NeoHWSerial (required for attachInterrupt() support)
-  this->pSerial = &Interface;
+  // store parameters in class variables
+  this->pSerial    = &Interface;          // pointer to used HW serial
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
