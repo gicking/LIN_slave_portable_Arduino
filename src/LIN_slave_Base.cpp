@@ -8,7 +8,7 @@
 */
 
 // include files
-#include "LIN_slave_Base.h"
+#include <LIN_slave_Base.h>
 
 
 
@@ -94,6 +94,12 @@ void LIN_Slave_Base::_resetBreakFlag()
 */
 LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[])
 {  
+  // For optional debugging
+  #if defined(LIN_SLAVE_DEBUG_SERIAL)
+    LIN_SLAVE_DEBUG_SERIAL.begin(115200);
+    while (!LIN_SLAVE_DEBUG_SERIAL);
+  #endif
+
   // store parameters in class variables
   this->version = Version;                                    // LIN protocol version (required for checksum)
   memcpy(this->nameLIN, NameLIN, LIN_SLAVE_BUFLEN_NAME);      // node name e.g. for debug

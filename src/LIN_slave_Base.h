@@ -18,13 +18,14 @@
   GLOBAL DEFINES
 -----------------------------------------------------------------------------*/
 
+// misc parameters
 #define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
 #define LIN_SLAVE_RX_TIMEOUT    10            //!< max. time [ms] between bytes in frame
 
-// for optional debug output
-#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
-#define LIN_SLAVE_DEBUG_LEVEL   1             //!< debug verbosity 0..3 (1=errors only, 3=verbose)
-
+// optional LIN debug output. For AVR must use NeoSerialx to avoid linker conflict
+//#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
+//#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output. Comment out for none
+#define LIN_SLAVE_DEBUG_LEVEL   3             //!< debug verbosity 0..3 (1=errors only, 3=verbose)
 
 
 /*-----------------------------------------------------------------------------
@@ -32,6 +33,12 @@
 -----------------------------------------------------------------------------*/
 
 #include <Arduino.h>
+
+// for AVR use NeoHWSerial for debugging to avoid conflict with HardwareSerial
+#if defined(LIN_SLAVE_DEBUG_SERIAL) && defined(ARDUINO_ARCH_AVR) 
+  #define HardwareSerial_h        // prevent Arduino HardwareSerial from being included
+  #include <NeoHWSerial.h>
+#endif
 
 
 /*-----------------------------------------------------------------------------

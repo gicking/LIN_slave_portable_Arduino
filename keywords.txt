@@ -8,6 +8,7 @@
 
 # instances
 LIN_Slave_HardwareSerial_ESP32	KEYWORD1
+LIN_Slave_HardwareSerial_AVR	KEYWORD1
 
 
 ###################################

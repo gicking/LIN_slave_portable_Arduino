@@ -21,16 +21,23 @@
 -----------------------------------------------------------------------------*/
 
 // include required libraries
-#include <Arduino.h>
-#include "LIN_slave_Base.h"
+#include <LIN_slave_Base.h>
 
 
 /*-----------------------------------------------------------------------------
   GLOBAL MACROS
 -----------------------------------------------------------------------------*/
 
-/// number of Serial interfaces (0..2)
-#define LIN_SLAVE_ESP32_MAX_SERIAL  3
+/// Default number of ESP32 Serial interfaces (0..2)
+#if !defined(LIN_SLAVE_ESP32_MAX_SERIAL)
+  #define LIN_SLAVE_ESP32_MAX_SERIAL   3 
+#endif
+
+/// Override for boards with fewer Serial interfaces
+#ifdef ARDUINO_ESP32S2
+  #undef LIN_SLAVE_ESP32_MAX_SERIAL
+  #define LIN_SLAVE_ESP32_MAX_SERIAL   2 
+#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -58,15 +65,21 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
   // PRIVATE METHODS
   private:
   
-    /// @brief Static callback function for ESP32 Serial0 error
-    static void _onSerialReceiveError0(hardwareSerial_error_t Err);
+    #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 1)
+      /// @brief Static callback function for ESP32 Serial0 error
+      static void _onSerialReceiveError0(hardwareSerial_error_t Err);
+	  #else
+      #error no HardwareSerial available for this board
+    #endif
+    #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 2)
+      /// @brief Static callback function for ESP32 Serial1 error
+      static void _onSerialReceiveError1(hardwareSerial_error_t Err);
+    #endif
+    #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 3)
+      /// @brief Static callback function for ESP32 Serial2 error
+      static void _onSerialReceiveError2(hardwareSerial_error_t Err);
+    #endif
   
-    /// @brief Static callback function for ESP32 Serial1 error
-    static void _onSerialReceiveError1(hardwareSerial_error_t Err);
-  
-    /// @brief Static callback function for ESP32 Serial2 error
-    static void _onSerialReceiveError2(hardwareSerial_error_t Err);
-
 
   // PROTECTED METHODS
   protected:

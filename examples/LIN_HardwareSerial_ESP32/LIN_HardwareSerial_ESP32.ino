@@ -25,11 +25,9 @@ LIN_Slave_HardwareSerial_ESP32  LIN_slave_node(Serial2, PIN_LIN_RX, PIN_LIN_TX, 
 // call once
 void setup()
 {
-  // For optional debugging
-  #if defined(LIN_SLAVE_DEBUG_SERIAL)
-    LIN_SLAVE_DEBUG_SERIAL.begin(115200);
-    while (!LIN_SLAVE_DEBUG_SERIAL);
-  #endif
+  // open console
+  Serial.begin(115200);
+  while(!Serial);
 
   // indicate background operation
   pinMode(PIN_TOGGLE, OUTPUT);
@@ -59,11 +57,9 @@ void loop()
   // check for LIN error
   if (LIN_slave_node.getError() != LIN_Slave_Base::NO_ERROR)
   {
-    // optional debug output
-    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-      LIN_SLAVE_DEBUG_SERIAL.print("LIN slave error ");
-      LIN_SLAVE_DEBUG_SERIAL.println((int) LIN_slave_node.getError());
-    #endif
+    // print error code
+    Serial.print("LIN slave error ");
+    Serial.println((int) LIN_slave_node.getError());
     
     // reset error (is latched)
     LIN_slave_node.resetError();
@@ -79,15 +75,14 @@ void loop()
 // Example for user-defined Master Request handler
 void handle_Master(uint8_t numData, uint8_t* data)
 {
-  // optional debug output
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-    LIN_SLAVE_DEBUG_SERIAL.print("Handle Request: Rx =");
-    for (int i = 0; i < numData; i++) {
-      LIN_SLAVE_DEBUG_SERIAL.print(" 0x");
-      LIN_SLAVE_DEBUG_SERIAL.print(data[i], HEX);
-    }
-    LIN_SLAVE_DEBUG_SERIAL.println();
-  #endif
+  // print received data
+  Serial.print("Handle Request: Rx =");
+  for (int i = 0; i < numData; i++)
+  {
+    Serial.print(" 0x");
+    Serial.print(data[i], HEX);
+  }
+  Serial.println();
 
 } // handle_Master()
 
@@ -99,14 +94,13 @@ void handle_Slave(uint8_t numData, uint8_t* data)
   for (uint8_t i=0; i<numData; i++)
     data[i] = 2*i;
   
-  // optional debug output
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-    LIN_SLAVE_DEBUG_SERIAL.print("Handle Response: Tx =");
-    for (int i = 0; i < numData; i++) {
-      LIN_SLAVE_DEBUG_SERIAL.print(" 0x");
-      LIN_SLAVE_DEBUG_SERIAL.print(data[i], HEX);
-    }
-    LIN_SLAVE_DEBUG_SERIAL.println();
-  #endif
+  // print response data
+  Serial.print("Handle Response: Tx =");
+  for (int i = 0; i < numData; i++)
+  {
+    Serial.print(" 0x");
+    Serial.print(data[i], HEX);
+  }
+  Serial.println();
 
 } // handle_Slave()
