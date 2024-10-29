@@ -127,3 +127,7 @@ class LIN_Slave_HardwareSerial_AVR : public LIN_Slave_Base
 #endif // _LIN_SLAVE_HW_SERIAL_AVR_H_
 
 #endif // ARDUINO_ARCH_AVR
+
+/*-----------------------------------------------------------------------------
+    END OF FILE
+-----------------------------------------------------------------------------*/

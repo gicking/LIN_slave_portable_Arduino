@@ -15,25 +15,24 @@
 
 
 /*-----------------------------------------------------------------------------
-  GLOBAL DEFINES
------------------------------------------------------------------------------*/
-
-// misc parameters
-#define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
-#define LIN_SLAVE_RX_TIMEOUT    10            //!< max. time [ms] between bytes in frame
-
-// optional LIN debug output. For AVR must use NeoSerialx to avoid linker conflict
-//#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
-//#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output. Comment out for none
-#define LIN_SLAVE_DEBUG_LEVEL   3             //!< debug verbosity 0..3 (1=errors only, 3=verbose)
-
-
-/*-----------------------------------------------------------------------------
   INCLUDE FILES
 -----------------------------------------------------------------------------*/
 
 #include <Arduino.h>
 
+
+/*-----------------------------------------------------------------------------
+  GLOBAL DEFINES
+-----------------------------------------------------------------------------*/
+
+// misc parameters
+#define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
+#define LIN_SLAVE_RX_TIMEOUT    300           //!< max. time [us] between received bytes in frame
+
+// optional LIN debug output. For AVR must use NeoSerialx to avoid linker conflict
+//#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
+//#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output (required for AVR). Comment out for none
+#define LIN_SLAVE_DEBUG_LEVEL   3             //!< debug verbosity 0..3 (1=errors only, 3=verbose)
 
 /*-----------------------------------------------------------------------------
   GLOBAL CLASS
@@ -73,10 +72,9 @@ class LIN_Slave_Base
     {
       NO_ERROR      = 0x00,                     //!< no error
       ERROR_STATE   = 0x01,                     //!< error in LIN state machine
-      ERROR_BREAK   = 0x02,                     //!< error in BREAK (not 0x00) 
-      ERROR_SYNC    = 0x04,                     //!< error in SYNC (not 0x55) 
-      ERROR_TIMEOUT = 0x08,                     //!< frame timeout error
-      ERROR_CHK     = 0x10,                     //!< LIN checksum error
+      ERROR_SYNC    = 0x02,                     //!< error in SYNC (not 0x55) 
+      ERROR_TIMEOUT = 0x04,                     //!< frame timeout error
+      ERROR_CHK     = 0x08,                     //!< LIN checksum error
       ERROR_MISC    = 0x80                      //!< misc error, should not occur
     } error_t;
 
@@ -170,3 +168,7 @@ class LIN_Slave_Base
     END OF MODULE DEFINITION FOR MULTIPLE INLUSION
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_BASE_H_
+
+/*-----------------------------------------------------------------------------
+    END OF FILE
+-----------------------------------------------------------------------------*/

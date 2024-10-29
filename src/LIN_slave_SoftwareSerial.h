@@ -24,14 +24,6 @@
 
 
 /*-----------------------------------------------------------------------------
-  GLOBAL MACROS
------------------------------------------------------------------------------*/
-
-/// min. pause between bytes to detect a new frame (not standard compliant!)
-#define LIN_SLAVE_SWSERIAL_INTERFRAME_PAUSE   500
-
-
-/*-----------------------------------------------------------------------------
   GLOBAL CLASS
 -----------------------------------------------------------------------------*/
 
@@ -46,6 +38,7 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
   private:
 
     bool                  flagBreak;                  //!< a break was detected, is set in handle
+    uint16_t              maxPause;                   //!< min. inter-frame pause [us] to start new frame (not standard compliant!)
 
 
   // PROTECTED METHODS
@@ -62,7 +55,7 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
   public:
 
     /// @brief Class constructor
-    LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[]);
+    LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[], uint16_t MaxPause=500);
      
     /// @brief Open serial interface
     void begin(uint16_t Baudrate);
@@ -80,3 +73,7 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     END OF MODULE DEFINITION FOR MULTIPLE INLUSION
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_SW_SERIAL_H_
+
+/*-----------------------------------------------------------------------------
+    END OF FILE
+-----------------------------------------------------------------------------*/

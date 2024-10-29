@@ -53,11 +53,12 @@ void LIN_Slave_HardwareSerial::_resetBreakFlag()
   \param[in]  Baudrate    communication speed [Baud]
   \param[in]  NameLIN     LIN node name 
 */
-LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[]) : 
-  LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
+LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version, 
+  const char NameLIN[], uint16_t MaxPause) : LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
 {  
   // store parameters in class variables
   this->pSerial    = &Interface;          // pointer to used HW serial
+  this->maxPause   = MaxPause;            // min. inter-frame pause [us]
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
@@ -133,7 +134,7 @@ void LIN_Slave_HardwareSerial::handler()
   if (((HardwareSerial*) (this->pSerial))->available())
   {
     // if 0x00 received and long time since last byte, start new frame  
-    if ((((HardwareSerial*) (this->pSerial))->peek() == 0x00) && ((micros() - usLastByte) > LIN_SLAVE_HWSERIAL_INTERFRAME_PAUSE))
+    if ((((HardwareSerial*) (this->pSerial))->peek() == 0x00) && ((micros() - usLastByte) > this->maxPause))
       this->flagBreak = true;
 
     // store time of this receive

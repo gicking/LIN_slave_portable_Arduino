@@ -16,7 +16,6 @@
 bool LIN_Slave_HardwareSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
 
 
-
 /**************************
  * PRIVATE METHODS
 **************************/
@@ -30,15 +29,12 @@ bool LIN_Slave_HardwareSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_HardwareSerial_AVR::_onSerialReceive0(uint8_t byte, uint8_t status)
   {
-    // avoid compiler warnings
-    (void)(byte);
-    
-    // on framing error (=BREAK) set global variable. Note: content 0x00 is checked in base class
-    if (status & (0x01<< FE0))
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((byte ==0x00) && (status & (0x01<< FE0)))
       (LIN_Slave_HardwareSerial_AVR::flagBreak)[0] = true;
 
     // return true -> byte is stored in Serial0 buffer
-	return true;
+	  return true;
 
   } // LIN_Slave_HardwareSerial_AVR::_onSerialReceive0()
 #endif
@@ -54,15 +50,12 @@ bool LIN_Slave_HardwareSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_HardwareSerial_AVR::_onSerialReceive1(uint8_t byte, uint8_t status)
   {
-    // avoid compiler warnings
-    (void)(byte);
-    
-    // on framing error (=BREAK) set global variable. Note: content 0x00 is checked in base class
-    if (status & (0x01<< FE0))
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((byte ==0x00) && (status & (0x01<< FE0)))
       (LIN_Slave_HardwareSerial_AVR::flagBreak)[1] = true;
 
     // return true -> byte is stored in Serial1 buffer
-	return true;
+	  return true;
 
   } // LIN_Slave_HardwareSerial_AVR::_onSerialReceive1()
 #endif
@@ -78,15 +71,12 @@ bool LIN_Slave_HardwareSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_HardwareSerial_AVR::_onSerialReceive2(uint8_t byte, uint8_t status)
   {
-    // avoid compiler warnings
-    (void)(byte);
-    
-    // on framing error (=BREAK) set global variable. Note: content 0x00 is checked in base class
-    if (status & (0x01<< FE0))
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((byte ==0x00) && (status & (0x01<< FE0)))
       (LIN_Slave_HardwareSerial_AVR::flagBreak)[2] = true;
 
     // return true -> byte is stored in Serial2 buffer
-	return true;
+	  return true;
 
   } // LIN_Slave_HardwareSerial_AVR::_onSerialReceive2()
 #endif
@@ -102,15 +92,12 @@ bool LIN_Slave_HardwareSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_HardwareSerial_AVR::_onSerialReceive3(uint8_t byte, uint8_t status)
   {
-    // avoid compiler warnings
-    (void)(byte);
-    
-    // on framing error (=BREAK) set global variable. Note: content 0x00 is checked in base class
-    if (status & (0x01<< FE0))
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((byte ==0x00) && (status & (0x01<< FE0)))
       (LIN_Slave_HardwareSerial_AVR::flagBreak)[3] = true;
 
     // return true -> byte is stored in Serial3 buffer
-	return true;
+  	return true;
 
   } // LIN_Slave_HardwareSerial_AVR::_onSerialReceive3()
 #endif

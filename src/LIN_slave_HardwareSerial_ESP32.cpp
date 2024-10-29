@@ -29,8 +29,8 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
   */
   void LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0(hardwareSerial_error_t Err)
   {
-    // set global variable
-    if (Err == UART_BREAK_ERROR)
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((Serial.peek() == 0x00) && (Err == UART_BREAK_ERROR))
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[0] = true;
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0()
@@ -46,8 +46,8 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
   */
   void LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1(hardwareSerial_error_t Err)
   {
-    // set global variable
-    if (Err == UART_BREAK_ERROR)
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((Serial1.peek() == 0x00) && (Err == UART_BREAK_ERROR))
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[1] = true;
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1()
@@ -63,8 +63,8 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
   */
   void LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2(hardwareSerial_error_t Err)
   {
-    // set global variable
-    if (Err == UART_BREAK_ERROR)
+    // on BREAK (=0x00 with framing error) set class variable
+    if ((Serial2.peek() == 0x00) && (Err == UART_BREAK_ERROR))
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[2] = true;
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2()

@@ -1,10 +1,10 @@
 /*********************
 
-Example code for LIN slave node using AVR HardwareSerial interface
+Example code for LIN slave node using generic SoftwareSerial interface
 
 Note:
-  - relies on NeoHWSerial for BREAK detection (install via Library manager)
-  - to avoid linker conflict, only use NeoSerial in your code, not Serial 
+  - frame synchronization via inter-frame pause, due to lack of framing error detection in Arduino -> not standard compliant!
+  - if available use respective platform implementation using proper BREAK detection 
 
 Supported (=successfully tested) boards:
  - Arduino Mega 2560      https://store.arduino.cc/products/arduino-mega-2560-rev3
@@ -12,22 +12,27 @@ Supported (=successfully tested) boards:
 **********************/
 
 // include files
-#include "LIN_slave_HardwareSerial_AVR.h"
+#include <LIN_slave_SoftwareSerial.h>
 
 // board pin definitions (GPIOn is referred to as n)
+#define PIN_LIN_RX    10        // receive pin for LIN
+#define PIN_LIN_TX    11        // transmit pin for LIN
 #define PIN_TOGGLE    6         // pin to demonstrate background operation
 #define PIN_ERROR     7         // indicate LIN return status
 
 
+// create SoftwareSerial instance. Note: not all pins can be used, check reference!
+SoftwareSerial mySerial(PIN_LIN_RX, PIN_LIN_TX);
+
 // setup LIN node
-LIN_Slave_HardwareSerial_AVR  LIN_slave_node(NeoSerial2, LIN_Slave_Base::LIN_V2, "Slave");
+LIN_Slave_SoftwareSerial  LIN_slave_node(mySerial, LIN_Slave_Base::LIN_V2, "Slave");
 
 
 // call once
 void setup()
 {
   // open console
-  NeoSerial.begin(115200);
+  Serial.begin(115200);
   while(!Serial);
 
   // indicate background operation
@@ -59,8 +64,8 @@ void loop()
   if (LIN_slave_node.getError() != LIN_Slave_Base::NO_ERROR)
   {
     // print error code
-    NeoSerial.print("LIN slave error ");
-    NeoSerial.println((int) LIN_slave_node.getError());
+    Serial.print("LIN slave error ");
+    Serial.println((int) LIN_slave_node.getError());
     
     // reset error (is latched)
     LIN_slave_node.resetError();
@@ -77,13 +82,13 @@ void loop()
 void handle_Master(uint8_t numData, uint8_t* data)
 {
   // print received data
-  NeoSerial.print("Handle Request: Rx =");
+  Serial.print("Handle Request: Rx =");
   for (int i = 0; i < numData; i++)
   {
-    NeoSerial.print(" 0x");
-    NeoSerial.print(data[i], HEX);
+    Serial.print(" 0x");
+    Serial.print(data[i], HEX);
   }
-  NeoSerial.println();
+  Serial.println();
 
 } // handle_Master()
 
@@ -96,12 +101,12 @@ void handle_Slave(uint8_t numData, uint8_t* data)
     data[i] = 2*i;
   
   // print response data
-  NeoSerial.print("Handle Response: Tx =");
+  Serial.print("Handle Response: Tx =");
   for (int i = 0; i < numData; i++)
   {
-    NeoSerial.print(" 0x");
-    NeoSerial.print(data[i], HEX);
+    Serial.print(" 0x");
+    Serial.print(data[i], HEX);
   }
-  NeoSerial.println();
+  Serial.println();
 
 } // handle_Slave()

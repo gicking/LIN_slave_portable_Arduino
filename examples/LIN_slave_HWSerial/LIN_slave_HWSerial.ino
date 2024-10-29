@@ -12,7 +12,7 @@ Supported (=successfully tested) boards:
 **********************/
 
 // include files
-#include "LIN_slave_HardwareSerial.h"
+#include <LIN_slave_HardwareSerial.h>
 
 // board pin definitions (GPIOn is referred to as n)
 #define PIN_TOGGLE    6         // pin to demonstrate background operation

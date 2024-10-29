@@ -11,7 +11,6 @@
 #include <LIN_slave_SoftwareSerial.h>
 
 
-
 /**************************
  * PROTECTED METHODS
 **************************/
@@ -53,12 +52,14 @@ void LIN_Slave_SoftwareSerial::_resetBreakFlag()
   \param[in]  Interface   serial interface for LIN. Use Serial for attachInterrupt() support
   \param[in]  Baudrate    communication speed [Baud]
   \param[in]  NameLIN     LIN node name 
+  \param[in]  MaxPause    min. inter-frame pause [us] to start new frame (not standard compliant!)
 */
-LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[]) : 
-  LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
+LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LIN_Slave_Base::version_t Version, 
+  const char NameLIN[], uint16_t MaxPause) : LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
 {  
   // store parameters in class variables
   this->pSerial    = &Interface;          // pointer to used HW serial
+  this->maxPause   = MaxPause;            // min. inter-frame pause [us]
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
@@ -134,7 +135,7 @@ void LIN_Slave_SoftwareSerial::handler()
   if (((SoftwareSerial*) (this->pSerial))->available())
   {
     // if 0x00 received and long time since last byte, start new frame  
-    if ((((SoftwareSerial*) (this->pSerial))->peek() == 0x00) && ((micros() - usLastByte) > LIN_SLAVE_SWSERIAL_INTERFRAME_PAUSE))
+    if ((((SoftwareSerial*) (this->pSerial))->peek() == 0x00) && ((micros() - usLastByte) > this->maxPause))
       this->flagBreak = true;
 
     // store time of this receive

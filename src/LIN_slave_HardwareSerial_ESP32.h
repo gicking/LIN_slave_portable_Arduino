@@ -112,3 +112,7 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
 #endif // _LIN_SLAVE_HW_SERIAL_ESP32_H_
 
 #endif // ARDUINO_ARCH_ESP32
+
+/*-----------------------------------------------------------------------------
+    END OF FILE
+-----------------------------------------------------------------------------*/

@@ -252,8 +252,8 @@ void LIN_Slave_Base::handler()
   }
 
   
-  // on receive timeout within frame revert state machine
-  if ((this->state != LIN_Slave_Base::WAIT_FOR_BREAK) && ((millis() - this->timeLastRx) > LIN_SLAVE_RX_TIMEOUT))
+  // on receive timeout [us] within frame revert state machine
+  if ((this->state != LIN_Slave_Base::WAIT_FOR_BREAK) && ((micros() - this->timeLastRx) > LIN_SLAVE_RX_TIMEOUT))
   {
     this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
     this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_TIMEOUT);
@@ -286,29 +286,16 @@ void LIN_Slave_Base::handler()
       LIN_SLAVE_DEBUG_SERIAL.println(byteReceived, HEX);
     #endif
 
-    // detected LIN BREAK 
+    // detected LIN BREAK (=0x00 with framing error)
     if (this->_getBreakFlag() == true)
     {
       // clear BREAK flag again
       this->_resetBreakFlag();
       
-      // valid BREAK (=0x00 w/o stop bit) -> start frame
+      // start frame
       if (byteReceived == 0x00)
         this->state = LIN_Slave_Base::WAIT_FOR_SYNC;
-      
-      // wrong data (!=0x00) -> error
-      else
-      {
-        this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
-        this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_BREAK);
 
-        // optional debug output
-        #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-          LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-          LIN_SLAVE_DEBUG_SERIAL.print(": BREAK error, received 0x");
-          LIN_SLAVE_DEBUG_SERIAL.println(byteReceived, HEX);
-        #endif
-      }
     } // BREAK detected
 
 

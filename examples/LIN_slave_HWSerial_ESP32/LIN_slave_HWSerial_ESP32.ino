@@ -8,7 +8,7 @@ Supported (=successfully tested) boards:
 **********************/
 
 // include files
-#include "LIN_slave_HardwareSerial_ESP32.h"
+#include <LIN_slave_HardwareSerial_ESP32.h>
 
 // board pin definitions (GPIOn is referred to as n)
 #define PIN_TOGGLE    19        // pin to demonstrate background operation
