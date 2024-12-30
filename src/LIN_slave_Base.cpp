@@ -17,6 +17,31 @@
 **************************/
 
 /**
+  \brief      Calculate protected frame ID
+  \details    Calculate protected frame ID as described in LIN2.0 spec "2.3.1.3 Protected identifier field"
+  \param[in]  ID   frame ID (protected or unprotected)
+  \return     Protected frame ID
+*/
+uint8_t LIN_Slave_Base::_calculatePID(uint8_t ID)
+{
+  uint8_t  pid;       // protected frame ID
+  uint8_t  tmp;       // temporary variable for calculating parity bits
+
+  // protect ID  with parity bits
+  pid  = (uint8_t) (ID & 0x3F);                                             // clear upper bits 6 & 7
+  tmp  = (uint8_t) ((pid ^ (pid>>1) ^ (pid>>2) ^ (pid>>4)) & 0x01);         // pid[6] = PI0 = ID0^ID1^ID2^ID4
+  pid |= (uint8_t) (tmp << 6);
+  tmp  = (uint8_t) (~((pid>>1) ^ (pid>>3) ^ (pid>>4) ^ (pid>>5)) & 0x01);   // pid[7] = PI1 = ~(ID1^ID3^ID4^ID5)
+  pid |= (uint8_t) (tmp << 7);
+
+  // return protected ID
+  return pid;
+
+} // LIN_Slave_Base::_calculatePID()
+
+
+
+/**
   \brief      Calculate LIN frame checksum
   \details    Calculate LIN frame checksum as described in LIN1.x / LIN2.x specs
   \param[in]  NumData   number of data bytes in frame
@@ -49,6 +74,7 @@ uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::_calculateChecksum()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_Base::_calculateChecksum()
@@ -89,10 +115,11 @@ void LIN_Slave_Base::_resetBreakFlag()
   \brief      LIN slave node constructor
   \details    LIN slave node constructor. Initialize class variables to default values.
               For an explanation of the LIN bus and protocol e.g. see https://en.wikipedia.org/wiki/Local_Interconnect_Network
-  \param[in]  Version     LIN protocol version (required for checksum)
-  \param[in]  NameLIN     LIN node name 
+  \param[in]  Version     LIN protocol version (default = v2)
+  \param[in]  NameLIN     LIN node name (default = "Slave")
+  \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
 */
-LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[])
+LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx)
 {  
   // For optional debugging
   #if defined(LIN_SLAVE_DEBUG_SERIAL)
@@ -103,30 +130,31 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
   // store parameters in class variables
   this->version = Version;                                    // LIN protocol version (required for checksum)
   memcpy(this->nameLIN, NameLIN, LIN_SLAVE_BUFLEN_NAME);      // node name e.g. for debug
+  this->timeoutRx = TimeoutRx;                                // timeout [us] for bytes in frame
 
   // initialize slave node properties
-  this->pSerial   = nullptr;                                  // pointer to serial I/F
-  this->state     = LIN_Slave_Base::WAIT_FOR_BREAK;           // status of LIN state machine
+  this->state     = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;     // status of LIN state machine
   this->error     = LIN_Slave_Base::NO_ERROR;                 // last LIN error. Is latched
   for (uint8_t i=0; i<64; i++)
   {
-    this->requestHandlers[i].handler = nullptr;               // handlers for master request IDs 0x00 - 0x3F
-    this->responseHandlers[i].handler = nullptr;              // handlers for slave response IDs 0x00 - 0x3F
+    this->callback[i].type_numData = 0x00;                    // frame type (high nibble) and number of data bytes (low nibble)
+    this->callback[i].fct = nullptr;                          // user callback functions (IDs 0x00 - 0x3F)
   }
 
   // initialize frame properties
   this->pid         = 0x00;                                   // protected frame identifier
   this->id          = 0x00;                                   // unprotected frame identifier
   this->numData     = 0;                                      // number of data bytes in frame
-  for (uint8_t i=0; i<8; i++)
-    this->bufRx[i] = 0x00;                                    // buffer for data bytes (max 8B)
-  this->idxData = 0;                                          // current index in bufRx
+  for (uint8_t i=0; i<9; i++)
+    this->bufData[i] = 0x00;                                  // init data bytes (max 8B) + chk
+  this->idxData    = 0;                                       // current index in bufData
   this->timeLastRx = 0;                                       // time [ms] of last received byte in frame
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::LIN_Slave_Base()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_Base::LIN_Slave_Base()
@@ -136,21 +164,22 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
 /**
   \brief      Open serial interface
   \details    Open serial interface with specified baudrate. Here dummy!
-  \param[in]  Baudrate    communication speed [Baud]
+  \param[in]  Baudrate    communication speed [Baud] (default = 19200)
 */
 void LIN_Slave_Base::begin(uint16_t Baudrate)
 {
   // store parameters in class variables
   this->baudrate   = Baudrate;                                // communication baudrate [Baud]
 
-  // initialize master node properties
+  // initialize slave node properties
   this->error = LIN_Slave_Base::NO_ERROR;                     // last LIN error. Is latched
-  this->state = LIN_Slave_Base::WAIT_FOR_BREAK;               // status of LIN state machine
+  this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;         // status of LIN state machine
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::begin()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_Base::begin()
@@ -163,13 +192,15 @@ void LIN_Slave_Base::begin(uint16_t Baudrate)
 */
 void LIN_Slave_Base::end()
 {
-  // initialize master node properties
-  this->state = LIN_Slave_Base::WAIT_FOR_BREAK;               // status of LIN state machine
+  // set slave node properties
+  this->error = LIN_Slave_Base::NO_ERROR;                     // last LIN error. Is latched
+  this->state = LIN_Slave_Base::STATE_OFF;                    // status of LIN state machine
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::end()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_Base::end()
@@ -177,104 +208,99 @@ void LIN_Slave_Base::end()
 
 
 /**
-  \brief      Attach callback function for master request frame
-  \details    Attach callback function for master request frame. Are called by handler() after reception of a master request frame
+  \brief      Attach user callback function for master request frame
+  \details    Attach user callback function for master request frame. Callback functions are called by handler() after reception of a master request frame
   \param[in]  ID        frame ID (protected or unprotected)
-  \param[in]  Handler   user callback function
+  \param[in]  Fct       user callback function
   \param[in]  NumData   number of frame data bytes
 */
-void LIN_Slave_Base::registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::LinMessageHandler Handler, uint8_t NumData)
+void LIN_Slave_Base::registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::LinMessageCallback Fct, uint8_t NumData)
 {  
   // drop parity bits -> non-protected ID = 0..63
   ID &= 0x3F;
 
-  // register user handler for master request frame
-  this->requestHandlers[ID].handler = Handler;
-  this->requestHandlers[ID].numData = NumData;
+  // register user callback function for master request frame
+  this->callback[ID].type_numData = LIN_Slave_Base::MASTER_REQUEST | (NumData & 0x0F);
+  this->callback[ID].fct = Fct;
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.print(": registered request ID 0x");
     LIN_SLAVE_DEBUG_SERIAL.println(ID, HEX);
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
-} // LIN_Slave_Base::registerMasterRequestHandler()
+} // LIN_Slave_Base::registerMasterRequestHandler
 
 
 
 /**
-  \brief      Attach callback function for slave response frame
-  \details    Attach callback function for slave response frame. Are called by handler() after reception of a PID
+  \brief      Attach user callback function for slave response frame
+  \details    Attach user callback function for slave response frame. Callback functions are called by handler() after reception of a PID
   \param[in]  ID        frame ID (protected or unprotected)
-  \param[in]  Handler   user callback function
+  \param[in]  Fct       user callback function
   \param[in]  NumData   number of frame data bytes
 */
-void LIN_Slave_Base::registerSlaveResponseHandler(uint8_t ID, LIN_Slave_Base::LinMessageHandler Handler, uint8_t NumData)
+void LIN_Slave_Base::registerSlaveResponseHandler(uint8_t ID, LIN_Slave_Base::LinMessageCallback Fct, uint8_t NumData)
 {
   // drop parity bits -> non-protected ID = 0..63
   ID &= 0x3F;
 
-  // register user handler for slave response frame
-  this->responseHandlers[ID].handler = Handler;
-  this->responseHandlers[ID].numData = NumData;
+  // register user callback function for slave response frame
+  this->callback[ID].type_numData = LIN_Slave_Base::SLAVE_RESPONSE | (NumData & 0x0F);
+  this->callback[ID].fct = Fct;
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.print(": registered response ID 0x");
     LIN_SLAVE_DEBUG_SERIAL.println(ID, HEX);
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
-} // LIN_Slave_Base::registerSlaveResponseHandler()
+} // LIN_Slave_Base::registerSlaveResponseHandler
 
 
 
 /**
-  \brief      Handle LIN protocol and call user-defined frame handlers
-  \details    Handle LIN protocol and call user-defined frame handlers, both for master request and slave response frames
+  \brief      Handle LIN protocol and call user-defined frame callback functions
+  \details    Handle LIN protocol and call user-defined frame callback functions, both for slave request and slave response frames
 */
 void LIN_Slave_Base::handler()
 {
   uint8_t   chk_calc;
 
-  // skip for base class to avoid crash
-  if (this->pSerial == nullptr)
+  // on receive timeout [us] within frame reset state machine
+  if (!(this->state | (LIN_Slave_Base::STATE_OFF | LIN_Slave_Base::STATE_WAIT_FOR_BREAK | LIN_Slave_Base::STATE_DONE)) && 
+    ((micros() - this->timeLastRx) > this->timeoutRx))
   {
-    // optional debug output
-    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-      LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-      LIN_SLAVE_DEBUG_SERIAL.println(": error: LIN_Slave_Base::handler() with pSerial==NULL");
-    #endif
-
-    // return immediately
-    return;
-  }
-
-  
-  // on receive timeout [us] within frame revert state machine
-  if ((this->state != LIN_Slave_Base::WAIT_FOR_BREAK) && ((micros() - this->timeLastRx) > LIN_SLAVE_RX_TIMEOUT))
-  {
-    this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
+    // set error and abort frame
     this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_TIMEOUT);
+    this->state = LIN_Slave_Base::STATE_DONE;
+
+    // flush receive buffer
+    while (this->_serialAvailable())
+      this->_serialRead();
 
     // optional debug output
     #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
       LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
       LIN_SLAVE_DEBUG_SERIAL.print(": error: frame timeout after ");
-      LIN_SLAVE_DEBUG_SERIAL.print((long) (millis() - this->timeLastRx));
-      LIN_SLAVE_DEBUG_SERIAL.println("ms");
+      LIN_SLAVE_DEBUG_SERIAL.print((long) (micros() - this->timeLastRx));
+      LIN_SLAVE_DEBUG_SERIAL.println("us");
+      LIN_SLAVE_DEBUG_SERIAL.flush();
     #endif
 
-  } // Rx timeout
+  } // if frame Rx timeout
 
 
   // A byte was received -> handle it
-  if (this->pSerial->available())
+  if (this->_serialAvailable())
   {
     // read received byte and reset timeout timer
-    uint8_t byteReceived = this->pSerial->read();
-    this->timeLastRx = millis();
+    uint8_t byteReceived = this->_serialRead();
+    this->timeLastRx = micros();
 
     // optional debug output
     #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
@@ -284,191 +310,258 @@ void LIN_Slave_Base::handler()
       else
         LIN_SLAVE_DEBUG_SERIAL.print(": Rx=0x");
       LIN_SLAVE_DEBUG_SERIAL.println(byteReceived, HEX);
+      LIN_SLAVE_DEBUG_SERIAL.flush();
     #endif
 
-    // detected LIN BREAK (=0x00 with framing error)
+
+    // detected LIN BREAK (=0x00 with framing error or inter-frame pause detected)
     if (this->_getBreakFlag() == true)
     {
       // clear BREAK flag again
       this->_resetBreakFlag();
       
-      // start frame
-      if (byteReceived == 0x00)
-        this->state = LIN_Slave_Base::WAIT_FOR_SYNC;
+      // start frame reception. Note: 0x00 already checked by derived class
+      this->state = LIN_Slave_Base::STATE_WAIT_FOR_SYNC;
+      return;
 
-    } // BREAK detected
+    } // if BREAK detected
 
 
     // no BREAK detected -> handle byte
-    else
+    switch (this->state)
     {
-      // LIN protocol state machine
-      switch (this->state)
-      {
-        // just to avoid compiler warning. State is handled above
-        case LIN_Slave_Base::WAIT_FOR_BREAK:
-          break;
+      // LIN interface disabled, do nothing
+      case LIN_Slave_Base::STATE_OFF:
+        break;
+
+      // just to avoid compiler warning, do nothing. State is handled above
+      case LIN_Slave_Base::STATE_WAIT_FOR_BREAK:
+        break;
+      
+      // master request frame is finished, do nothing
+      case LIN_Slave_Base::STATE_DONE:
+        break;
+
+      // break has been received, waiting for sync field
+      case LIN_Slave_Base::STATE_WAIT_FOR_SYNC:
         
-        // break has been received, waiting for sync field
-        case LIN_Slave_Base::WAIT_FOR_SYNC:
-          
-          // valid SYNC (=0x55) -> wait for ID
-          if (byteReceived == 0x55)
-          {
-            this->state = LIN_Slave_Base::WAIT_FOR_PID;
-            this->idxData = 0;
-          } 
+        // valid SYNC (=0x55) -> wait for ID
+        if (byteReceived == 0x55)
+        {
+          this->idxData = 0;
+          this->state = LIN_Slave_Base::STATE_WAIT_FOR_PID;
+        } 
 
-          // invalid SYNC (!=0x55) -> error
-          else
-          {
-            // reset state machine
-            this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
-            this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_SYNC);
-
-            // optional debug output
-            #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-              LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-              LIN_SLAVE_DEBUG_SERIAL.print(": SYNC error, received 0x");
-              LIN_SLAVE_DEBUG_SERIAL.println(byteReceived, HEX);
-            #endif
-          }
-
-          break; // WAIT_FOR_SYNC
-
-
-        // sync field has been received, waiting for protected ID
-        case LIN_Slave_Base::WAIT_FOR_PID:
-
-          this->pid = byteReceived;         // received (protected) ID
-          this->id  = byteReceived & 0x3F;   // extract ID, drop parity bits
-
-          // if slave response ID is registered, call handler and send response immediately
-          if (this->responseHandlers[id].handler != nullptr)
-          {
-            // get number of response bytes
-            this->numData = this->responseHandlers[id].numData;
-            
-            // call the user-defined handler for this ID
-            this->responseHandlers[id].handler(numData, this->bufRx);
-
-            // send slave response (skip echo handling)
-            this->pSerial->write(bufRx, numData);
-            this->pSerial->write(this->_calculateChecksum(this->numData, this->bufRx));
-            
-            // revert state machine
-            this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
-
-            // optional debug output
-            #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-              LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-              LIN_SLAVE_DEBUG_SERIAL.print(": handle slave response PID 0x");
-              LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
-            #endif
-
-          } // slave response frame
-          
-          // if master request ID is registered, get number of data bytes and advance state
-          else if (this->requestHandlers[id].handler != nullptr)
-          {
-            this->numData = this->requestHandlers[id].numData;
-            this->state = LIN_Slave_Base::RECEIVING_DATA;
-          } // master request frame 
-            
-          // ID is not registered -> wait for next break
-          else
-          {
-            // reset state machine
-            this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
-
-            // optional debug output
-            #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-              LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-              LIN_SLAVE_DEBUG_SERIAL.print(": drop frame PID 0x");
-              LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
-            #endif
-
-          } // frame not registered
-
-          break; // WAIT_FOR_PID
-
-
-        // PID has been received for master request frame, receiving data
-        case LIN_Slave_Base::RECEIVING_DATA:
-
-          // store received data
-          this->bufRx[(this->idxData)++] = byteReceived;
-          
-          // if frame is completed, advance to checksum
-          if (this->idxData >= this->numData)
-            this->state = LIN_Slave_Base::CHECKSUM_VERIFY;
-
-          break; // RECEIVING_DATA
-
-
-        // Data has been received for master request frame, waiting for checksum
-        case LIN_Slave_Base::CHECKSUM_VERIFY:
-
-          // calculate checksum for master request frame
-          chk_calc = this->_calculateChecksum(this->numData, this->bufRx);
-          
-          // Checksum valid -> call user-defined callback function for this ID
-          if (byteReceived == chk_calc)
-          {
-            // call user-defined handler
-            this->requestHandlers[id].handler(numData, bufRx);
-
-            // optional debug output
-            #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-              LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-              LIN_SLAVE_DEBUG_SERIAL.print(": handle master request PID 0x");
-              LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
-            #endif
-
-          } 
-          
-          // checksum error
-          else
-          {
-            // set error
-            this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_CHK);
-
-            // optional debug output
-            #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
-              LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-              LIN_SLAVE_DEBUG_SERIAL.print(": CHK error, received 0x");
-              LIN_SLAVE_DEBUG_SERIAL.print(byteReceived, HEX);
-              LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
-              LIN_SLAVE_DEBUG_SERIAL.println(chk_calc, HEX);
-            #endif
-          }
-
-          // reset state machine
-          this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
-
-          break; // CHECKSUM_VERIFY
-
-
-        // this should never happen -> error
-        default:
-
-          // set error
-          this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::LIN_Slave_Base::ERROR_STATE);
+        // invalid SYNC (!=0x55) -> error
+        else
+        {
+          // set error and abort frame
+          this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_SYNC);
+          this->state = LIN_Slave_Base::STATE_DONE;
 
           // optional debug output
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.print(": error: illegal state ");
-            LIN_SLAVE_DEBUG_SERIAL.print(this->state);
-            LIN_SLAVE_DEBUG_SERIAL.println(", this should never happen...");
+            LIN_SLAVE_DEBUG_SERIAL.print(": SYNC error, received 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(byteReceived, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
           #endif
 
-          // revert state machine
-          this->state = LIN_Slave_Base::WAIT_FOR_BREAK;
+        } // invalid SYNC
 
-      } // switch(state)
+        break; // STATE_WAIT_FOR_SYNC
 
-    } // no BREAK
+
+      // sync field has been received, waiting for protected ID
+      case LIN_Slave_Base::STATE_WAIT_FOR_PID:
+
+        this->pid = byteReceived;          // received (protected) ID
+        this->id  = byteReceived & 0x3F;   // extract ID, drop parity bits
+
+        // check PID parity bits 7+8
+        if (this->pid != this->_calculatePID(this->id))
+        {
+          // set error and abort frame
+          this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_PID);
+          this->state = LIN_Slave_Base::STATE_DONE;
+
+          // optional debug output
+          #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
+            LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+            LIN_SLAVE_DEBUG_SERIAL.print(": PID parity error, received 0x");
+            LIN_SLAVE_DEBUG_SERIAL.print(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(this->_calculatePID(this->id), HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
+          #endif
+          
+        } // PID error
+
+        // if slave response ID is registered, call callback function and send response
+        else if ((this->callback[id].fct != nullptr) && (this->callback[id].type_numData & LIN_Slave_Base::SLAVE_RESPONSE))
+        {
+          // get type (high nibble) and number of response bytes (low nibble) from callback array
+          this->type = (LIN_Slave_Base::frame_t) (this->callback[id].type_numData & 0xF0);
+          this->numData = this->callback[id].type_numData & 0x0F;
+          
+          // call the user-defined callback function for this ID
+          this->callback[id].fct(numData, this->bufData);
+
+          // attach frame checksum
+          bufData[numData] = this->_calculateChecksum(this->numData, this->bufData);
+
+          // send slave response (data+chk)
+          this->_serialWrite(bufData, numData+1);
+
+          // advance state to receiving echo
+          this->state = LIN_Slave_Base::STATE_RECEIVING_ECHO;
+
+          // optional debug output
+          #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+            LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+            LIN_SLAVE_DEBUG_SERIAL.print(": handle slave response PID 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
+          #endif
+
+        } // if slave response frame
+        
+        // if master request ID is registered, get number of data bytes and advance state
+        else if ((this->callback[id].fct != nullptr) && (this->callback[id].type_numData & LIN_Slave_Base::MASTER_REQUEST))
+        {
+          // get type (high nibble) and number of response bytes (low nibble) from callback array
+          this->type = (LIN_Slave_Base::frame_t) (this->callback[id].type_numData & 0xF0);
+          this->numData = this->callback[id].type_numData & 0x0F;
+          
+          // advance state to receiving data
+          this->state = LIN_Slave_Base::STATE_RECEIVING_DATA;
+        
+        } // if master request frame 
+          
+        // ID is not registered -> wait for next break
+        else
+        {
+          // optional debug output
+          #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+            LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+            LIN_SLAVE_DEBUG_SERIAL.print(": drop frame PID 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
+          #endif
+
+          // reset state machine
+          this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;
+
+        } // if frame not registered
+
+        break; // STATE_WAIT_FOR_PID
+
+
+      // receive master request data
+      case LIN_Slave_Base::STATE_RECEIVING_DATA:
+
+        // check received data
+        this->bufData[(this->idxData)++] = byteReceived;
+        
+        // if data is finished, advance to checksum check
+        if (this->idxData >= this->numData)
+          this->state = LIN_Slave_Base::STATE_WAIT_FOR_CHK;
+
+        break; // STATE_RECEIVING_DATA
+
+
+      // receive slave response echo
+      case LIN_Slave_Base::STATE_RECEIVING_ECHO:
+
+        // compare received echo to sent data
+        if (this->bufData[(this->idxData)++] != byteReceived)
+        {
+          // set error and abort frame
+          this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_ECHO);
+          this->state = LIN_Slave_Base::STATE_DONE;
+
+          // optional debug output
+          #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
+            LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+            LIN_SLAVE_DEBUG_SERIAL.print(": echo error, received 0x");
+            LIN_SLAVE_DEBUG_SERIAL.print(byteReceived, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.print(", expected 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(this->bufData[(this->idxData)-1], HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
+          #endif
+
+        } // if echo error
+
+        // if data is finished, finish frame
+        else if (this->idxData >= this->numData+1)
+          this->state = LIN_Slave_Base::STATE_DONE;
+
+        break; // STATE_RECEIVING_ECHO
+
+
+      // Data has been received for master request frame, waiting for checksum
+      case LIN_Slave_Base::STATE_WAIT_FOR_CHK:
+
+        // calculate checksum for master request frame
+        chk_calc = this->_calculateChecksum(this->numData, this->bufData);
+        
+        // Checksum valid -> call user-defined callback function for this ID
+        if (byteReceived == chk_calc)
+        {
+          // call user-defined master request callback function. Only reachable if callback has been registered
+          this->callback[id].fct(numData, bufData);
+
+          // optional debug output
+          #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+            LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+            LIN_SLAVE_DEBUG_SERIAL.print(": handle master request PID 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
+          #endif
+
+        } // if checksum ok
+        
+        // checksum error
+        else
+        {
+          // set error
+          this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_CHK);
+
+          // optional debug output
+          #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
+            LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+            LIN_SLAVE_DEBUG_SERIAL.print(": CHK error, received 0x");
+            LIN_SLAVE_DEBUG_SERIAL.print(byteReceived, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
+            LIN_SLAVE_DEBUG_SERIAL.println(chk_calc, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.flush();
+          #endif
+
+        } // if checksum error
+
+        // frame is finished
+        this->state = LIN_Slave_Base::STATE_DONE;
+
+        break; // STATE_WAIT_FOR_CHK
+
+
+      // this should never happen -> error
+      default:
+
+        // set error and abort frame
+        this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::LIN_Slave_Base::ERROR_STATE);
+        this->state = LIN_Slave_Base::STATE_DONE;
+
+        // optional debug output
+        #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
+          LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+          LIN_SLAVE_DEBUG_SERIAL.print(": error: illegal state ");
+          LIN_SLAVE_DEBUG_SERIAL.print(this->state);
+          LIN_SLAVE_DEBUG_SERIAL.println(", this should never happen...");
+          LIN_SLAVE_DEBUG_SERIAL.flush();
+        #endif
+
+    } // switch(state)
 
   } // if byte received
 

@@ -7,6 +7,9 @@
   \author   Georg Icking-Konert
 */
 
+// assert platform which supports SoftwareSerial. Note: ARDUINO_ARCH_ESP32 requires library ESPSoftwareSerial
+#if defined(ARDUINO_ARCH_AVR) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32) 
+
 // include files
 #include <LIN_slave_SoftwareSerial.h>
 
@@ -17,7 +20,7 @@
 
 /**
   \brief      Get break detection flag
-  \details    Get break detection flag
+  \details    Get break detection flag. Is hardware dependent
   \return status of break detection
 */
 bool LIN_Slave_SoftwareSerial::_getBreakFlag()
@@ -30,8 +33,8 @@ bool LIN_Slave_SoftwareSerial::_getBreakFlag()
 
 
 /**
-  \brief      Clear break detection flag. Is software dependent
-  \details    Clear break detection flag. Is software dependent
+  \brief      Clear break detection flag
+  \details    Clear break detection flag
 */
 void LIN_Slave_SoftwareSerial::_resetBreakFlag()
 {
@@ -49,22 +52,27 @@ void LIN_Slave_SoftwareSerial::_resetBreakFlag()
 /**
   \brief      Constructor for LIN node class using generic SoftwareSerial
   \details    Constructor for LIN node class for using generic SoftwareSerial. Inherit all methods from LIN_Slave_Base, only different constructor
-  \param[in]  Interface   serial interface for LIN. Use Serial for attachInterrupt() support
-  \param[in]  Baudrate    communication speed [Baud]
-  \param[in]  NameLIN     LIN node name 
-  \param[in]  MaxPause    min. inter-frame pause [us] to start new frame (not standard compliant!)
+  \param[in]  PinRx         GPIO used for reception
+  \param[in]  PinTx         GPIO used for transmission
+  \param[in]  InverseLogic  use inverse logic (default = false)
+  \param[in]  Version     LIN protocol version (default = v2)
+  \param[in]  NameLIN     LIN node name (default = "Slave")
+  \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
+  \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
 */
-LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint16_t MaxPause) : LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
+LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, LIN_Slave_Base::version_t Version, 
+  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx) : LIN_Slave_Base(Version, NameLIN, TimeoutRx), SWSerial(PinRx, PinTx, InverseLogic)
 {  
   // store parameters in class variables
-  this->pSerial    = &Interface;          // pointer to used HW serial
-  this->maxPause   = MaxPause;            // min. inter-frame pause [us]
-
-  // optional debug output
+  this->pinRx = PinRx;
+  this->pinTx = PinTx;
+  this->inverseLogic = InverseLogic;
+  this->minFramePause = MinFramePause;
+  
+  // optional debug output 
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    //LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    //LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial()");
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial()");
   #endif
 
 } // LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial()
@@ -72,9 +80,28 @@ LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LI
 
 
 /**
+  \brief      Destructor for LIN node class using generic SoftwareSerial
+  \details    Destructor for LIN node class for using generic SoftwareSerial. Close SoftwareSerial interface
+*/
+LIN_Slave_SoftwareSerial::~LIN_Slave_SoftwareSerial()
+{
+  // close SW serial interface
+  this->SWSerial.end();
+
+  // optional debug output
+  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.println(": ~LIN_Slave_SoftwareSerial()");
+  #endif
+
+} // LIN_Slave_SoftwareSerial::~LIN_Slave_SoftwareSerial() 
+
+
+
+/**
   \brief      Open serial interface
   \details    Open serial interface with specified baudrate
-  \param[in]  Baudrate    communication speed [Baud]
+  \param[in]  Baudrate    communication speed [Baud] (default = 19200)
 */
 void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
 {
@@ -82,9 +109,8 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   LIN_Slave_Base::begin(Baudrate);  
 
   // open serial interface incl. used pins
-  ((SoftwareSerial*) (this->pSerial))->end();
-  ((SoftwareSerial*) (this->pSerial))->begin(this->baudrate);
-  while(!(*((SoftwareSerial*) (this->pSerial)))) { }
+  this->SWSerial.end();
+  this->SWSerial.begin(this->baudrate);
 
   // initialize variables
   this->_resetBreakFlag();
@@ -93,6 +119,7 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::begin()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_SoftwareSerial::begin()
@@ -109,12 +136,13 @@ void LIN_Slave_SoftwareSerial::end()
   LIN_Slave_Base::end();
     
   // close serial interface
-  ((SoftwareSerial*) (this->pSerial))->end();
+  this->SWSerial.end();
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::end()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_SoftwareSerial::end()
@@ -132,10 +160,10 @@ void LIN_Slave_SoftwareSerial::handler()
   static uint32_t   usLastByte = 0;
   
   // byte received -> check it
-  if (((SoftwareSerial*) (this->pSerial))->available())
+  if (this->_serialAvailable())
   {
     // if 0x00 received and long time since last byte, start new frame  
-    if ((((SoftwareSerial*) (this->pSerial))->peek() == 0x00) && ((micros() - usLastByte) > this->maxPause))
+    if ((this->_serialPeek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
       this->flagBreak = true;
 
     // store time of this receive
@@ -144,9 +172,19 @@ void LIN_Slave_SoftwareSerial::handler()
     // call base-class handler
     LIN_Slave_Base::handler();
 
+    // SoftwareSerial is blocking while sending -> skip reading echo
+    if (this->state == LIN_Slave_Base::STATE_RECEIVING_ECHO)
+    {
+      this->_serialFlush();
+      this->state = LIN_Slave_Base::STATE_DONE;
+    }
+
   } // if byte received
 
 } // LIN_Slave_SoftwareSerial::handler()
+
+
+#endif // ARDUINO_ARCH_AVR || ARDUINO_ARCH_ESP8266 || ARDUINO_ARCH_ESP32
 
 /*-----------------------------------------------------------------------------
     END OF FILE

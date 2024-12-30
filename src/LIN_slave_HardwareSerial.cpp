@@ -7,6 +7,10 @@
   \author   Georg Icking-Konert
 */
 
+// for AVR platform use NeoHWSerial or enable this file and disable LIN_slave_NeoHWSerial_AVR.*
+#if !defined(ARDUINO_ARCH_AVR)
+//if (1)
+
 // include files
 #include <LIN_slave_HardwareSerial.h>
 
@@ -17,7 +21,7 @@
 
 /**
   \brief      Get break detection flag
-  \details    Get break detection flag
+  \details    Get break detection flag. Is hardware dependent
   \return status of break detection
 */
 bool LIN_Slave_HardwareSerial::_getBreakFlag()
@@ -30,8 +34,8 @@ bool LIN_Slave_HardwareSerial::_getBreakFlag()
 
 
 /**
-  \brief      Clear break detection flag. Is hardware dependent
-  \details    Clear break detection flag. Is hardware dependent
+  \brief      Clear break detection flag
+  \details    Clear break detection flag
 */
 void LIN_Slave_HardwareSerial::_resetBreakFlag()
 {
@@ -49,22 +53,27 @@ void LIN_Slave_HardwareSerial::_resetBreakFlag()
 /**
   \brief      Constructor for LIN node class using generic HardwareSerial
   \details    Constructor for LIN node class for using generic HardwareSerial. Inherit all methods from LIN_Slave_Base, only different constructor
-  \param[in]  Interface   serial interface for LIN. Use Serial for attachInterrupt() support
-  \param[in]  Baudrate    communication speed [Baud]
-  \param[in]  NameLIN     LIN node name 
+  \param[in]  Interface       serial interface for LIN
+  \param[in]  Version         LIN protocol version (default = v2)
+  \param[in]  NameLIN         LIN node name (default = "Slave")
+  \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
+  \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
 */
 LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint16_t MaxPause) : LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN)
+  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx) : LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx)
 {  
   // store parameters in class variables
-  this->pSerial    = &Interface;          // pointer to used HW serial
-  this->maxPause   = MaxPause;            // min. inter-frame pause [us]
+  this->pSerial       = &Interface;
+  this->minFramePause = MinFramePause;
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    //LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    //LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial()");
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
+  
+  // must not open connection here, else (at least) ESP32 and ESP8266 fail
 
 } // LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial()
 
@@ -73,17 +82,16 @@ LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LI
 /**
   \brief      Open serial interface
   \details    Open serial interface with specified baudrate
-  \param[in]  Baudrate    communication speed [Baud]
+  \param[in]  Baudrate    communication speed [Baud] (default = 19200)
 */
 void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
 {
   // call base class method
   LIN_Slave_Base::begin(Baudrate);  
 
-  // open serial interface incl. used pins
-  ((HardwareSerial*) (this->pSerial))->end();
-  ((HardwareSerial*) (this->pSerial))->begin(this->baudrate);
-  while(!(*((HardwareSerial*) (this->pSerial)))) { }
+  // open serial interface
+  pSerial->begin(this->baudrate);
+  while(!(*pSerial));
 
   // initialize variables
   this->_resetBreakFlag();
@@ -92,6 +100,7 @@ void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::begin()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_HardwareSerial::begin()
@@ -108,12 +117,13 @@ void LIN_Slave_HardwareSerial::end()
   LIN_Slave_Base::end();
     
   // close serial interface
-  ((HardwareSerial*) (this->pSerial))->end();
+  pSerial->end();
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::end()");
+    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_HardwareSerial::end()
@@ -131,10 +141,10 @@ void LIN_Slave_HardwareSerial::handler()
   static uint32_t   usLastByte = 0;
   
   // byte received -> check it
-  if (((HardwareSerial*) (this->pSerial))->available())
+  if (pSerial->available())
   {
     // if 0x00 received and long time since last byte, start new frame  
-    if ((((HardwareSerial*) (this->pSerial))->peek() == 0x00) && ((micros() - usLastByte) > this->maxPause))
+    if ((pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
       this->flagBreak = true;
 
     // store time of this receive
@@ -146,6 +156,8 @@ void LIN_Slave_HardwareSerial::handler()
   } // if byte received
 
 } // LIN_Slave_HardwareSerial::handler()
+
+#endif // !ARDUINO_ARCH_AVR
 
 /*-----------------------------------------------------------------------------
     END OF FILE

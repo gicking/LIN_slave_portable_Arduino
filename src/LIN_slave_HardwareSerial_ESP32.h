@@ -3,6 +3,7 @@
   \brief    LIN slave emulation library using a HardwareSerial interface of ESP32
   \details  This library provides a slave node emulation for a LIN bus via a HardwareSerial interface of ESP32.
             For an explanation of the LIN bus and protocol e.g. see https://en.wikipedia.org/wiki/Local_Interconnect_Network
+  \note     Use ESP32 HardwareSerial for BREAK detection using framing error
   \author   Georg Icking-Konert
 */
 
@@ -28,7 +29,7 @@
   GLOBAL MACROS
 -----------------------------------------------------------------------------*/
 
-/// Default number of ESP32 Serial interfaces (0..2)
+/// Set board number of ESP32 Serial interfaces (0..2)
 #if !defined(LIN_SLAVE_ESP32_MAX_SERIAL)
   #define LIN_SLAVE_ESP32_MAX_SERIAL   3 
 #endif
@@ -51,15 +52,14 @@
 */
 class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
 {
-  // PROTECTED VARIABLES
-  protected:
+  // PRIVATE VARIABLES
+  public:
 
-    uint8_t               pinRx;              //!< pin used for receive
-    uint8_t               pinTx;              //!< pin used for transmit
-    uint8_t               idxSerial;          //!< index to flagBreak[] of this instance
-
-    // break flags for Serial0..2
-    static bool           flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
+    HardwareSerial        *pSerial;                              //!< pointer to serial interface used for LIN
+    uint8_t               pinRx;                                 //!< pin used for receive
+    uint8_t               pinTx;                                 //!< pin used for transmit
+    uint8_t               idxSerial;                             //!< index to flagBreak[] of this instance
+    static bool           flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL]; //!< break flags for Serial0..N
 
 
   // PRIVATE METHODS
@@ -84,21 +84,38 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
   // PROTECTED METHODS
   protected:
 
-    /// @brief Get break detection flag. Is hardware dependent
+    /// @brief Get break detection flag
     bool _getBreakFlag(void);
 
-    /// @brief Clear break detection flag. Is hardware dependent
+    /// @brief Clear break detection flag
     void _resetBreakFlag(void);
+
+
+    /// @brief check if a byte is available in Rx buffer
+    inline bool _serialAvailable(void) { return pSerial->available(); }
+
+    /// @brief peek next byte from Rx buffer
+    inline uint8_t _serialPeek(void) { return pSerial->peek(); }
+
+    /// @brief read next byte from Rx buffer
+    inline uint8_t _serialRead(void) { return pSerial->read(); }
+
+    /// @brief write bytes to Tx buffer
+    inline void _serialWrite(uint8_t buf[], uint8_t num) { pSerial->write(buf, num); }
+
+    /// @brief flush Tx buffer
+    inline void _serialFlush(void) { pSerial->flush(); }
 
 
   // PUBLIC METHODS
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx, LIN_Slave_Base::version_t Version, const char NameLIN[]);
+    LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2,
+      const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L);
      
     /// @brief Open serial interface
-    void begin(uint16_t Baudrate);
+    void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     void end(void);

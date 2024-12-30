@@ -15,24 +15,24 @@
 
 
 /*-----------------------------------------------------------------------------
-  INCLUDE FILES
------------------------------------------------------------------------------*/
-
-#include <Arduino.h>
-
-
-/*-----------------------------------------------------------------------------
   GLOBAL DEFINES
 -----------------------------------------------------------------------------*/
 
 // misc parameters
 #define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
-#define LIN_SLAVE_RX_TIMEOUT    300           //!< max. time [us] between received bytes in frame
 
 // optional LIN debug output. For AVR must use NeoSerialx to avoid linker conflict
 //#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
 //#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output (required for AVR). Comment out for none
 #define LIN_SLAVE_DEBUG_LEVEL   3             //!< debug verbosity 0..3 (1=errors only, 3=verbose)
+
+
+/*-----------------------------------------------------------------------------
+  INCLUDE FILES
+-----------------------------------------------------------------------------*/
+
+#include <Arduino.h>
+
 
 /*-----------------------------------------------------------------------------
   GLOBAL CLASS
@@ -49,45 +49,58 @@ class LIN_Slave_Base
   public:
 
     /// LIN protocol version 
-    typedef enum
+    typedef enum : uint8_t
     {
-      LIN_V1 = 1,                               //!< LIN protocol version 1.x
-      LIN_V2 = 2                                //!< LIN protocol version 2.x
+      LIN_V1                = 1,                //!< LIN protocol version 1.x
+      LIN_V2                = 2                 //!< LIN protocol version 2.x
     } version_t;
 
 
-    /// LIN state machine states
-    typedef enum
+    /// LIN frame type (use high nibble for type, low nibble for number of data bytes)
+    typedef enum : uint8_t
+    {
+      MASTER_REQUEST        = 0x10,             //!< LIN master request frame
+      SLAVE_RESPONSE        = 0x20              //!< LIN slave response frame
+    } frame_t;
+
+
+    /// LIN state machine states. Use bitmasks for fast checking multiple states
+    typedef enum : uint8_t
     { 
-      WAIT_FOR_BREAK  = 0x00,                   //!< waiting for sync break
-      WAIT_FOR_SYNC   = 0x01,                   //!< waiting for sync field
-      WAIT_FOR_PID    = 0x02,                   //!< waiting for frame PID
-      RECEIVING_DATA  = 0x03,                   //!< receiving data
-      CHECKSUM_VERIFY = 0x04                    //!< waiting for checksum
+      STATE_OFF             = 0x01,             //!< LIN interface closed
+      STATE_WAIT_FOR_BREAK  = 0x02,             //!< no LIN transmission ongoing, wait for BRK
+      STATE_WAIT_FOR_SYNC   = 0x04,             //!< BRK received, wait for SYNC
+      STATE_WAIT_FOR_PID    = 0x08,             //!< SYNC received, wait for frame PID
+      STATE_RECEIVING_DATA  = 0x10,             //!< receiving master request data
+      STATE_RECEIVING_ECHO  = 0x20,             //!< receiving slave response echo
+      STATE_WAIT_FOR_CHK    = 0x40,             //!< waiting for checksum
+      STATE_DONE            = 0x80              //!< frame is completed
     } state_t;
 
 
-    /// LIN error codes. Use bitmasks, as error is latched
-    typedef enum
+    /// LIN error codes. Use bitmasks, as error is latched. Use same as LIN_master_portable
+    typedef enum : uint8_t
     {
-      NO_ERROR      = 0x00,                     //!< no error
-      ERROR_STATE   = 0x01,                     //!< error in LIN state machine
-      ERROR_SYNC    = 0x02,                     //!< error in SYNC (not 0x55) 
-      ERROR_TIMEOUT = 0x04,                     //!< frame timeout error
-      ERROR_CHK     = 0x08,                     //!< LIN checksum error
-      ERROR_MISC    = 0x80                      //!< misc error, should not occur
+      NO_ERROR              = 0x00,             //!< no error
+      ERROR_STATE           = 0x01,             //!< error in LIN state machine
+      ERROR_ECHO            = 0x02,             //!< error reading response echo
+      ERROR_TIMEOUT         = 0x04,             //!< frame timeout error
+      ERROR_CHK             = 0x08,             //!< LIN checksum error
+      ERROR_SYNC            = 0x10,             //!< error in SYNC (not 0x55) 
+      ERROR_PID             = 0x20,             //!< ID parity error 
+      ERROR_MISC            = 0x80              //!< misc error, should not occur
     } error_t;
 
 
-    /// Pointer to frame handler
-    typedef void (*LinMessageHandler)(uint8_t numData, uint8_t* data);
+    /// Type for frame callback function
+    typedef void (*LinMessageCallback)(uint8_t numData, uint8_t* data);
 
-    /// User-defined frame handler with data length
+    /// User-defined callback function with data length
     typedef struct
     {
-      LinMessageHandler handler;
-      uint8_t           numData;
-    } handler_t;
+      uint8_t                 type_numData;     //!< frame type (high nibble) and number of data bytes (low nibble)
+      LinMessageCallback      fct;              //!< frame callback function
+    } callback_t;
 
 
 
@@ -95,32 +108,35 @@ class LIN_Slave_Base
   protected:
 
     // node properties
-    Stream                *pSerial;                   //!< pointer to serial I/F
-    uint16_t              baudrate;                   //!< communication baudrate [Baud]
-    LIN_Slave_Base::version_t  version;               //!< LIN protocol version
-    LIN_Slave_Base::state_t    state;                 //!< status of LIN state machine
-    LIN_Slave_Base::error_t    error;                 //!< error state. Is latched until cleared
-    bool                  flagBreak;                  //!< flag for BREAK detected. Needs to be set in Rx-ISR 
-    LIN_Slave_Base::handler_t  requestHandlers[64];   //!< handlers for master request IDs 0x00..0x3F
-    LIN_Slave_Base::handler_t  responseHandlers[64];  //!< handlers for slave response IDs 0x00..0x3F
+    uint16_t                  baudrate;         //!< communication baudrate [Baud]
+    LIN_Slave_Base::version_t version;          //!< LIN protocol version
+    LIN_Slave_Base::state_t   state;            //!< status of LIN state machine
+    LIN_Slave_Base::error_t   error;            //!< error state. Is latched until cleared
+    bool                      flagBreak;        //!< flag for BREAK detected. Needs to be set in Rx-ISR 
+    LIN_Slave_Base::callback_t  callback[64];   //!< array of user callback functions for IDs 0x00..0x3F
 
-    // frame properties
-    uint8_t               pid;                        //!< protected frame identifier
-    uint8_t               id;                         //!< unprotected frame identifier
-    uint8_t               numData;                    //!< number of data bytes in frame
-    uint8_t               bufRx[8];                   //!< buffer for data bytes (max 8B)
-    uint8_t               idxData;                    //!< current index in bufRx
-    uint32_t              timeLastRx;                 //!< time [ms] of last received byte in frame
+    // latest frame properties
+    uint8_t                   pid;              //!< protected frame identifier
+    uint8_t                   id;               //!< unprotected frame identifier
+    LIN_Slave_Base::frame_t   type;             //!< frame type (master request or slave response)
+    uint8_t                   numData;          //!< number of data bytes in frame
+    uint8_t                   bufData[9];       //!< buffer for data bytes (max. 8B) + checksum
+    uint8_t                   idxData;          //!< current index in bufData
+    uint32_t                  timeoutRx;        //!< timeout [us] for bytes in frame
+    uint32_t                  timeLastRx;       //!< time [us] of last received byte in frame
 
 
   // PUBLIC VARIABLES
   public:
 
-    char                  nameLIN[LIN_SLAVE_BUFLEN_NAME];    //!< LIN node name, e.g. for debug
+    char                      nameLIN[LIN_SLAVE_BUFLEN_NAME];   //!< LIN node name, e.g. for debug
 
 
   // PROTECTED METHODS
   protected:
+  
+    /// @brief Calculate protected frame ID
+    uint8_t _calculatePID(uint8_t ID);
   
     /// @brief Calculate LIN frame checksum
     uint8_t _calculateChecksum(uint8_t NumData, uint8_t Data[]);
@@ -132,17 +148,44 @@ class LIN_Slave_Base
     virtual void _resetBreakFlag(void);
 
 
+    /// @brief check if a byte is available in Rx buffer. Here dummy
+    virtual inline bool _serialAvailable(void) { return false; }
+
+    /// @brief peek next byte from Rx buffer. Here dummy
+    virtual inline uint8_t _serialPeek(void) { return 0x00; }
+
+    /// @brief read next byte from Rx buffer. Here dummy
+    virtual inline uint8_t _serialRead(void) { return 0x00; }
+
+    /// @brief write bytes to Tx buffer. Here dummy
+    virtual inline void _serialWrite(uint8_t buf[], uint8_t num) { (void) buf; (void) num; }
+
+    /// @brief flush Tx buffer. Here dummy
+    virtual inline void _serialFlush(void) { }
+
+
   // PUBLIC METHODS
   public:
   
-    /// @brief LIN master node constructor
-    LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[]);
+    /// @brief LIN slave node constructor
+    LIN_Slave_Base(LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L);
     
+    /// @brief LIN slave node destructor, here dummy. Any class with virtual functions should have virtual destructor 
+    virtual ~LIN_Slave_Base(void) {};
+
+
     /// @brief Open serial interface
-    virtual void begin(uint16_t Baudrate);
+    virtual void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     virtual void end(void);
+    
+    
+    /// @brief Reset LIN state machine
+    inline void resetStateMachine(void) { this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK; }
+
+    /// @brief Getter for LIN state machine state
+    inline LIN_Slave_Base::state_t getState(void) { return this->state; }
 
 
     /// @brief Clear error of LIN state machine
@@ -150,16 +193,28 @@ class LIN_Slave_Base
     
     /// @brief Getter for LIN state machine error
     inline LIN_Slave_Base::error_t getError(void) { return this->error; }
+    
+    
+    /// @brief Getter for LIN frame
+    inline void getFrame(LIN_Slave_Base::frame_t &Type, uint8_t &Id, uint8_t &NumData, uint8_t Data[])
+    { 
+      noInterrupts();                         // for data consistency temporarily disable ISRs
+      Type    = this->type;                   // frame type 
+      Id      = this->id;                     // frame ID
+      NumData = this->numData;                // number of data bytes (excl. BREAK, SYNC, ID, CHK)
+      memcpy(Data, this->bufData, NumData);   // copy data bytes w/o checksum
+      interrupts();                           // re-enable ISRs
+    }
 
 
-    /// @brief Attach callback function for master request frame
-    void registerMasterRequestHandler(uint8_t ID, LinMessageHandler Handler, uint8_t NumData);
+    /// @brief Attach user callback function for master request frame
+    void registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::LinMessageCallback Fct, uint8_t NumData);
 
-    /// @brief Attach callback function for slave response frame
-    void registerSlaveResponseHandler(uint8_t ID, LinMessageHandler Handler, uint8_t NumData);
+    /// @brief Attach user callback function for slave response frame
+    void registerSlaveResponseHandler(uint8_t ID, LIN_Slave_Base::LinMessageCallback Fct, uint8_t NumData);
 
 
-    /// @brief Handle LIN protocol and call user-defined frame handlers
+    /// @brief Handle LIN protocol and call user-defined frame callbacks
     virtual void handler(void);
 
 }; // class LIN_Slave_Base

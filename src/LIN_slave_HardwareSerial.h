@@ -7,6 +7,10 @@
   \author   Georg Icking-Konert
 */
 
+// for AVR platform use NeoHWSerial or enable this file and disable LIN_slave_NeoHWSerial_AVR.*
+#if !defined(ARDUINO_ARCH_AVR)
+//if (1)
+
 /*-----------------------------------------------------------------------------
   MODULE DEFINITION FOR MULTIPLE INCLUSION
 -----------------------------------------------------------------------------*/
@@ -33,31 +37,49 @@
 */
 class LIN_Slave_HardwareSerial : public LIN_Slave_Base
 {
-  // PRIVATE VARIABLES
-  private:
+  // PROTECTED VARIABLES
+  protected:
 
-    bool                  flagBreak;                  //!< a break was detected, is set in handle
-    uint16_t              maxPause;                   //!< min. inter-frame pause [us] to start new frame (not standard compliant!)
+    HardwareSerial        *pSerial;             //!< pointer to serial interface used for LIN
+    bool                  flagBreak;            //!< a break was detected, is set in handle
+    uint16_t              minFramePause;        //!< min. inter-frame pause [us] to start new frame (not standard compliant!)
 
 
   // PROTECTED METHODS
   protected:
 
     /// @brief Get break detection flag
-    bool _getBreakFlag(void);
+    virtual bool _getBreakFlag(void);
 
     /// @brief Clear break detection flag
     void _resetBreakFlag(void);
+
+
+    /// @brief check if a byte is available in Rx buffer
+    inline bool _serialAvailable(void) { return pSerial->available(); }
+
+    /// @brief peek next byte from Rx buffer
+    inline uint8_t _serialPeek(void) { return pSerial->peek(); }
+
+    /// @brief read next byte from Rx buffer
+    inline uint8_t _serialRead(void) { return pSerial->read(); }
+
+    /// @brief write bytes to Tx buffer
+    inline void _serialWrite(uint8_t buf[], uint8_t num) { pSerial->write(buf, num); }
+
+    /// @brief flush Tx buffer
+    inline void _serialFlush(void) { pSerial->flush(); }
 
 
   // PUBLIC METHODS
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[], uint16_t MaxPause=500);
+    LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, 
+      const char NameLIN[] = "Slave", uint16_t MinFramePause=1000L, uint32_t TimeoutRx = 1500L);
      
     /// @brief Open serial interface
-    void begin(uint16_t Baudrate);
+    void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     void end(void);
@@ -72,6 +94,8 @@ class LIN_Slave_HardwareSerial : public LIN_Slave_Base
     END OF MODULE DEFINITION FOR MULTIPLE INLUSION
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_HW_SERIAL_H_
+
+#endif // !ARDUINO_ARCH_AVR
 
 /*-----------------------------------------------------------------------------
     END OF FILE

@@ -1,5 +1,5 @@
 ###############################################
-# Syntax coloring Map For LIN Master library
+# Syntax coloring Map For LIN Slave library
 ###############################################
 
 ###################################

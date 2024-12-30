@@ -2,6 +2,9 @@
 
 Example code for LIN slave node using ESP32 HardwareSerial interface
 
+Note:
+  - handling of frames can be done inside callback punctions. Console output below is optional
+
 Supported (=successfully tested) boards:
  - ESP32 Wroom-32UE       https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/
 
@@ -12,21 +15,26 @@ Supported (=successfully tested) boards:
 
 // board pin definitions (GPIOn is referred to as n)
 #define PIN_TOGGLE    19        // pin to demonstrate background operation
-#define PIN_ERROR     23        // indicate LIN return status
-#define PIN_LIN_RX    25        // receive pin for LIN
-#define PIN_LIN_TX    26        // transmit pin for LIN
+#define PIN_ERROR     18        // indicate LIN return status
+#define PIN_LIN_RX    16        // receive pin for LIN
+#define PIN_LIN_TX    17        // transmit pin for LIN
+
+// serial I/F for debug output (comment for no output)
+#define SERIAL_DEBUG  Serial
 
 
 // setup LIN node
-LIN_Slave_HardwareSerial_ESP32  LIN_slave_node(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave");
+LIN_Slave_HardwareSerial_ESP32  LIN(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave");
 
 
 // call once
 void setup()
 {
-  // open console
-  Serial.begin(115200);
-  while(!Serial);
+  // for debug output
+  #if defined(SERIAL_DEBUG)
+    SERIAL_DEBUG.begin(115200);
+    while(!SERIAL_DEBUG);
+  #endif // SERIAL_DEBUG
 
   // indicate background operation
   pinMode(PIN_TOGGLE, OUTPUT);
@@ -35,11 +43,11 @@ void setup()
   pinMode(PIN_ERROR, OUTPUT);
 
   // open LIN interface
-  LIN_slave_node.begin(19200);
+  LIN.begin(19200);
 
-  // Register handlers for frame IDs with expected data lengths
-  LIN_slave_node.registerMasterRequestHandler(0x1A, handle_Master, 4);
-  LIN_slave_node.registerSlaveResponseHandler(0x05, handle_Slave, 6);
+  // Register callback functions for frame IDs with expected data lengths
+  LIN.registerMasterRequestHandler(0x1A, handle_Request, 4);
+  LIN.registerSlaveResponseHandler(0x05, handle_Response, 6);
 
 } // setup()
 
@@ -47,59 +55,119 @@ void setup()
 
 void loop()
 {
-  // call LIN slave protocol handler often
-  LIN_slave_node.handler();
-
-  // indicate error status via pin
-  digitalWrite(PIN_ERROR, LIN_slave_node.getError());
-
-  // check for LIN error
-  if (LIN_slave_node.getError() != LIN_Slave_Base::NO_ERROR)
-  {
-    // print error code
-    Serial.print("LIN slave error ");
-    Serial.println((int) LIN_slave_node.getError());
-    
-    // reset error (is latched)
-    LIN_slave_node.resetError();
-  
-  } // if LIN error
-
   // indicate core load
   digitalWrite(PIN_TOGGLE, !digitalRead(PIN_TOGGLE));
 
 } // loop()
 
 
-// Example for user-defined Master Request handler
-void handle_Master(uint8_t numData, uint8_t* data)
-{
-  // print received data
-  Serial.print("Handle Request: Rx =");
-  for (int i = 0; i < numData; i++)
-  {
-    Serial.print(" 0x");
-    Serial.print(data[i], HEX);
-  }
-  Serial.println();
 
-} // handle_Master()
+// called when byte was received via Serial2. This routine is called between loop() runs (not in background).
+void serialEvent2()
+{
+  // call LIN slave protocol handler often
+  LIN.handler();
+
+  // indicate error status via pin
+  digitalWrite(PIN_ERROR, LIN.getError());
+
+
+  // if LIN frame has finished, print it
+  if (LIN.getState() == LIN_Slave_Base::STATE_DONE)
+  {
+    LIN_Slave_Base::frame_t   Type;
+    LIN_Slave_Base::error_t   error;
+    uint8_t                   Id;
+    uint8_t                   NumData;
+    uint8_t                   Data[8];
+
+    // get frame data & error status
+    LIN.getFrame(Type, Id, NumData, Data);
+    error = LIN.getError();
+
+    // indicate status via pin
+    digitalWrite(PIN_ERROR, error);
+
+    // print result
+    #if defined(SERIAL_DEBUG)
+      if (Type == LIN_Slave_Base::MASTER_REQUEST)
+      {
+        SERIAL_DEBUG.print(LIN.nameLIN);
+        SERIAL_DEBUG.print(", request, ID=0x");
+        SERIAL_DEBUG.print(Id, HEX);
+        if (error != LIN_Slave_Base::NO_ERROR)
+        { 
+          SERIAL_DEBUG.print(", err=0x");
+          SERIAL_DEBUG.println(error, HEX);
+        }
+        else
+        {
+          SERIAL_DEBUG.print(", data=");        
+          for (uint8_t i=0; (i < NumData); i++)
+          {
+            SERIAL_DEBUG.print("0x");
+            SERIAL_DEBUG.print((int) Data[i], HEX);
+            SERIAL_DEBUG.print(" ");
+          }
+          SERIAL_DEBUG.println();
+        }
+      }
+      else
+      {
+        SERIAL_DEBUG.print(LIN.nameLIN);
+        SERIAL_DEBUG.print(", response, ID=0x");
+        SERIAL_DEBUG.print(Id, HEX);
+        if (error != LIN_Slave_Base::NO_ERROR)
+        { 
+          SERIAL_DEBUG.print(", err=0x");
+          SERIAL_DEBUG.println(error, HEX);
+        }
+        else
+        {
+          SERIAL_DEBUG.print(", data=");        
+          for (uint8_t i=0; (i < NumData); i++)
+          {
+            SERIAL_DEBUG.print("0x");
+            SERIAL_DEBUG.print((int) Data[i], HEX);
+            SERIAL_DEBUG.print(" ");
+          }
+          SERIAL_DEBUG.println();
+        }
+      }
+    #endif // SERIAL_DEBUG
+
+    // reset state machine & error
+    LIN.resetStateMachine();
+    LIN.resetError();
+
+  } // if LIN frame finished
+
+} // serialEvent1()
+
+
+
+// Example for user-defined Master Request handler
+void handle_Request(uint8_t NumData, uint8_t* Data)
+{
+  // avoid unused parameter warning
+  (void) NumData;
+  (void) Data;
+
+  // add code to response on received data
+
+} // handle_Request()
+
 
 
 // Example for user-defined Slave Response handler
-void handle_Slave(uint8_t numData, uint8_t* data)
-{  
-  // set dummy data
-  for (uint8_t i=0; i<numData; i++)
-    data[i] = 2*i;
+void handle_Response(uint8_t NumData, uint8_t* Data)
+{
+  // avoid unused parameter warning
+  (void) NumData;
+  (void) Data;
   
-  // print response data
-  Serial.print("Handle Response: Tx =");
-  for (int i = 0; i < numData; i++)
-  {
-    Serial.print(" 0x");
-    Serial.print(data[i], HEX);
-  }
-  Serial.println();
+  // set dummy data for response
+  for (uint8_t i=0; i<NumData; i++)
+    Data[i] = 0x10 + i;
 
-} // handle_Slave()
+} // handle_Response()

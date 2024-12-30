@@ -7,6 +7,9 @@
   \author   Georg Icking-Konert
 */
 
+// assert platform which supports SoftwareSerial. Note: ARDUINO_ARCH_ESP32 requires library ESPSoftwareSerial
+#if defined(ARDUINO_ARCH_AVR) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32) 
+
 /*-----------------------------------------------------------------------------
   MODULE DEFINITION FOR MULTIPLE INCLUSION
 -----------------------------------------------------------------------------*/
@@ -37,8 +40,12 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
   // PRIVATE VARIABLES
   private:
 
-    bool                  flagBreak;                  //!< a break was detected, is set in handle
-    uint16_t              maxPause;                   //!< min. inter-frame pause [us] to start new frame (not standard compliant!)
+    SoftwareSerial        SWSerial;           //!< SW serial interface used for LIN (no pointer!)
+    uint8_t               pinRx;              //!< pin used for receive
+    uint8_t               pinTx;              //!< pin used for transmit
+    bool                  inverseLogic;       //!< use inverse logic
+    bool                  flagBreak;          //!< a break was detected, is set in handle
+    uint16_t              minFramePause;      //!< min. inter-frame pause [us] to start new frame (not standard compliant!)
 
 
   // PROTECTED METHODS
@@ -51,14 +58,34 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     void _resetBreakFlag(void);
 
 
+    /// @brief check if a byte is available in Rx buffer
+    inline bool _serialAvailable(void) { return SWSerial.available(); }
+
+    /// @brief peek next byte from Rx buffer
+    inline uint8_t _serialPeek(void) { return SWSerial.peek(); }
+
+    /// @brief read next byte from Rx buffer
+    inline uint8_t _serialRead(void) { return SWSerial.read(); }
+
+    /// @brief write bytes to Tx buffer
+    inline void _serialWrite(uint8_t buf[], uint8_t num) { SWSerial.write(buf, num); }
+
+    /// @brief flush Tx buffer
+    inline void _serialFlush(void) { SWSerial.flush(); }
+
+
   // PUBLIC METHODS
   public:
 
     /// @brief Class constructor
-    LIN_Slave_SoftwareSerial(SoftwareSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[], uint16_t MaxPause=500);
-     
+    LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic = false, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, 
+      const char NameLIN[] = "Slave", uint16_t MinFramePause=1000L, uint32_t TimeoutRx = 1500L);
+
+    /// @brief Class destructor
+    ~LIN_Slave_SoftwareSerial(void);
+
     /// @brief Open serial interface
-    void begin(uint16_t Baudrate);
+    void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     void end(void);
@@ -73,6 +100,8 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     END OF MODULE DEFINITION FOR MULTIPLE INLUSION
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_SW_SERIAL_H_
+
+#endif // ARDUINO_ARCH_AVR || ARDUINO_ARCH_ESP8266 || ARDUINO_ARCH_ESP32
 
 /*-----------------------------------------------------------------------------
     END OF FILE
