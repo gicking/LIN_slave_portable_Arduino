@@ -92,6 +92,9 @@ class LIN_Slave_Base
     } error_t;
 
 
+  // PROTECTED TYPEDEFS
+  protected:
+
     /// Type for frame callback function
     typedef void (*LinMessageCallback)(uint8_t numData, uint8_t* data);
 
@@ -101,7 +104,6 @@ class LIN_Slave_Base
       uint8_t                 type_numData;     //!< frame type (high nibble) and number of data bytes (low nibble)
       LinMessageCallback      fct;              //!< frame callback function
     } callback_t;
-
 
 
   // PROTECTED VARIABLES
