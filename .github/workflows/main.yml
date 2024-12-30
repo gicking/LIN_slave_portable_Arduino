@@ -34,6 +34,7 @@ jobs:
           fqbn: ${{ matrix.board.fqbn }}
           libraries: |
             - source-path: ./
+            - name: NeoHWSerial
           sketch-paths: |
             - examples/LIN_slave_NeoHWSerial_AVR
             - examples/LIN_slave_SWSerial
