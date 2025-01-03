@@ -1,6 +1,6 @@
 var classLIN__Slave__HardwareSerial =
 [
-    [ "LIN_Slave_HardwareSerial", "db/dae/classLIN__Slave__HardwareSerial.html#ae77259c2f6909715066029d862304a42", null ],
+    [ "LIN_Slave_HardwareSerial", "db/dae/classLIN__Slave__HardwareSerial.html#a9ba075095712e3870845ba7bb24d6173", null ],
     [ "_getBreakFlag", "db/dae/classLIN__Slave__HardwareSerial.html#ab109092ba4a5166e62b25862e0413359", null ],
     [ "_resetBreakFlag", "db/dae/classLIN__Slave__HardwareSerial.html#a81fc72a2ce2e3427c73342d211368957", null ],
     [ "_serialAvailable", "db/dae/classLIN__Slave__HardwareSerial.html#a20ee58273ddf452a8ad6105ee105644e", null ],

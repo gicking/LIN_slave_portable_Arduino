@@ -1,7 +1,6 @@
 var classLIN__Slave__SoftwareSerial =
 [
-    [ "LIN_Slave_SoftwareSerial", "dc/d16/classLIN__Slave__SoftwareSerial.html#a814e6b65b46f26297ac28a7e9d4d1d2d", null ],
-    [ "~LIN_Slave_SoftwareSerial", "dc/d16/classLIN__Slave__SoftwareSerial.html#ad93b8b571c7b22637f928b52f22822f0", null ],
+    [ "LIN_Slave_SoftwareSerial", "dc/d16/classLIN__Slave__SoftwareSerial.html#a176a58511ef0c3d375dbe594c925c05b", null ],
     [ "_getBreakFlag", "dc/d16/classLIN__Slave__SoftwareSerial.html#ae55478c283433ba9c622cfa15835308b", null ],
     [ "_resetBreakFlag", "dc/d16/classLIN__Slave__SoftwareSerial.html#aa8930ff60f123e8bf7ad0e356f765403", null ],
     [ "_serialAvailable", "dc/d16/classLIN__Slave__SoftwareSerial.html#a2c55bed3411a8adb706297742bace2de", null ],
