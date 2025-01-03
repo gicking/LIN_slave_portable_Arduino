@@ -24,13 +24,15 @@
 /**
   \brief      Constructor for LIN node class using ESP8266 HardwareSerial 0
   \details    Constructor for LIN node class for using ESP8266 HardwareSerial 0. Inherit all methods from LIN_Slave_HardwareSerial, only different constructor
-  \param[in]  SwapPins        use alternate Serial2 Rx/Tx pins (default = false)
-  \param[in]  Version         LIN protocol version (default = v2)
-  \param[in]  NameLIN         LIN node name (default = "Slave")
-  \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
+  \param[in]  SwapPins    use alternate Serial2 Rx/Tx pins (default = false)
+  \param[in]  Version     LIN protocol version (default = v2)
+  \param[in]  NameLIN     LIN node name (default = "Slave")
+  \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
 LIN_Slave_HardwareSerial_ESP8266::LIN_Slave_HardwareSerial_ESP8266(bool SwapPins, LIN_Slave_Base::version_t Version, const char NameLIN[], 
-  uint32_t TimeoutRx) : LIN_Slave_HardwareSerial(Serial, Version, NameLIN, TimeoutRx)
+  uint32_t TimeoutRx, const int8_t PinTxEN) : 
+  LIN_Slave_HardwareSerial(Serial, Version, NameLIN, TimeoutRx, PinTxEN)
 {
   // store parameters in class variables
   this->swapPins   = SwapPins;            // use alternate pins Rx=D7 / Tx=D8 for Serial0

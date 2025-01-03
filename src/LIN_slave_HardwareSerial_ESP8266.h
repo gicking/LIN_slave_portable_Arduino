@@ -47,7 +47,7 @@ class LIN_Slave_HardwareSerial_ESP8266 : public LIN_Slave_HardwareSerial
 
     /// @brief Class constructor
     LIN_Slave_HardwareSerial_ESP8266(bool SwapPins = false, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave",
-      uint32_t TimeoutRx = 1500L);
+      uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
           
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);

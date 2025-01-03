@@ -148,9 +148,11 @@ void LIN_Slave_NeoHWSerial_AVR::_resetBreakFlag()
   \param[in]  Version         LIN protocol version (default = v2)
   \param[in]  NameLIN         LIN node name (default = "Slave")
   \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx) : 
-  LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx)
+LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, LIN_Slave_Base::version_t Version, 
+  const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
+  LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  
   // store parameters in class variables
   this->pSerial    = &Interface;          // pointer to used HW serial

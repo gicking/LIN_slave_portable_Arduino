@@ -118,8 +118,10 @@ void LIN_Slave_Base::_resetBreakFlag()
   \param[in]  Version     LIN protocol version (default = v2)
   \param[in]  NameLIN     LIN node name (default = "Slave")
   \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx)
+LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, 
+  const int8_t PinTxEN)
 {  
   // For optional debugging
   #if defined(LIN_SLAVE_DEBUG_SERIAL)
@@ -131,6 +133,7 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
   this->version = Version;                                    // LIN protocol version (required for checksum)
   memcpy(this->nameLIN, NameLIN, LIN_SLAVE_BUFLEN_NAME);      // node name e.g. for debug
   this->timeoutRx = TimeoutRx;                                // timeout [us] for bytes in frame
+  this->pinTxEN = PinTxEN;                                    // optional Tx enable pin for RS485
 
   // initialize slave node properties
   this->state     = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;     // status of LIN state machine
@@ -149,6 +152,13 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
     this->bufData[i] = 0x00;                                  // init data bytes (max 8B) + chk
   this->idxData    = 0;                                       // current index in bufData
   this->timeLastRx = 0;                                       // time [ms] of last received byte in frame
+
+  // initialize TxEN pin low (=transmitter off)
+  if (this->pinTxEN >= 0)
+  {
+    digitalWrite(this->pinTxEN, LOW);
+    pinMode(this->pinTxEN, OUTPUT);
+  }
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)

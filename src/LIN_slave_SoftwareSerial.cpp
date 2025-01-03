@@ -59,9 +59,11 @@ void LIN_Slave_SoftwareSerial::_resetBreakFlag()
   \param[in]  NameLIN     LIN node name (default = "Slave")
   \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
   \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
 LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx) : LIN_Slave_Base(Version, NameLIN, TimeoutRx), SWSerial(PinRx, PinTx, InverseLogic)
+  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx, const int8_t PinTxEN) : 
+  LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN), SWSerial(PinRx, PinTx, InverseLogic)
 {  
   // store parameters in class variables
   this->pinRx = PinRx;
@@ -76,25 +78,6 @@ LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx,
   #endif
 
 } // LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial()
-
-
-
-/**
-  \brief      Destructor for LIN node class using generic SoftwareSerial
-  \details    Destructor for LIN node class for using generic SoftwareSerial. Close SoftwareSerial interface
-*/
-LIN_Slave_SoftwareSerial::~LIN_Slave_SoftwareSerial()
-{
-  // close SW serial interface
-  this->SWSerial.end();
-
-  // optional debug output
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": ~LIN_Slave_SoftwareSerial()");
-  #endif
-
-} // LIN_Slave_SoftwareSerial::~LIN_Slave_SoftwareSerial() 
 
 
 
