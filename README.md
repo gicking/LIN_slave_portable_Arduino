@@ -15,6 +15,7 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
   - multiple, simultaneous LIN nodes
   - background handling of frames via user-defined callback functions 
   - supports HardwareSerial and SoftwareSerial, if available
+  - supports LIN protocoll via RS485
   
 **Supported Boards (with additional LIN hardware)**
   - AVR boards, e.g. [Arduino Uno](https://store.arduino.cc/products/arduino-uno-rev3), [Mega](https://store.arduino.cc/products/arduino-mega-2560-rev3) or [Nano](https://store.arduino.cc/products/arduino-nano)
@@ -34,7 +35,7 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
   - For the following boards BREAK detection via framing errors is supported:
     - AVR via [NeoHWSerial](https://github.com/gicking/NeoHWSerial) library, which supports custom UART ISRs. 
     - ESP32, which natively supports a `onReceiveError()` method
-  - for AVR you must not use both `Serial` and `NeoHWSerial` instances in the same sketch. If possible use only `NeoHWSerial`, else you have to disable `LIN_slave_NeoHWSerial_AVR.*` and enable `LIN_slave_HardwareSerial.*` via macros
+  - for AVR you must not use both `Serial` and `NeoHWSerial` instances in the same sketch. If possible use only `NeoHWSerial`, else you have to disable `LIN_slave_NeoHWSerial_AVR.h` and enable `LIN_slave_HardwareSerial.h` via macros
   - ESP8266 and ESP32 [SoftwareSerial](https://github.com/plerup/espsoftwareserial) drops BREAK (=0x00 without stop bit) altogether. Therefore these platforms only support HardwareSerial
 
 **Library Reference**

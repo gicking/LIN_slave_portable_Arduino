@@ -7,9 +7,10 @@
   \author   Georg Icking-Konert
 */
 
-// for AVR platform use NeoHWSerial or enable this file and disable LIN_slave_NeoHWSerial_AVR.*
+// for AVR platform use NeoHWSerial or enable this file and disable file LIN_slave_NeoHWSerial_AVR.h
 #if !defined(ARDUINO_ARCH_AVR)
 //if (1)
+
 
 /*-----------------------------------------------------------------------------
   MODULE DEFINITION FOR MULTIPLE INCLUSION

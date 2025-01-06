@@ -7,7 +7,7 @@
   \author   Georg Icking-Konert
 */
 
-// optionally disable this file and enable LIN_slave_HardwareSerial.*
+// for AVR platform optionally disable this file and enable file LIN_slave_HardwareSerial.h
 #if defined(ARDUINO_ARCH_AVR) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)
 //#if (0)
 

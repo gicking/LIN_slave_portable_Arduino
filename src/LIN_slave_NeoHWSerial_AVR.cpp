@@ -13,7 +13,6 @@
 // optional file, see LIN_slave_NeoHWSerial_AVR.h
 #if defined(_LIN_SLAVE_NEOHWSERIAL_AVR_H_)
 
-
 // definition of static class variables (see https://stackoverflow.com/a/51091696)
 bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
 

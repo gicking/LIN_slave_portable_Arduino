@@ -11,7 +11,7 @@
 #include <LIN_slave_HardwareSerial.h>
 
 // optional file, see LIN_slave_HardwareSerial.h
-#if !defined(_LIN_SLAVE_HW_SERIAL_H_)
+#if defined(_LIN_SLAVE_HW_SERIAL_H_)
 
 
 /**************************
