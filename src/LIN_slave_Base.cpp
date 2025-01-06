@@ -311,7 +311,23 @@ void LIN_Slave_Base::handler()
       LIN_SLAVE_DEBUG_SERIAL.flush();
     #endif
 
-  } // if frame Rx timeout
+  } // if frame receive timeout
+
+
+  // detected LIN BREAK (=0x00 with framing error or inter-frame pause detected)
+  // Note: received BREAK byte is consumed by child class to support also sync on SYNC byte. 
+  if (this->_getBreakFlag() == true)
+  {
+    // clear BREAK flag again
+    this->_resetBreakFlag();
+    
+    // start frame reception. Note: 0x00 already checked by derived class
+    this->state = LIN_Slave_Base::STATE_WAIT_FOR_SYNC;
+
+    // optionally disable RS485 transmitter
+    _disableTransmitter();
+
+  } // if BREAK detected
 
 
   // A byte was received -> handle it
@@ -332,25 +348,7 @@ void LIN_Slave_Base::handler()
       LIN_SLAVE_DEBUG_SERIAL.flush();
     #endif
 
-
-    // detected LIN BREAK (=0x00 with framing error or inter-frame pause detected)
-    if (this->_getBreakFlag() == true)
-    {
-      // clear BREAK flag again
-      this->_resetBreakFlag();
-      
-      // start frame reception. Note: 0x00 already checked by derived class
-      this->state = LIN_Slave_Base::STATE_WAIT_FOR_SYNC;
-
-      // optionally disable RS485 transmitter
-      _disableTransmitter();
-
-      return;
-
-    } // if BREAK detected
-
-
-    // no BREAK detected -> handle byte
+    // handle byte
     switch (this->state)
     {
       // LIN interface disabled, do nothing

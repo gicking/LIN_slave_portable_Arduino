@@ -25,6 +25,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   /**
     \brief      Static callback function for AVR Serial0 error
     \details    Static callback function for AVR Serial0 error
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  byte    received data
     \param[in]  status  UART status byte
   */
@@ -34,8 +35,8 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
     if ((byte ==0x00) && (status & (0x01 << FE0)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[0] = true;
 
-    // return true -> byte is stored in Serial0 buffer
-    return true;
+    // return false -> byte is not stored in Serial0 buffer
+    return false;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0()
 #endif
@@ -46,6 +47,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   /**
     \brief      Static callback function for AVR Serial1 error
     \details    Static callback function for AVR Serial1 error
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  byte    received data
     \param[in]  status  UART status byte
   */
@@ -55,8 +57,8 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
     if ((byte ==0x00) && (status & (0x01<< FE1)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[1] = true;
 
-    // return true -> byte is stored in Serial1 buffer
-    return true;
+    // return false -> byte is not stored in Serial0 buffer
+    return false;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1()
 #endif
@@ -67,6 +69,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   /**
     \brief      Static callback function for AVR Serial2 error
     \details    Static callback function for AVR Serial2 error
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  byte    received data
     \param[in]  status  UART status byte
   */
@@ -76,8 +79,8 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
     if ((byte ==0x00) && (status & (0x01<< FE2)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[2] = true;
 
-    // return true -> byte is stored in Serial2 buffer
-    return true;
+    // return false -> byte is not stored in Serial0 buffer
+    return false;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2()
 #endif
@@ -88,6 +91,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   /**
     \brief      Static callback function for AVR Serial3 error
     \details    Static callback function for AVR Serial3 error
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  byte    received data
     \param[in]  status  UART status byte
   */
@@ -97,8 +101,8 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
     if ((byte ==0x00) && (status & (0x01<< FE3)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[3] = true;
 
-    // return true -> byte is stored in Serial3 buffer
-    return true;
+    // return false -> byte is not stored in Serial0 buffer
+    return false;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3()
 #endif

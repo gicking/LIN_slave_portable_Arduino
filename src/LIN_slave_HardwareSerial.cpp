@@ -135,6 +135,7 @@ void LIN_Slave_HardwareSerial::end()
   \brief      Handle LIN protocol and call user-defined frame handlers
   \details    Handle LIN protocol and call user-defined frame handlers, both for master request and slave response frames. 
               BREAK detection is based on inter-frame timing only (Arduino doesn't store framing error) -> less reliable.
+              Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
 */
 void LIN_Slave_HardwareSerial::handler()
 {
@@ -146,7 +147,10 @@ void LIN_Slave_HardwareSerial::handler()
   {
     // if 0x00 received and long time since last byte, start new frame  
     if ((pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
+    {
       this->flagBreak = true;
+      pSerial->read();
+    }
 
     // store time of this receive
     usLastByte = micros();

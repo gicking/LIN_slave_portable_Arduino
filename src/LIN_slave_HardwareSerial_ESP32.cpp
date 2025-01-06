@@ -26,13 +26,17 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
   /**
     \brief      Static callback function for ESP32 Serial0 error
     \details    Static callback function for ESP32 Serial0 error. For a BRK this is called after onReceiveFunction() -> use polling in loop()
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  Err   type of UART error
   */
   void LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0(hardwareSerial_error_t Err)
   {
     // on BREAK (=0x00 with framing error) set class variable
     if ((Serial.peek() == 0x00) && (Err == UART_BREAK_ERROR))
+    {
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[0] = true;
+      Serial.read();
+    }
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0()
 #endif
@@ -43,13 +47,17 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
   /**
     \brief      Static callback function for ESP32 Serial1 error
     \details    Static callback function for ESP32 Serial1 error. For a BRK this is called after onReceiveFunction() -> use polling in loop()
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  Err   type of UART error
   */
   void LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1(hardwareSerial_error_t Err)
   {
     // on BREAK (=0x00 with framing error) set class variable
     if ((Serial1.peek() == 0x00) && (Err == UART_BREAK_ERROR))
+    {
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[1] = true;
+      Serial1.read();
+    }
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1()
 #endif
@@ -60,13 +68,17 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
   /**
     \brief      Static callback function for ESP32 Serial2 error
     \details    Static callback function for ESP32 Serial2 error. For a BRK this is called after onReceiveFunction() -> use polling in loop()
+                Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
     \param[in]  Err   type of UART error
   */
   void LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2(hardwareSerial_error_t Err)
   {
     // on BREAK (=0x00 with framing error) set class variable
     if ((Serial2.peek() == 0x00) && (Err == UART_BREAK_ERROR))
+    {
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[2] = true;
+      Serial2.read();
+    }
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2()
 #endif
