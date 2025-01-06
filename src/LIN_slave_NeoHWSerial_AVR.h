@@ -122,7 +122,7 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
 
     /// @brief Class constructor
     LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2,
-      const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L);
+      const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);

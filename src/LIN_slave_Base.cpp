@@ -118,8 +118,10 @@ void LIN_Slave_Base::_resetBreakFlag()
   \param[in]  Version     LIN protocol version (default = v2)
   \param[in]  NameLIN     LIN node name (default = "Slave")
   \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx)
+LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, 
+  const int8_t PinTxEN)
 {  
   // For optional debugging
   #if defined(LIN_SLAVE_DEBUG_SERIAL)
@@ -131,6 +133,7 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
   this->version = Version;                                    // LIN protocol version (required for checksum)
   memcpy(this->nameLIN, NameLIN, LIN_SLAVE_BUFLEN_NAME);      // node name e.g. for debug
   this->timeoutRx = TimeoutRx;                                // timeout [us] for bytes in frame
+  this->pinTxEN = PinTxEN;                                    // optional Tx enable pin for RS485
 
   // initialize slave node properties
   this->state     = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;     // status of LIN state machine
@@ -149,6 +152,13 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
     this->bufData[i] = 0x00;                                  // init data bytes (max 8B) + chk
   this->idxData    = 0;                                       // current index in bufData
   this->timeLastRx = 0;                                       // time [ms] of last received byte in frame
+
+  // initialize TxEN pin low (=transmitter off)
+  if (this->pinTxEN >= 0)
+  {
+    digitalWrite(this->pinTxEN, LOW);
+    pinMode(this->pinTxEN, OUTPUT);
+  }
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
@@ -175,6 +185,9 @@ void LIN_Slave_Base::begin(uint16_t Baudrate)
   this->error = LIN_Slave_Base::NO_ERROR;                     // last LIN error. Is latched
   this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;         // status of LIN state machine
 
+  // optionally disable RS485 transmitter
+  _disableTransmitter();
+
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
@@ -195,6 +208,9 @@ void LIN_Slave_Base::end()
   // set slave node properties
   this->error = LIN_Slave_Base::NO_ERROR;                     // last LIN error. Is latched
   this->state = LIN_Slave_Base::STATE_OFF;                    // status of LIN state machine
+
+  // optionally disable RS485 transmitter
+  _disableTransmitter();
 
   // optional debug output
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
@@ -283,6 +299,9 @@ void LIN_Slave_Base::handler()
     while (this->_serialAvailable())
       this->_serialRead();
 
+    // optionally disable RS485 transmitter
+    _disableTransmitter();
+
     // optional debug output
     #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
       LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
@@ -322,6 +341,10 @@ void LIN_Slave_Base::handler()
       
       // start frame reception. Note: 0x00 already checked by derived class
       this->state = LIN_Slave_Base::STATE_WAIT_FOR_SYNC;
+
+      // optionally disable RS485 transmitter
+      _disableTransmitter();
+
       return;
 
     } // if BREAK detected
@@ -359,6 +382,9 @@ void LIN_Slave_Base::handler()
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_SYNC);
           this->state = LIN_Slave_Base::STATE_DONE;
 
+          // optionally disable RS485 transmitter
+          _disableTransmitter();
+
           // optional debug output
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
@@ -385,6 +411,9 @@ void LIN_Slave_Base::handler()
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_PID);
           this->state = LIN_Slave_Base::STATE_DONE;
 
+          // optionally disable RS485 transmitter
+          _disableTransmitter();
+
           // optional debug output
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
@@ -409,6 +438,9 @@ void LIN_Slave_Base::handler()
 
           // attach frame checksum
           bufData[numData] = this->_calculateChecksum(this->numData, this->bufData);
+
+          // optionally enable RS485 transmitter
+          _enableTransmitter();
 
           // send slave response (data+chk)
           this->_serialWrite(bufData, numData+1);
@@ -480,6 +512,9 @@ void LIN_Slave_Base::handler()
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_ECHO);
           this->state = LIN_Slave_Base::STATE_DONE;
 
+          // optionally disable RS485 transmitter
+          _disableTransmitter();
+
           // optional debug output
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
@@ -494,7 +529,12 @@ void LIN_Slave_Base::handler()
 
         // if data is finished, finish frame
         else if (this->idxData >= this->numData+1)
+        {
           this->state = LIN_Slave_Base::STATE_DONE;
+
+          // optionally disable RS485 transmitter
+          _disableTransmitter();
+        }
 
         break; // STATE_RECEIVING_ECHO
 
@@ -542,6 +582,9 @@ void LIN_Slave_Base::handler()
         // frame is finished
         this->state = LIN_Slave_Base::STATE_DONE;
 
+        // optionally disable RS485 transmitter
+        _disableTransmitter();
+
         break; // STATE_WAIT_FOR_CHK
 
 
@@ -551,6 +594,9 @@ void LIN_Slave_Base::handler()
         // set error and abort frame
         this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::LIN_Slave_Base::ERROR_STATE);
         this->state = LIN_Slave_Base::STATE_DONE;
+
+        // optionally disable RS485 transmitter
+        _disableTransmitter();
 
         // optional debug output
         #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)

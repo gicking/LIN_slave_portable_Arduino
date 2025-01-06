@@ -76,7 +76,7 @@ class LIN_Slave_HardwareSerial : public LIN_Slave_Base
 
     /// @brief Class constructor
     LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, 
-      const char NameLIN[] = "Slave", uint16_t MinFramePause=1000L, uint32_t TimeoutRx = 1500L);
+      const char NameLIN[] = "Slave", uint16_t MinFramePause=1000L, uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);

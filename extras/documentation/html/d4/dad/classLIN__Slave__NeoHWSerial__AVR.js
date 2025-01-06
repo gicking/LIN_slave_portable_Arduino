@@ -1,6 +1,6 @@
 var classLIN__Slave__NeoHWSerial__AVR =
 [
-    [ "LIN_Slave_NeoHWSerial_AVR", "d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a6d95d25ca1cb79175b1f561fabfa0009", null ],
+    [ "LIN_Slave_NeoHWSerial_AVR", "d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a624df87aa6ee2e56ea8a61dd800123fe", null ],
     [ "_getBreakFlag", "d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a69d75010ab37f455b1e5ca8b5f91870f", null ],
     [ "_resetBreakFlag", "d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a70247a527f08213962eff81d80f17fbd", null ],
     [ "_serialAvailable", "d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a8ce3c29ca5173a4381dfc5ebe7b4f686", null ],

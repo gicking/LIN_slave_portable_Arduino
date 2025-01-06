@@ -96,6 +96,8 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <h3><a id="index__5F" name="index__5F"></a>- _ -</h3><ul>
 <li>_calculateChecksum()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#a9d9d9ba724af72dcf366b494a8b3d868">LIN_Slave_Base</a></li>
 <li>_calculatePID()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0">LIN_Slave_Base</a></li>
+<li>_disableTransmitter()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04">LIN_Slave_Base</a></li>
+<li>_enableTransmitter()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#ada94260537f5248e8ebca094bedc8198">LIN_Slave_Base</a></li>
 <li>_getBreakFlag()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#a719d9b03156111e4c38e894c203af350">LIN_Slave_Base</a>, <a class="el" href="db/dae/classLIN__Slave__HardwareSerial.html#ab109092ba4a5166e62b25862e0413359">LIN_Slave_HardwareSerial</a>, <a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#ad1c370e96f830289a4e4fb2c3f11bdf1">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a69d75010ab37f455b1e5ca8b5f91870f">LIN_Slave_NeoHWSerial_AVR</a>, <a class="el" href="dc/d16/classLIN__Slave__SoftwareSerial.html#ae55478c283433ba9c622cfa15835308b">LIN_Slave_SoftwareSerial</a></li>
 <li>_resetBreakFlag()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d">LIN_Slave_Base</a>, <a class="el" href="db/dae/classLIN__Slave__HardwareSerial.html#a81fc72a2ce2e3427c73342d211368957">LIN_Slave_HardwareSerial</a>, <a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#af69728d4daccce67e2d315f18261c825">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a70247a527f08213962eff81d80f17fbd">LIN_Slave_NeoHWSerial_AVR</a>, <a class="el" href="dc/d16/classLIN__Slave__SoftwareSerial.html#aa8930ff60f123e8bf7ad0e356f765403">LIN_Slave_SoftwareSerial</a></li>
 <li>_serialAvailable()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#a8eb91414cbd13e45371407b9cfec6fc1">LIN_Slave_Base</a>, <a class="el" href="db/dae/classLIN__Slave__HardwareSerial.html#a20ee58273ddf452a8ad6105ee105644e">LIN_Slave_HardwareSerial</a>, <a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a201379aaa165967259e9cc48b98b7055">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a8ce3c29ca5173a4381dfc5ebe7b4f686">LIN_Slave_NeoHWSerial_AVR</a>, <a class="el" href="dc/d16/classLIN__Slave__SoftwareSerial.html#a2c55bed3411a8adb706297742bace2de">LIN_Slave_SoftwareSerial</a></li>
@@ -159,12 +161,12 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 
 
 <h3><a id="index_l" name="index_l"></a>- l -</h3><ul>
-<li>LIN_Slave_Base()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aa49f708f39a2cdb53bbf37446a61457c">LIN_Slave_Base</a></li>
-<li>LIN_Slave_HardwareSerial()&#160;:&#160;<a class="el" href="db/dae/classLIN__Slave__HardwareSerial.html#ae77259c2f6909715066029d862304a42">LIN_Slave_HardwareSerial</a></li>
-<li>LIN_Slave_HardwareSerial_ESP32()&#160;:&#160;<a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a9b3047541179a56f6051164e39a20520">LIN_Slave_HardwareSerial_ESP32</a></li>
-<li>LIN_Slave_HardwareSerial_ESP8266()&#160;:&#160;<a class="el" href="db/dcb/classLIN__Slave__HardwareSerial__ESP8266.html#a6cfa8b3c5a3d491907f0a279b6c7cbd1">LIN_Slave_HardwareSerial_ESP8266</a></li>
-<li>LIN_Slave_NeoHWSerial_AVR()&#160;:&#160;<a class="el" href="d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a6d95d25ca1cb79175b1f561fabfa0009">LIN_Slave_NeoHWSerial_AVR</a></li>
-<li>LIN_Slave_SoftwareSerial()&#160;:&#160;<a class="el" href="dc/d16/classLIN__Slave__SoftwareSerial.html#a814e6b65b46f26297ac28a7e9d4d1d2d">LIN_Slave_SoftwareSerial</a></li>
+<li>LIN_Slave_Base()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aba97a58894c689735213d7999875cf62">LIN_Slave_Base</a></li>
+<li>LIN_Slave_HardwareSerial()&#160;:&#160;<a class="el" href="db/dae/classLIN__Slave__HardwareSerial.html#a9ba075095712e3870845ba7bb24d6173">LIN_Slave_HardwareSerial</a></li>
+<li>LIN_Slave_HardwareSerial_ESP32()&#160;:&#160;<a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a3744a0cb280c1adbd34146e6c350a159">LIN_Slave_HardwareSerial_ESP32</a></li>
+<li>LIN_Slave_HardwareSerial_ESP8266()&#160;:&#160;<a class="el" href="db/dcb/classLIN__Slave__HardwareSerial__ESP8266.html#a95128a44c9cd262101390adb0fd2c457">LIN_Slave_HardwareSerial_ESP8266</a></li>
+<li>LIN_Slave_NeoHWSerial_AVR()&#160;:&#160;<a class="el" href="d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a624df87aa6ee2e56ea8a61dd800123fe">LIN_Slave_NeoHWSerial_AVR</a></li>
+<li>LIN_Slave_SoftwareSerial()&#160;:&#160;<a class="el" href="dc/d16/classLIN__Slave__SoftwareSerial.html#a176a58511ef0c3d375dbe594c925c05b">LIN_Slave_SoftwareSerial</a></li>
 <li>LIN_V1&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aaf5d75f5cc443247e0850c7ed2e9e142a6ad58eace8908a1321d708181568daf6">LIN_Slave_Base</a></li>
 <li>LIN_V2&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aaf5d75f5cc443247e0850c7ed2e9e142a8898d5e1c3bbd2af237fb4d253f2a447">LIN_Slave_Base</a></li>
 <li>LinMessageCallback&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#aa9e432fa43b6ad5246822cb8121b9084">LIN_Slave_Base</a></li>
@@ -188,6 +190,7 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 <li>pid&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#ac6efdc8cf01f1db1825c71ff6dc8ff24">LIN_Slave_Base</a></li>
 <li>pinRx&#160;:&#160;<a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#ac447f62cc214ab59045419d420ce2718">LIN_Slave_HardwareSerial_ESP32</a></li>
 <li>pinTx&#160;:&#160;<a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a0060768233c07912694962cd0e2b61f5">LIN_Slave_HardwareSerial_ESP32</a></li>
+<li>pinTxEN&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#a3e86554e0c9fa166150f098e40ce1e99">LIN_Slave_Base</a></li>
 <li>pSerial&#160;:&#160;<a class="el" href="db/dae/classLIN__Slave__HardwareSerial.html#a33c9fefa8ebef3a47d1654cc282f3804">LIN_Slave_HardwareSerial</a>, <a class="el" href="d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a79022c2543b9e8727dede0b8baadcf30">LIN_Slave_HardwareSerial_ESP32</a></li>
 </ul>
 
@@ -231,7 +234,6 @@ $(document).ready(function(){initNavTree('functions.html',''); initResizable(); 
 
 <h3><a id="index__7E" name="index__7E"></a>- ~ -</h3><ul>
 <li>~LIN_Slave_Base()&#160;:&#160;<a class="el" href="d8/d65/classLIN__Slave__Base.html#a474ca7899d1268e8db240fcbd009fa67">LIN_Slave_Base</a></li>
-<li>~LIN_Slave_SoftwareSerial()&#160;:&#160;<a class="el" href="dc/d16/classLIN__Slave__SoftwareSerial.html#ad93b8b571c7b22637f928b52f22822f0">LIN_Slave_SoftwareSerial</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

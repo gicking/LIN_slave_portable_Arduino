@@ -38,6 +38,8 @@ jobs:
           sketch-paths: |
             - examples/LIN_slave_NeoHWSerial_AVR
             - examples/LIN_slave_SWSerial
+            - examples/LIN_slave_RS485_NeoHWSerial_AVR
+            - examples/LIN_slave_RS485_SWSerial
           cli-compile-flags: |
             - --warnings="all"
       - uses: actions/upload-artifact@v4.4.3          # upload test reports
@@ -70,6 +72,7 @@ jobs:
             - source-path: ./
           sketch-paths: |
             - examples/LIN_slave_HWSerial
+            - examples/LIN_slave_RS485_HWSerial
           cli-compile-flags: |
             - --warnings="all"
       - uses: actions/upload-artifact@v4.4.3          # upload test reports
@@ -133,6 +136,8 @@ jobs:
           sketch-paths: |
             - examples/LIN_slave_HWSerial_ESP8266
             - examples/LIN_slave_SWSerial
+            - examples/LIN_slave_RS485_HWSerial_ESP8266
+            - examples/LIN_slave_RS485_SWSerial
             
       # upload test reports
       - uses: actions/upload-artifact@v4.4.3
@@ -197,6 +202,8 @@ jobs:
           sketch-paths: |
             - examples/LIN_slave_HWSerial_ESP32
             - examples/LIN_slave_SWSerial
+            - examples/LIN_slave_RS485_HWSerial_ESP32
+            - examples/LIN_slave_RS485_SWSerial
             
       # upload test reports
       - uses: actions/upload-artifact@v4.4.3
@@ -263,6 +270,7 @@ jobs:
             - source-url: https://github.com/plerup/espsoftwareserial.git
           sketch-paths: |
             - examples/LIN_slave_SWSerial
+            - examples/LIN_slave_RS485_SWSerial
             
       # upload test reports
       - uses: actions/upload-artifact@v4.4.3

@@ -110,6 +110,7 @@ class LIN_Slave_Base
   protected:
 
     // node properties
+    int8_t                    pinTxEN;          //!< optional Tx direction pin, e.g. for LIN via RS485 
     uint16_t                  baudrate;         //!< communication baudrate [Baud]
     LIN_Slave_Base::version_t version;          //!< LIN protocol version
     LIN_Slave_Base::state_t   state;            //!< status of LIN state machine
@@ -164,13 +165,21 @@ class LIN_Slave_Base
 
     /// @brief flush Tx buffer. Here dummy
     virtual inline void _serialFlush(void) { }
+    
+
+    /// @brief Enable RS485 transmitter (DE=high)
+    inline void _enableTransmitter(void) { if (this->pinTxEN >= 0) digitalWrite(this->pinTxEN, HIGH); }
+    
+    /// @brief Disable RS485 transmitter (DE=low)
+    inline void _disableTransmitter(void) { if (this->pinTxEN >= 0) digitalWrite(this->pinTxEN, LOW); }
 
 
   // PUBLIC METHODS
   public:
   
     /// @brief LIN slave node constructor
-    LIN_Slave_Base(LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L);
+    LIN_Slave_Base(LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", 
+      uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
     
     /// @brief LIN slave node destructor, here dummy. Any class with virtual functions should have virtual destructor 
     virtual ~LIN_Slave_Base(void) {};

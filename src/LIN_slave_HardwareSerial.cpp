@@ -57,9 +57,11 @@ void LIN_Slave_HardwareSerial::_resetBreakFlag()
   \param[in]  NameLIN         LIN node name (default = "Slave")
   \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
   \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
 LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx) : LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx)
+  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx, const int8_t PinTxEN) : 
+  LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  
   // store parameters in class variables
   this->pSerial       = &Interface;

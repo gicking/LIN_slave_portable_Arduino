@@ -1,6 +1,6 @@
 var classLIN__Slave__HardwareSerial__ESP32 =
 [
-    [ "LIN_Slave_HardwareSerial_ESP32", "d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a9b3047541179a56f6051164e39a20520", null ],
+    [ "LIN_Slave_HardwareSerial_ESP32", "d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a3744a0cb280c1adbd34146e6c350a159", null ],
     [ "_getBreakFlag", "d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#ad1c370e96f830289a4e4fb2c3f11bdf1", null ],
     [ "_resetBreakFlag", "d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#af69728d4daccce67e2d315f18261c825", null ],
     [ "_serialAvailable", "d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a201379aaa165967259e9cc48b98b7055", null ],
