@@ -7,12 +7,11 @@
   \author   Georg Icking-Konert
 */
 
-// for AVR platform use NeoHWSerial or enable this file and disable LIN_slave_NeoHWSerial_AVR.*
-#if !defined(ARDUINO_ARCH_AVR)
-//if (1)
-
 // include files
 #include <LIN_slave_HardwareSerial.h>
+
+// optional file, see LIN_slave_HardwareSerial.h
+#if !defined(_LIN_SLAVE_HW_SERIAL_H_)
 
 
 /**************************

@@ -7,12 +7,12 @@
   \author   Georg Icking-Konert
 */
 
-// optionally disable this file and enable LIN_slave_HardwareSerial.*
-#if defined(ARDUINO_ARCH_AVR) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)
-//#if (0)
-
 // include files
 #include <LIN_slave_NeoHWSerial_AVR.h>
+
+// optional file, see LIN_slave_NeoHWSerial_AVR.h
+#if defined(_LIN_SLAVE_NEOHWSERIAL_AVR_H_)
+
 
 // definition of static class variables (see https://stackoverflow.com/a/51091696)
 bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
