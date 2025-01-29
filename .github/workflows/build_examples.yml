@@ -64,6 +64,7 @@ jobs:
           
           # required for ESP32 & ESP8266
           arduino-cli lib install "espsoftwareserial"
+          arduino-cli lib install "neohwserial"
 
           # copy repo to library folder 
           mkdir -p ~/Arduino/libraries/MyLibrary
