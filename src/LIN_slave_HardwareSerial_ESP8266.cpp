@@ -34,15 +34,10 @@ LIN_Slave_HardwareSerial_ESP8266::LIN_Slave_HardwareSerial_ESP8266(bool SwapPins
   uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_HardwareSerial(Serial, Version, NameLIN, TimeoutRx, PinTxEN)
 {
+  // Debug serial initialized in begin() -> no debug output here
+
   // store parameters in class variables
   this->swapPins   = SwapPins;            // use alternate pins Rx=D7 / Tx=D8 for Serial0
-
-  // optional debug output
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP8266()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
-  #endif
 
 } // LIN_Slave_HardwareSerial_ESP8266::LIN_Slave_HardwareSerial_ESP8266()
 
@@ -66,7 +61,6 @@ void LIN_Slave_HardwareSerial_ESP8266::begin(uint16_t Baudrate)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP8266::begin()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_HardwareSerial_ESP8266::begin()

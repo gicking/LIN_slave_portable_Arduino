@@ -55,27 +55,23 @@ void LIN_Slave_SoftwareSerial::_resetBreakFlag()
   \param[in]  PinRx         GPIO used for reception
   \param[in]  PinTx         GPIO used for transmission
   \param[in]  InverseLogic  use inverse logic (default = false)
-  \param[in]  Version     LIN protocol version (default = v2)
-  \param[in]  NameLIN     LIN node name (default = "Slave")
-  \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
-  \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
-  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
+  \param[in]  MinFramePause min. inter-frame pause [us] to detect new frame (default = 1000)
+  \param[in]  Version       LIN protocol version (default = v2)
+  \param[in]  NameLIN       LIN node name (default = "Slave")
+  \param[in]  TimeoutRx     timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN       optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx, const int8_t PinTxEN) : 
+LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, uint16_t MinFramePause, 
+  LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN):
   LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN), SWSerial(PinRx, PinTx, InverseLogic)
 {  
+  // Debug serial initialized in begin() -> no debug output here
+
   // store parameters in class variables
   this->pinRx = PinRx;
   this->pinTx = PinTx;
   this->inverseLogic = InverseLogic;
   this->minFramePause = MinFramePause;
-  
-  // optional debug output 
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial()");
-  #endif
 
 } // LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial()
 
@@ -102,7 +98,6 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::begin()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_SoftwareSerial::begin()
@@ -125,7 +120,6 @@ void LIN_Slave_SoftwareSerial::end()
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::end()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_SoftwareSerial::end()
@@ -136,6 +130,9 @@ void LIN_Slave_SoftwareSerial::end()
   \brief      Handle LIN protocol and call user-defined frame handlers
   \details    Handle LIN protocol and call user-defined frame handlers, both for master request and slave response frames. 
               BREAK detection is based on inter-frame timing only (Arduino doesn't store framing error) -> less reliable.
+              Notes: 
+                - received BREAK byte is consumed here to support also sync on SYNC byte
+                - ESP32 & ESP8266 SoftwareSerial ignores bytes w/o stop bity -> use SYNC(=0x55) for frame synchronization
 */
 void LIN_Slave_SoftwareSerial::handler()
 {
@@ -145,9 +142,19 @@ void LIN_Slave_SoftwareSerial::handler()
   // byte received -> check it
   if (this->_serialAvailable())
   {
-    // if 0x00 received and long time since last byte, start new frame  
-    if ((this->_serialPeek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
-      this->flagBreak = true;
+    // ESP32 & ESP8266: if 0x55 received and long time since last byte, start new frame  
+    #if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266)
+      if ((this->_serialPeek() == 0x55) && ((micros() - usLastByte) > this->minFramePause))
+        this->flagBreak = true;
+
+    // other architectures: if 0x00 received and long time since last byte, start new frame and remove 0x00 from queue
+    #else
+      if ((this->_serialPeek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
+      {
+        this->flagBreak = true;
+        this->_serialRead();
+      }
+    #endif
 
     // store time of this receive
     usLastByte = micros();
@@ -160,6 +167,9 @@ void LIN_Slave_SoftwareSerial::handler()
     {
       this->_serialFlush();
       this->state = LIN_Slave_Base::STATE_DONE;
+
+      // optionally disable RS485 transmitter
+      _disableTransmitter();
     }
 
   } // if byte received

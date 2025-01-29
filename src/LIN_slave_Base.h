@@ -21,17 +21,30 @@
 // misc parameters
 #define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
 
-// optional LIN debug output. For AVR must use NeoSerialx to avoid linker conflict
-//#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
-//#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output (required for AVR). Comment out for none
-#define LIN_SLAVE_DEBUG_LEVEL   3             //!< debug verbosity 0..3 (1=errors only, 3=verbose)
-
+// optional LIN debug output @ 115.2kBaud. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
+#if !defined(LIN_SLAVE_DEBUG_SERIAL)
+  //#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
+  //#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output (required for AVR). Comment out for none
+#endif
+#if !defined(LIN_SLAVE_DEBUG_LEVEL)
+  #define LIN_SLAVE_DEBUG_LEVEL   2             //!< debug verbosity 0..3 (1=errors only, 3=chatty)
+#endif
 
 /*-----------------------------------------------------------------------------
   INCLUDE FILES
 -----------------------------------------------------------------------------*/
 
+// generic Arduino functions
 #include <Arduino.h>
+
+// required for debug on AVR via NeoSerial
+#if defined (LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_SERIAL == NeoSerial)
+  #if defined(ARDUINO_ARCH_AVR)
+    #include <NeoHWSerial.h>
+  #else
+    #error NeoSerial only available for AVR
+  #endif
+#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -56,7 +69,7 @@ class LIN_Slave_Base
     } version_t;
 
 
-    /// LIN frame type (use high nibble for type, low nibble for number of data bytes)
+    /// LIN frame type. Use high nibble for type, low nibble for number of data bytes -> minimize callback[] size
     typedef enum : uint8_t
     {
       MASTER_REQUEST        = 0x10,             //!< LIN master request frame
@@ -143,7 +156,7 @@ class LIN_Slave_Base
   
     /// @brief Calculate LIN frame checksum
     uint8_t _calculateChecksum(uint8_t NumData, uint8_t Data[]);
-    
+
     /// @brief Get break detection flag. Is hardware dependent
     virtual bool _getBreakFlag(void);
 
@@ -168,10 +181,32 @@ class LIN_Slave_Base
     
 
     /// @brief Enable RS485 transmitter (DE=high)
-    inline void _enableTransmitter(void) { if (this->pinTxEN >= 0) digitalWrite(this->pinTxEN, HIGH); }
+    inline void _enableTransmitter(void)
+    { 
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::_enableTransmitter()");
+      #endif
+
+      // enable tranmitter
+      if (this->pinTxEN >= 0)
+        digitalWrite(this->pinTxEN, HIGH);
+    
+    } // _enableTransmitter()
     
     /// @brief Disable RS485 transmitter (DE=low)
-    inline void _disableTransmitter(void) { if (this->pinTxEN >= 0) digitalWrite(this->pinTxEN, LOW); }
+    inline void _disableTransmitter(void)
+    { 
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::_disableTransmitter()");
+      #endif
+
+      // disable tranmitter
+      if (this->pinTxEN >= 0)
+        digitalWrite(this->pinTxEN, LOW);
+
+    } // _disableTransmitter()
 
 
   // PUBLIC METHODS
@@ -180,7 +215,7 @@ class LIN_Slave_Base
     /// @brief LIN slave node constructor
     LIN_Slave_Base(LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", 
       uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
-    
+
     /// @brief LIN slave node destructor, here dummy. Any class with virtual functions should have virtual destructor 
     virtual ~LIN_Slave_Base(void) {};
 
@@ -193,29 +228,75 @@ class LIN_Slave_Base
     
     
     /// @brief Reset LIN state machine
-    inline void resetStateMachine(void) { this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK; }
+    inline void resetStateMachine(void)
+    {
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::resetStateMachine()");
+      #endif
+
+      // reset state      
+      this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;
+      
+    } // resetStateMachine()
 
     /// @brief Getter for LIN state machine state
-    inline LIN_Slave_Base::state_t getState(void) { return this->state; }
+    inline LIN_Slave_Base::state_t getState(void)
+    {
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::getState()");
+      #endif
+
+      // return state
+      return this->state;
+
+    } // getState()
 
 
     /// @brief Clear error of LIN state machine
-    inline void resetError(void) { this->error = LIN_Slave_Base::NO_ERROR; }
+    inline void resetError(void) 
+    {
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::resetError()");
+      #endif
+
+      // reset error
+      this->error = LIN_Slave_Base::NO_ERROR;
+
+    } // resetError()
     
     /// @brief Getter for LIN state machine error
-    inline LIN_Slave_Base::error_t getError(void) { return this->error; }
-    
+    inline LIN_Slave_Base::error_t getError(void)
+    {
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::getError()");
+      #endif
+
+      // return error
+      return this->error;
+
+    } // getError()
+
     
     /// @brief Getter for LIN frame
     inline void getFrame(LIN_Slave_Base::frame_t &Type, uint8_t &Id, uint8_t &NumData, uint8_t Data[])
     { 
+      // print debug message (debug level 3)
+      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::getFrame()");
+      #endif
+
       noInterrupts();                         // for data consistency temporarily disable ISRs
       Type    = this->type;                   // frame type 
       Id      = this->id;                     // frame ID
       NumData = this->numData;                // number of data bytes (excl. BREAK, SYNC, ID, CHK)
       memcpy(Data, this->bufData, NumData);   // copy data bytes w/o checksum
       interrupts();                           // re-enable ISRs
-    }
+
+    } // getFrame()
 
 
     /// @brief Attach user callback function for master request frame

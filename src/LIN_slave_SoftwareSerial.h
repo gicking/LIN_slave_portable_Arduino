@@ -78,8 +78,8 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
   public:
 
     /// @brief Class constructor
-    LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic = false, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, 
-      const char NameLIN[] = "Slave", uint16_t MinFramePause=1000L, uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
+    LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic = false, uint16_t MinFramePause=1000L, 
+      LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
 
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);

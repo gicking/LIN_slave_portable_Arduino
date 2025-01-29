@@ -29,26 +29,6 @@
 
 
 /*-----------------------------------------------------------------------------
-  GLOBAL MACROS
------------------------------------------------------------------------------*/
-
-/// determine number of Serial interfaces
-#if !defined(LIN_SLAVE_AVR_MAX_SERIAL)
-  #if defined(HAVE_HWSERIAL3)
-    #define LIN_SLAVE_AVR_MAX_SERIAL    4  
-  #elif defined(HAVE_HWSERIAL2)
-    #define LIN_SLAVE_AVR_MAX_SERIAL    3
-  #elif defined(HAVE_HWSERIAL1)
-    #define LIN_SLAVE_AVR_MAX_SERIAL    2
-  #elif defined(HAVE_HWSERIAL0)
-    #define LIN_SLAVE_AVR_MAX_SERIAL    1
-  #else
-    #error no HardwareSerial available for this board
-  #endif
-#endif
-
-
-/*-----------------------------------------------------------------------------
   GLOBAL CLASS
 -----------------------------------------------------------------------------*/
 
@@ -64,7 +44,17 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
 
     NeoHWSerial           *pSerial;                             //!< pointer to serial interface used for LIN
     uint8_t               idxSerial;                            //!< index to flagBreak[] of this instance
-    static bool           flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];  //!< break flags for Serial0..N
+    #if defined(HAVE_HWSERIAL3)
+      static bool           flagBreak[4];                       //!< break flags for Serial0..3
+    #elif defined(HAVE_HWSERIAL2)
+      static bool           flagBreak[3];                       //!< break flags for Serial0..2
+    #elif defined(HAVE_HWSERIAL1)
+      static bool           flagBreak[2];                       //!< break flags for Serial0..1
+    #elif defined(HAVE_HWSERIAL0)
+      static bool           flagBreak[1];                       //!< break flags for Serial0
+    #else
+      #error no HardwareSerial available for this board
+    #endif
 
 
   // PRIVATE METHODS

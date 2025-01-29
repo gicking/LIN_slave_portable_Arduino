@@ -28,7 +28,7 @@ Unsupported (=test failed) boards:
   #define PIN_TXEN      17        // pin to switch RS485 Tx direction (=DE)
   #define PIN_TOGGLE    30        // pin to demonstrate background operation
   #define PIN_ERROR     32        // indicate LIN return status
-  #define SERIAL_DEBUG	NeoSerial // serial I/F for debug output (comment for no output) 
+  //#define SERIAL_DEBUG	NeoSerial // serial I/F for debug output (comment for no output) 
 #elif defined(ARDUINO_ESP8266_WEMOS_D1MINI)
   #define PIN_LIN_TX    D8
   #define PIN_LIN_RX    D7
@@ -55,12 +55,12 @@ Unsupported (=test failed) boards:
 #endif
 
 // setup LIN node
-LIN_Slave_SoftwareSerial  LIN(PIN_LIN_RX, PIN_LIN_TX, false, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
+LIN_Slave_SoftwareSerial  LIN(PIN_LIN_RX, PIN_LIN_TX, false, 1000, LIN_Slave_Base::LIN_V2, "Slave", 1500, PIN_TXEN);
 
 
 // call once
 void setup()
-{
+{  
   // for debug output
   #if defined(SERIAL_DEBUG)
     SERIAL_DEBUG.begin(115200);

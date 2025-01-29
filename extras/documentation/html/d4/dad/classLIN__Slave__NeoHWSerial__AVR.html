@@ -205,7 +205,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a48276bf84de47e284af2160895f0209e inherit pub_types_classLIN__Slave__Base" id="r_a48276bf84de47e284af2160895f0209e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">frame_t</a> : uint8_t { <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eae4de5ef67e779014a097b3cc7b26e150">MASTER_REQUEST</a> = 0x10
 , <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eab959418674f527daa766aa3af6bc9bf2">SLAVE_RESPONSE</a> = 0x20
  }</td></tr>
-<tr class="memdesc:a48276bf84de47e284af2160895f0209e"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN frame type (use high nibble for type, low nibble for number of data bytes)  <a href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">More...</a><br /></td></tr>
+<tr class="memdesc:a48276bf84de47e284af2160895f0209e"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN frame type. Use high nibble for type, low nibble for number of data bytes -&gt; minimize callback[] size.  <a href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">More...</a><br /></td></tr>
 <tr class="separator:a48276bf84de47e284af2160895f0209e inherit pub_types_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7853b93dda3981a700a439da15b4af37 inherit pub_types_classLIN__Slave__Base" id="r_a7853b93dda3981a700a439da15b4af37"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7853b93dda3981a700a439da15b4af37">state_t</a> : uint8_t { <br />
 &#160;&#160;<a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7853b93dda3981a700a439da15b4af37a30c75a90201c19c1ac04e0cd1c6ba240">STATE_OFF</a> = 0x01
@@ -294,7 +294,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>LIN slave node class via AVR NeoHWSerial. </p>
 <p>LIN slave node class via AVR NeoHWSerial. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00060">60</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00040">40</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a624df87aa6ee2e56ea8a61dd800123fe" name="a624df87aa6ee2e56ea8a61dd800123fe"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a624df87aa6ee2e56ea8a61dd800123fe">&#9670;&#160;</a></span>LIN_Slave_NeoHWSerial_AVR()</h2>
@@ -353,7 +353,7 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00153">153</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00156">156</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
 
 </div>
 </div>
@@ -387,7 +387,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a719d9b03156111e4c38e894c203af350">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00118">118</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00121">121</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
 
 </div>
 </div>
@@ -421,7 +421,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00131">131</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00134">134</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -463,7 +463,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a8eb91414cbd13e45371407b9cfec6fc1">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00105">105</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00095">95</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
 
 </div>
 </div>
@@ -495,7 +495,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#ae540477fe80675182197818aa25325a7">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00117">117</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00107">107</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
 
 </div>
 </div>
@@ -527,7 +527,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a523ef437485067a20d63d505dfc4d689">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00108">108</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00098">98</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
 
 </div>
 </div>
@@ -559,7 +559,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00111">111</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00101">101</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
 
 </div>
 </div>
@@ -601,7 +601,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00114">114</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html#l00104">104</a> of file <a class="el" href="../../df/d05/LIN__slave__NeoHWSerial__AVR_8h_source.html">LIN_slave_NeoHWSerial_AVR.h</a>.</p>
 
 </div>
 </div>
@@ -639,7 +639,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a81d059df4642dc37656dcbabf3fb0485">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00176">176</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00174">174</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -650,8 +650,6 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="184,40,218,36,219,41,185,46"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a81d059df4642dc37656dcbabf3fb0485" title="Open serial interface." alt="" coords="237,70,406,95"/>
 <area shape="poly" title=" " alt="" coords="185,63,224,68,223,73,184,68"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04" title="Disable RS485 transmitter (DE=low)" alt="" coords="459,63,645,103"/>
-<area shape="poly" title=" " alt="" coords="406,80,445,80,445,85,406,85"/>
 </map>
 </div>
 
@@ -686,7 +684,7 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aed021e90f2f0c3bf65af6e1f57964d90">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00234">234</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html#l00231">231</a> of file <a class="el" href="../../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp_source.html">LIN_slave_NeoHWSerial_AVR.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

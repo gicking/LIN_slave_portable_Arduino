@@ -173,7 +173,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:a48276bf84de47e284af2160895f0209e inherit pub_types_classLIN__Slave__Base" id="r_a48276bf84de47e284af2160895f0209e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">frame_t</a> : uint8_t { <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eae4de5ef67e779014a097b3cc7b26e150">MASTER_REQUEST</a> = 0x10
 , <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eab959418674f527daa766aa3af6bc9bf2">SLAVE_RESPONSE</a> = 0x20
  }</td></tr>
-<tr class="memdesc:a48276bf84de47e284af2160895f0209e"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN frame type (use high nibble for type, low nibble for number of data bytes)  <a href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">More...</a><br /></td></tr>
+<tr class="memdesc:a48276bf84de47e284af2160895f0209e"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN frame type. Use high nibble for type, low nibble for number of data bytes -&gt; minimize callback[] size.  <a href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">More...</a><br /></td></tr>
 <tr class="separator:a48276bf84de47e284af2160895f0209e inherit pub_types_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7853b93dda3981a700a439da15b4af37 inherit pub_types_classLIN__Slave__Base" id="r_a7853b93dda3981a700a439da15b4af37"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7853b93dda3981a700a439da15b4af37">state_t</a> : uint8_t { <br />
 &#160;&#160;<a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7853b93dda3981a700a439da15b4af37a30c75a90201c19c1ac04e0cd1c6ba240">STATE_OFF</a> = 0x01
@@ -405,7 +405,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Reimplemented from <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a91aaabdd99fbab8618dcf9830595767b">LIN_Slave_HardwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d1/de3/LIN__slave__HardwareSerial__ESP8266_8cpp_source.html#l00056">56</a> of file <a class="el" href="../../d1/de3/LIN__slave__HardwareSerial__ESP8266_8cpp_source.html">LIN_slave_HardwareSerial_ESP8266.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d1/de3/LIN__slave__HardwareSerial__ESP8266_8cpp_source.html#l00051">51</a> of file <a class="el" href="../../d1/de3/LIN__slave__HardwareSerial__ESP8266_8cpp_source.html">LIN_slave_HardwareSerial_ESP8266.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -418,8 +418,6 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="440,40,474,36,475,41,440,46"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a81d059df4642dc37656dcbabf3fb0485" title="Open serial interface." alt="" coords="500,70,669,95"/>
 <area shape="poly" title=" " alt="" coords="440,63,487,69,486,74,440,69"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04" title="Disable RS485 transmitter (DE=low)" alt="" coords="729,63,916,103"/>
-<area shape="poly" title=" " alt="" coords="670,80,716,80,716,85,670,85"/>
 </map>
 </div>
 

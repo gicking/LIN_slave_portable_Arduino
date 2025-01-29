@@ -14,7 +14,7 @@
 #if defined(_LIN_SLAVE_NEOHWSERIAL_AVR_H_)
 
 // definition of static class variables (see https://stackoverflow.com/a/51091696)
-bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
+bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
 
 
 /**************************
@@ -31,7 +31,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable
+    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((byte ==0x00) && (status & (0x01 << FE0)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[0] = true;
 
@@ -53,7 +53,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable
+    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((byte ==0x00) && (status & (0x01<< FE1)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[1] = true;
 
@@ -75,7 +75,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable
+    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((byte ==0x00) && (status & (0x01<< FE2)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[2] = true;
 
@@ -97,7 +97,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[LIN_SLAVE_AVR_MAX_SERIAL];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable
+    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((byte ==0x00) && (status & (0x01<< FE3)))
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[3] = true;
 
@@ -157,15 +157,10 @@ LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, LIN
   const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  
+  // Debug serial initialized in begin() -> no debug output here
+
   // store parameters in class variables
   this->pSerial    = &Interface;          // pointer to used HW serial
-
-  // optional debug output
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_NeoHWSerial_AVR()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
-  #endif
 
 } // LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR()
 
@@ -223,7 +218,6 @@ void LIN_Slave_NeoHWSerial_AVR::begin(uint16_t Baudrate)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_NeoHWSerial_AVR::begin()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_NeoHWSerial_AVR::begin()
@@ -246,7 +240,6 @@ void LIN_Slave_NeoHWSerial_AVR::end()
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_NeoHWSerial_AVR::end()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_NeoHWSerial_AVR::end()

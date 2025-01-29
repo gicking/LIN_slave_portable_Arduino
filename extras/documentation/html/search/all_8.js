@@ -15,7 +15,7 @@ var searchData=
   ['lin_5fslave_5fneohwserial_5favr_12',['lin_slave_neohwserial_avr',['../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html',1,'LIN_Slave_NeoHWSerial_AVR'],['../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a624df87aa6ee2e56ea8a61dd800123fe',1,'LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR()']]],
   ['lin_5fslave_5fneohwserial_5favr_2ecpp_13',['LIN_slave_NeoHWSerial_AVR.cpp',['../d1/d52/LIN__slave__NeoHWSerial__AVR_8cpp.html',1,'']]],
   ['lin_5fslave_5fneohwserial_5favr_2eh_14',['LIN_slave_NeoHWSerial_AVR.h',['../df/d05/LIN__slave__NeoHWSerial__AVR_8h.html',1,'']]],
-  ['lin_5fslave_5fsoftwareserial_15',['lin_slave_softwareserial',['../dc/d16/classLIN__Slave__SoftwareSerial.html',1,'LIN_Slave_SoftwareSerial'],['../dc/d16/classLIN__Slave__SoftwareSerial.html#a176a58511ef0c3d375dbe594c925c05b',1,'LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial()']]],
+  ['lin_5fslave_5fsoftwareserial_15',['lin_slave_softwareserial',['../dc/d16/classLIN__Slave__SoftwareSerial.html',1,'LIN_Slave_SoftwareSerial'],['../dc/d16/classLIN__Slave__SoftwareSerial.html#a412539384a5239e07f85429127994e3a',1,'LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial()']]],
   ['lin_5fslave_5fsoftwareserial_2ecpp_16',['LIN_slave_SoftwareSerial.cpp',['../d7/d93/LIN__slave__SoftwareSerial_8cpp.html',1,'']]],
   ['lin_5fslave_5fsoftwareserial_2eh_17',['LIN_slave_SoftwareSerial.h',['../d5/dd4/LIN__slave__SoftwareSerial_8h.html',1,'']]],
   ['lin_5fv1_18',['LIN_V1',['../d8/d65/classLIN__Slave__Base.html#aaf5d75f5cc443247e0850c7ed2e9e142a6ad58eace8908a1321d708181568daf6',1,'LIN_Slave_Base']]],

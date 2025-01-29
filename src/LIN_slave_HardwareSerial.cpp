@@ -63,16 +63,11 @@ LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LI
   const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  
+  // Debug serial initialized in begin() -> no debug output here
+
   // store parameters in class variables
   this->pSerial       = &Interface;
   this->minFramePause = MinFramePause;
-
-  // optional debug output
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
-  #endif
   
   // must not open connection here, else (at least) ESP32 and ESP8266 fail
 
@@ -101,7 +96,6 @@ void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::begin()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_HardwareSerial::begin()
@@ -124,7 +118,6 @@ void LIN_Slave_HardwareSerial::end()
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::end()");
-    LIN_SLAVE_DEBUG_SERIAL.flush();
   #endif
 
 } // LIN_Slave_HardwareSerial::end()
@@ -145,7 +138,7 @@ void LIN_Slave_HardwareSerial::handler()
   // byte received -> check it
   if (pSerial->available())
   {
-    // if 0x00 received and long time since last byte, start new frame  
+    // if 0x00 received and long time since last byte, start new frame and remove 0x00 from queue
     if ((pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
     {
       this->flagBreak = true;

@@ -143,7 +143,7 @@ Public Types</h2></td></tr>
 <tr class="memitem:a48276bf84de47e284af2160895f0209e" id="r_a48276bf84de47e284af2160895f0209e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">frame_t</a> : uint8_t { <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eae4de5ef67e779014a097b3cc7b26e150">MASTER_REQUEST</a> = 0x10
 , <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eab959418674f527daa766aa3af6bc9bf2">SLAVE_RESPONSE</a> = 0x20
  }</td></tr>
-<tr class="memdesc:a48276bf84de47e284af2160895f0209e"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN frame type (use high nibble for type, low nibble for number of data bytes)  <a href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">More...</a><br /></td></tr>
+<tr class="memdesc:a48276bf84de47e284af2160895f0209e"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN frame type. Use high nibble for type, low nibble for number of data bytes -&gt; minimize callback[] size.  <a href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">More...</a><br /></td></tr>
 <tr class="separator:a48276bf84de47e284af2160895f0209e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7853b93dda3981a700a439da15b4af37" id="r_a7853b93dda3981a700a439da15b4af37"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7853b93dda3981a700a439da15b4af37">state_t</a> : uint8_t { <br />
 &#160;&#160;<a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7853b93dda3981a700a439da15b4af37a30c75a90201c19c1ac04e0cd1c6ba240">STATE_OFF</a> = 0x01
@@ -313,7 +313,7 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><p>LIN slave node base class. </p>
 <p>LIN slave node base class. From this class the actual LIN classes for a Serialx are derived. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00046">46</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00059">59</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="aa9e432fa43b6ad5246822cb8121b9084" name="aa9e432fa43b6ad5246822cb8121b9084"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa9e432fa43b6ad5246822cb8121b9084">&#9670;&#160;</a></span>LinMessageCallback</h2>
@@ -337,7 +337,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Type for frame callback function. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00099">99</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00112">112</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -374,7 +374,7 @@ Protected Attributes</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00082">82</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00095">95</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -390,7 +390,7 @@ Protected Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>LIN frame type (use high nibble for type, low nibble for number of data bytes) </p>
+<p>LIN frame type. Use high nibble for type, low nibble for number of data bytes -&gt; minimize callback[] size. </p>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a48276bf84de47e284af2160895f0209eae4de5ef67e779014a097b3cc7b26e150" name="a48276bf84de47e284af2160895f0209eae4de5ef67e779014a097b3cc7b26e150"></a>MASTER_REQUEST&#160;</td><td class="fielddoc"><p>LIN master request frame. </p>
 </td></tr>
@@ -398,7 +398,7 @@ Protected Attributes</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00060">60</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00073">73</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -434,7 +434,7 @@ Protected Attributes</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00068">68</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00081">81</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -458,7 +458,7 @@ Protected Attributes</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00052">52</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00065">65</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -512,7 +512,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00123">123</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00127">127</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 
 </div>
 </div>
@@ -542,7 +542,7 @@ Protected Attributes</h2></td></tr>
 
 <p>LIN slave node destructor, here dummy. Any class with virtual functions should have virtual destructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00185">185</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00220">220</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -591,7 +591,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>calculated checksum, depending on protocol version </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00051">51</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00056">56</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -642,7 +642,7 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Protected frame ID </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00025">25</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00030">30</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -686,41 +686,30 @@ Here is the caller graph for this function:</div>
 
 <p>Disable RS485 transmitter (DE=low) </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00174">174</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00198">198</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d8/d65/classLIN__Slave__Base_a7d128f517fa36393d58246f8f3759b04_icgraph.png" border="0" usemap="#ad8/d65/classLIN__Slave__Base_a7d128f517fa36393d58246f8f3759b04_icgraph" alt=""/></div>
 <map name="ad8/d65/classLIN__Slave__Base_a7d128f517fa36393d58246f8f3759b04_icgraph" id="ad8/d65/classLIN__Slave__Base_a7d128f517fa36393d58246f8f3759b04_icgraph">
-<area shape="rect" title="Disable RS485 transmitter (DE=low)" alt="" coords="751,344,937,384"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a81d059df4642dc37656dcbabf3fb0485" title="Open serial interface." alt="" coords="527,141,696,166"/>
-<area shape="poly" title=" " alt="" coords="809,337,625,168,629,164,812,333"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aed021e90f2f0c3bf65af6e1f57964d90" title="Close serial interface." alt="" coords="533,351,690,377"/>
-<area shape="poly" title=" " alt="" coords="737,367,690,367,690,361,737,361"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8" title="Handle LIN protocol and call user&#45;defined frame callbacks." alt="" coords="520,498,703,523"/>
-<area shape="poly" title=" " alt="" coords="801,394,634,500,632,495,798,389"/>
-<area shape="rect" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a91aaabdd99fbab8618dcf9830595767b" title="Open serial interface." alt="" coords="263,5,456,45"/>
-<area shape="poly" title=" " alt="" coords="583,134,533,96,471,60,441,48,443,43,473,55,536,92,586,130"/>
-<area shape="rect" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a8aa829da6f43bb5f3d5a8225ff420d87" title="Open serial interface." alt="" coords="263,69,456,109"/>
-<area shape="poly" title=" " alt="" coords="546,140,438,112,440,107,548,135"/>
-<area shape="rect" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#ae1836c57cba66527325d34c9ae72a4d5" title="Open serial interface." alt="" coords="270,133,449,173"/>
-<area shape="poly" title=" " alt="" coords="513,156,449,156,449,151,513,151"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a7a87ffa15a03774c4866e6a38774fb13" title="Open serial interface." alt="" coords="266,197,453,237"/>
-<area shape="poly" title=" " alt="" coords="548,172,440,200,438,195,546,167"/>
-<area shape="rect" href="../../db/dcb/classLIN__Slave__HardwareSerial__ESP8266.html#a7f5bcc5950dda10066d438ec0f2bcf7d" title="Open serial interface." alt="" coords="5,5,199,45"/>
-<area shape="poly" title=" " alt="" coords="249,28,199,28,199,23,249,23"/>
-<area shape="rect" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a934cb8e2315084ea6c6264c6a2651d86" title="Close serial interface." alt="" coords="247,262,472,287"/>
-<area shape="poly" title=" " alt="" coords="573,347,525,324,471,303,427,290,428,285,473,297,527,319,575,342"/>
-<area shape="rect" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a63c0ed598a087aeca0a53d7a56a3402e" title="Close serial interface." alt="" coords="263,312,456,352"/>
-<area shape="poly" title=" " alt="" coords="519,355,456,347,456,342,520,350"/>
-<area shape="rect" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#aee0da54f372a52622f5b850537f31c63" title="Close serial interface." alt="" coords="270,376,449,416"/>
-<area shape="poly" title=" " alt="" coords="520,378,449,387,449,382,519,373"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aaab43c030cb26e5a470b79aed98bdc61" title="Close serial interface." alt="" coords="250,441,469,466"/>
-<area shape="poly" title=" " alt="" coords="575,386,527,409,473,431,428,443,427,438,471,425,525,404,573,381"/>
-<area shape="rect" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a8e083f91cab80fb9d3ed275d53bb1aa0" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="263,491,456,531"/>
-<area shape="poly" title=" " alt="" coords="506,513,456,513,456,508,506,508"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="266,555,453,595"/>
-<area shape="poly" title=" " alt="" coords="548,529,440,557,438,552,546,524"/>
+<area shape="rect" title="Disable RS485 transmitter (DE=low)" alt="" coords="509,241,696,281"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aed021e90f2f0c3bf65af6e1f57964d90" title="Close serial interface." alt="" coords="291,127,449,152"/>
+<area shape="poly" title=" " alt="" coords="550,237,395,155,397,150,552,232"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8" title="Handle LIN protocol and call user&#45;defined frame callbacks." alt="" coords="279,248,461,273"/>
+<area shape="poly" title=" " alt="" coords="495,263,462,263,462,258,495,258"/>
+<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="25,298,211,338"/>
+<area shape="poly" title=" " alt="" coords="496,283,462,289,331,304,212,314,211,309,330,298,461,283,496,278"/>
+<area shape="rect" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a934cb8e2315084ea6c6264c6a2651d86" title="Close serial interface." alt="" coords="5,5,231,31"/>
+<area shape="poly" title=" " alt="" coords="342,120,292,82,230,46,193,33,195,28,232,41,295,77,346,116"/>
+<area shape="rect" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a63c0ed598a087aeca0a53d7a56a3402e" title="Close serial interface." alt="" coords="21,55,215,95"/>
+<area shape="poly" title=" " alt="" coords="305,126,197,98,198,93,306,121"/>
+<area shape="rect" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#aee0da54f372a52622f5b850537f31c63" title="Close serial interface." alt="" coords="29,119,207,159"/>
+<area shape="poly" title=" " alt="" coords="277,142,208,142,208,137,277,137"/>
+<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aaab43c030cb26e5a470b79aed98bdc61" title="Close serial interface." alt="" coords="9,184,227,209"/>
+<area shape="poly" title=" " alt="" coords="301,158,231,174,176,187,175,181,230,169,300,153"/>
+<area shape="rect" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a8e083f91cab80fb9d3ed275d53bb1aa0" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="21,234,215,274"/>
+<area shape="poly" title=" " alt="" coords="265,261,215,259,215,254,265,255"/>
+<area shape="poly" title=" " alt="" coords="301,279,207,301,206,295,299,274"/>
 </map>
 </div>
 
@@ -752,7 +741,7 @@ Here is the caller graph for this function:</div>
 
 <p>Enable RS485 transmitter (DE=high) </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00171">171</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00184">184</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -799,7 +788,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#ab109092ba4a5166e62b25862e0413359">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#ad1c370e96f830289a4e4fb2c3f11bdf1">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a69d75010ab37f455b1e5ca8b5f91870f">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ae55478c283433ba9c622cfa15835308b">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00089">89</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00093">93</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -846,7 +835,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a81fc72a2ce2e3427c73342d211368957">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#af69728d4daccce67e2d315f18261c825">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a70247a527f08213962eff81d80f17fbd">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aa8930ff60f123e8bf7ad0e356f765403">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00102">102</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00106">106</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -892,7 +881,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a20ee58273ddf452a8ad6105ee105644e">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a201379aaa165967259e9cc48b98b7055">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a8ce3c29ca5173a4381dfc5ebe7b4f686">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a2c55bed3411a8adb706297742bace2de">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00155">155</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00168">168</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -938,7 +927,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a1bf609bfa6639ae83072b84c08e4bb70">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#aaff15d900d6e30bf1602c041bbdcacfd">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#ac88309138da658b52b15e5a77fadb32d">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a6b86896440040aa7ad02ed3d453119bd">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00167">167</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00180">180</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -970,7 +959,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#ad7b0093976b90fc0785261254d95179d">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#aae14fe77767b0bed0f1ddd1b68b0c955">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#adb7628c6d131bc1885bd60d050447713">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a1b2d929ebe78abb843e6ac464a01d985">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00158">158</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00171">171</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1002,7 +991,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a18e08b8b1ac1ddb26d206fec435566f1">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#afd9c1b1dbe42439cc16b0e461937eb3f">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#acbbff42e2fbfd6a095e0e5063a0c09f4">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ab1aa5ea5521652dbe557b97bdea5086f">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00161">161</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00174">174</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1058,7 +1047,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a5c7e72ec2af1222a749b897eda0cf019">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#ab15bc9e6eaf155f6133b8653bc68daab">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#a87e72a928d16823b474741beaaa13376">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ae43256e1eb94013f6461e8bb224c33af">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00164">164</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00177">177</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1110,17 +1099,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a91aaabdd99fbab8618dcf9830595767b">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a8aa829da6f43bb5f3d5a8225ff420d87">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../db/dcb/classLIN__Slave__HardwareSerial__ESP8266.html#a7f5bcc5950dda10066d438ec0f2bcf7d">LIN_Slave_HardwareSerial_ESP8266</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#ae1836c57cba66527325d34c9ae72a4d5">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a7a87ffa15a03774c4866e6a38774fb13">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00179">179</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="../../d8/d65/classLIN__Slave__Base_a81d059df4642dc37656dcbabf3fb0485_cgraph.png" border="0" usemap="#ad8/d65/classLIN__Slave__Base_a81d059df4642dc37656dcbabf3fb0485_cgraph" alt=""/></div>
-<map name="ad8/d65/classLIN__Slave__Base_a81d059df4642dc37656dcbabf3fb0485_cgraph" id="ad8/d65/classLIN__Slave__Base_a81d059df4642dc37656dcbabf3fb0485_cgraph">
-<area shape="rect" title="Open serial interface." alt="" coords="5,13,175,38"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04" title="Disable RS485 transmitter (DE=low)" alt="" coords="223,5,409,45"/>
-<area shape="poly" title=" " alt="" coords="175,23,209,23,209,28,175,28"/>
-</map>
-</div>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00171">171</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -1171,7 +1150,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a934cb8e2315084ea6c6264c6a2651d86">LIN_Slave_HardwareSerial</a>, <a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a63c0ed598a087aeca0a53d7a56a3402e">LIN_Slave_HardwareSerial_ESP32</a>, <a class="el" href="../../d4/dad/classLIN__Slave__NeoHWSerial__AVR.html#aee0da54f372a52622f5b850537f31c63">LIN_Slave_NeoHWSerial_AVR</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aaab43c030cb26e5a470b79aed98bdc61">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00206">206</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00209">209</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1227,7 +1206,7 @@ Here is the caller graph for this function:</div>
 
 <p>Getter for LIN state machine error. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00206">206</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00271">271</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1279,7 +1258,7 @@ Here is the caller graph for this function:</div>
 
 <p>Getter for LIN frame. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00210">210</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00285">285</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1309,7 +1288,7 @@ Here is the caller graph for this function:</div>
 
 <p>Getter for LIN state machine state. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00199">199</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00244">244</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1343,7 +1322,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dae/classLIN__Slave__HardwareSerial.html#a8e083f91cab80fb9d3ed275d53bb1aa0">LIN_Slave_HardwareSerial</a>, and <a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98">LIN_Slave_SoftwareSerial</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00286">286</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00288">288</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1427,7 +1406,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00233">233</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00235">235</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 
 </div>
 </div>
@@ -1473,7 +1452,7 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00261">261</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html#l00263">263</a> of file <a class="el" href="../../d2/de2/LIN__slave__Base_8cpp_source.html">LIN_slave_Base.cpp</a>.</p>
 
 </div>
 </div>
@@ -1503,7 +1482,7 @@ Here is the caller graph for this function:</div>
 
 <p>Clear error of LIN state machine. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00203">203</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00258">258</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1533,7 +1512,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reset LIN state machine. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00196">196</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00231">231</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1560,7 +1539,7 @@ Here is the caller graph for this function:</div>
 
 <p>communication baudrate [Baud] </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00114">114</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00127">127</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1586,7 +1565,7 @@ Here is the caller graph for this function:</div>
 
 <p>buffer for data bytes (max. 8B) + checksum </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00126">126</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00139">139</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1612,7 +1591,7 @@ Here is the caller graph for this function:</div>
 
 <p>array of user callback functions for IDs 0x00..0x3F </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00119">119</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00132">132</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1638,7 +1617,7 @@ Here is the caller graph for this function:</div>
 
 <p>error state. Is latched until cleared </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00117">117</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00130">130</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1664,7 +1643,7 @@ Here is the caller graph for this function:</div>
 
 <p>flag for BREAK detected. Needs to be set in Rx-ISR </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00118">118</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00131">131</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1690,7 +1669,7 @@ Here is the caller graph for this function:</div>
 
 <p>unprotected frame identifier </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00123">123</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00136">136</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1716,7 +1695,7 @@ Here is the caller graph for this function:</div>
 
 <p>current index in bufData </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00127">127</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00140">140</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1734,7 +1713,7 @@ Here is the caller graph for this function:</div>
 
 <p>LIN node name, e.g. for debug. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00135">135</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00148">148</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1760,7 +1739,7 @@ Here is the caller graph for this function:</div>
 
 <p>number of data bytes in frame </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00125">125</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00138">138</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1786,7 +1765,7 @@ Here is the caller graph for this function:</div>
 
 <p>protected frame identifier </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00122">122</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00135">135</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1812,7 +1791,7 @@ Here is the caller graph for this function:</div>
 
 <p>optional Tx direction pin, e.g. for LIN via RS485 </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00113">113</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00126">126</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1838,7 +1817,7 @@ Here is the caller graph for this function:</div>
 
 <p>status of LIN state machine </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00116">116</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00129">129</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1864,7 +1843,7 @@ Here is the caller graph for this function:</div>
 
 <p>time [us] of last received byte in frame </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00129">129</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00142">142</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1890,7 +1869,7 @@ Here is the caller graph for this function:</div>
 
 <p>timeout [us] for bytes in frame </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00128">128</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00141">141</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1916,7 +1895,7 @@ Here is the caller graph for this function:</div>
 
 <p>frame type (master request or slave response) </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00124">124</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00137">137</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>
@@ -1942,7 +1921,7 @@ Here is the caller graph for this function:</div>
 
 <p>LIN protocol version. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00115">115</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html#l00128">128</a> of file <a class="el" href="../../d0/d1c/LIN__slave__Base_8h_source.html">LIN_slave_Base.h</a>.</p>
 
 </div>
 </div>

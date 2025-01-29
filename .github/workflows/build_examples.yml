@@ -1,0 +1,372 @@
+name: Build library examples
+
+# Trigger workflow on push and pull requests
+on:
+  push:
+  pull_request:
+  
+  # Also run periodically to catch breakage caused by changes to external resources (libraries, platforms).
+  schedule:
+    # Minute, Hour, Day of Month, Month, Day of Week (UTC timezone)
+    - cron: '0 1 2 * *'
+
+# jobs to run
+jobs:
+
+  # build all given examples. Don't use matrix for only 1 CPU instances (saves power and tests are not time-critical)
+  build_examples:
+    
+    # setup OS
+    runs-on: ubuntu-latest
+    
+    # actual test steps
+    steps:
+
+      # checkout this repository
+      - uses: actions/checkout@v4.2.2
+      
+      # Install Arduino CLI
+      - name: Install Arduino CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          export PATH="$PWD/bin:$PATH"
+          echo "PATH=$PATH"
+          which arduino-cli
+          arduino-cli version
+
+      # Create Board Manager file
+      - name: Create Board Manager file
+        run: |
+          mkdir -p ~/.arduino15
+          echo "directory: ~/.arduino15" > ~/.arduino15/arduino-cli.yaml
+          echo "board_manager:" >> ~/.arduino15/arduino-cli.yaml
+          echo "  additional_urls:" >> ~/.arduino15/arduino-cli.yaml
+          echo "    - https://adafruit.github.io/arduino-board-index/package_adafruit_index.json" >> ~/.arduino15/arduino-cli.yaml
+          echo "    - https://arduino.esp8266.com/stable/package_esp8266com_index.json" >> ~/.arduino15/arduino-cli.yaml
+          echo "    - https://espressif.github.io/arduino-esp32/package_esp32_index.json" >> ~/.arduino15/arduino-cli.yaml
+          cat ~/.arduino15/arduino-cli.yaml
+      
+      # Install cores for all defined boards. Don't use matrix.board.fqbn due to dependencies
+      - name: Install Cores
+        run: |
+          export PATH="$PWD/bin:$PATH"
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr
+          arduino-cli core install arduino:sam
+          arduino-cli core install esp8266:esp8266
+          arduino-cli core install esp32:esp32
+          arduino-cli core install adafruit:avr
+
+      # Install required libraries
+      - name: Install Libraries
+        run: |
+          export PATH="$PWD/bin:$PATH"
+          
+          # required for ESP32 & ESP8266
+          arduino-cli lib install "espsoftwareserial"
+
+          # copy repo to library folder 
+          mkdir -p ~/Arduino/libraries/MyLibrary
+          cp -r $PWD/* $HOME/Arduino/libraries/MyLibrary
+
+
+      # Build sketches for AVR
+      - name: Build AVR
+        run: |
+          export PATH="$PWD/bin:$PATH"
+
+          # list of boards with optional build flags
+          BOARDS_FLAGS=(
+            "arduino:avr:mega -DLIN_SLAVE_DEBUG_SERIAL=Serial -DLIN_SLAVE_DEBUG_LEVEL=3"            # Arduino Mega 2560 
+          )
+
+          # list of sketches with optional build flags
+          SKETCHES_FLAGS=(
+            "examples/LIN_slave_NeoHWSerial_AVR"
+            "examples/LIN_slave_SWSerial"
+            "examples/LIN_slave_RS485_NeoHWSerial_AVR"
+            "examples/LIN_slave_RS485_SWSerial"
+          )
+
+          # misc build flags
+          #MISC_FLAGS="-Wall -Wextra -Wpedantic"
+          MISC_FLAGS="-Wall -Wextra"
+
+          # loop over sketches
+          for ITEM_SKETCHES_FLAGS in "${SKETCHES_FLAGS[@]}"; do
+          
+            # get sketch and corresponding sketch build flags
+            SKETCH_NAME=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f1)    # get 1st word
+            SKETCH_FLAGS=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f2-)  # get all other words
+            if [ "$SKETCH_FLAGS" == "$SKETCH_NAME" ]; then
+              SKETCH_FLAGS=""
+            fi
+            # echo "sketch: $SKETCH_NAME"
+            # echo "sketch flags: $SKETCH_FLAGS"
+
+            # loop over boards
+            for ITEM_BOARDS_FLAGS in "${BOARDS_FLAGS[@]}"; do
+
+              # get board and corresponding board build flags
+              BOARD_NAME=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f1)     # get 1st word
+              BOARD_FLAGS=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f2-)   # get all other words
+              if [ "$BOARD_FLAGS" == "$BOARD_NAME" ]; then
+                BOARD_FLAGS=""
+              fi
+              # echo "board: $BOARD_NAME"
+              # echo "board flags: $BOARD_FLAGS"
+              
+              # build sketch
+              echo ""
+              echo ""
+              echo "build ketch '$SKETCH_NAME' for board '$BOARD_NAME'"
+              echo arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              if [ $? -ne 0 ]; then
+                echo "ERROR: build failed"
+                exit 1
+              fi
+              
+            done # end loop over boards
+          done # end loop over sketches
+
+
+      # Build sketches for SAMD
+      - name: Build SAMD
+        run: |
+          export PATH="$PWD/bin:$PATH"
+
+          # list of boards with optional build flags
+          BOARDS_FLAGS=(
+            "arduino:sam:arduino_due_x_dbg -DLIN_SLAVE_DEBUG_SERIAL=Serial -DLIN_SLAVE_DEBUG_LEVEL=3"     # Arduino Due (Programming Port)
+            "arduino:sam:arduino_due_x     -DLIN_SLAVE_DEBUG_SERIAL=Serial -DLIN_SLAVE_DEBUG_LEVEL=3"     # Arduino Due (Native USB Port)
+          )
+
+          # list of sketches with optional build flags
+          SKETCHES_FLAGS=(
+            "examples/LIN_slave_HWSerial"
+            "examples/LIN_slave_RS485_HWSerial"
+          )
+
+          # misc build flags
+          #MISC_FLAGS="-Wall -Wextra -Wpedantic"
+          MISC_FLAGS="-Wall -Wextra"
+
+          # loop over sketches
+          for ITEM_SKETCHES_FLAGS in "${SKETCHES_FLAGS[@]}"; do
+          
+            # get sketch and corresponding sketch build flags
+            SKETCH_NAME=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f1)    # get 1st word
+            SKETCH_FLAGS=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f2-)  # get all other words
+            if [ "$SKETCH_FLAGS" == "$SKETCH_NAME" ]; then
+              SKETCH_FLAGS=""
+            fi
+            # echo "sketch: $SKETCH_NAME"
+            # echo "sketch flags: $SKETCH_FLAGS"
+
+            # loop over boards
+            for ITEM_BOARDS_FLAGS in "${BOARDS_FLAGS[@]}"; do
+
+              # get board and corresponding board build flags
+              BOARD_NAME=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f1)     # get 1st word
+              BOARD_FLAGS=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f2-)   # get all other words
+              if [ "$BOARD_FLAGS" == "$BOARD_NAME" ]; then
+                BOARD_FLAGS=""
+              fi
+              # echo "board: $BOARD_NAME"
+              # echo "board flags: $BOARD_FLAGS"
+              
+              # build sketch
+              echo ""
+              echo ""
+              echo "build ketch '$SKETCH_NAME' for board '$BOARD_NAME'"
+              echo arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              if [ $? -ne 0 ]; then
+                echo "ERROR: build failed"
+                exit 1
+              fi
+              
+            done # end loop over boards
+          done # end loop over sketches
+
+
+      # Build sketches for ESP8266
+      - name: Build ESP8266
+        run: |
+          export PATH="$PWD/bin:$PATH"
+
+          # list of boards with optional build flags
+          BOARDS_FLAGS=(
+            "esp8266:esp8266:d1_mini_clone -DLIN_SLAVE_DEBUG_SERIAL=Serial1 -DLIN_SLAVE_DEBUG_LEVEL=3"     # ESP8255 Wemos D1 Mini (clone)
+          )
+
+          # list of sketches with optional build flags
+          SKETCHES_FLAGS=(
+            "examples/LIN_slave_HWSerial_ESP8266"
+            "examples/LIN_slave_SWSerial"
+            "examples/LIN_slave_RS485_HWSerial_ESP8266"
+            "examples/LIN_slave_RS485_SWSerial"
+          )
+
+          # misc build flags
+          #MISC_FLAGS="-Wall -Wextra -Wpedantic"
+          MISC_FLAGS="-Wall -Wextra"
+
+          # loop over sketches
+          for ITEM_SKETCHES_FLAGS in "${SKETCHES_FLAGS[@]}"; do
+          
+            # get sketch and corresponding sketch build flags
+            SKETCH_NAME=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f1)    # get 1st word
+            SKETCH_FLAGS=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f2-)  # get all other words
+            if [ "$SKETCH_FLAGS" == "$SKETCH_NAME" ]; then
+              SKETCH_FLAGS=""
+            fi
+            # echo "sketch: $SKETCH_NAME"
+            # echo "sketch flags: $SKETCH_FLAGS"
+
+            # loop over boards
+            for ITEM_BOARDS_FLAGS in "${BOARDS_FLAGS[@]}"; do
+
+              # get board and corresponding board build flags
+              BOARD_NAME=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f1)     # get 1st word
+              BOARD_FLAGS=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f2-)   # get all other words
+              if [ "$BOARD_FLAGS" == "$BOARD_NAME" ]; then
+                BOARD_FLAGS=""
+              fi
+              # echo "board: $BOARD_NAME"
+              # echo "board flags: $BOARD_FLAGS"
+              
+              # build sketch
+              echo ""
+              echo ""
+              echo "build ketch '$SKETCH_NAME' for board '$BOARD_NAME'"
+              echo arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              if [ $? -ne 0 ]; then
+                echo "ERROR: build failed"
+                exit 1
+              fi
+              
+            done # end loop over boards
+          done # end loop over sketches
+
+
+      # Build sketches for ESP32
+      - name: Build ESP32
+        run: |
+          export PATH="$PWD/bin:$PATH"
+
+          # list of boards with optional build flags
+          BOARDS_FLAGS=(
+            "esp32:esp32:esp32da -DLIN_SLAVE_DEBUG_SERIAL=Serial -DLIN_SLAVE_DEBUG_LEVEL=3"     # ESP32-WROOM-DA
+          )
+
+          # list of sketches with optional build flags
+          SKETCHES_FLAGS=(
+            "examples/LIN_slave_HWSerial_ESP32"
+            "examples/LIN_slave_SWSerial"
+            "examples/LIN_slave_RS485_HWSerial_ESP32"
+            "examples/LIN_slave_RS485_SWSerial"
+          )
+
+          # misc build flags
+          #MISC_FLAGS="-Wall -Wextra -Wpedantic"
+          MISC_FLAGS="-Wall -Wextra"
+
+          # loop over sketches
+          for ITEM_SKETCHES_FLAGS in "${SKETCHES_FLAGS[@]}"; do
+          
+            # get sketch and corresponding sketch build flags
+            SKETCH_NAME=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f1)    # get 1st word
+            SKETCH_FLAGS=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f2-)  # get all other words
+            if [ "$SKETCH_FLAGS" == "$SKETCH_NAME" ]; then
+              SKETCH_FLAGS=""
+            fi
+            # echo "sketch: $SKETCH_NAME"
+            # echo "sketch flags: $SKETCH_FLAGS"
+
+            # loop over boards
+            for ITEM_BOARDS_FLAGS in "${BOARDS_FLAGS[@]}"; do
+
+              # get board and corresponding board build flags
+              BOARD_NAME=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f1)     # get 1st word
+              BOARD_FLAGS=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f2-)   # get all other words
+              if [ "$BOARD_FLAGS" == "$BOARD_NAME" ]; then
+                BOARD_FLAGS=""
+              fi
+              # echo "board: $BOARD_NAME"
+              # echo "board flags: $BOARD_FLAGS"
+              
+              # build sketch
+              echo ""
+              echo ""
+              echo "build ketch '$SKETCH_NAME' for board '$BOARD_NAME'"
+              echo arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              if [ $? -ne 0 ]; then
+                echo "ERROR: build failed"
+                exit 1
+              fi
+              
+            done # end loop over boards
+          done # end loop over sketches
+
+
+      # Build sketches for ATTiny85
+      - name: Build ATTiny85
+        run: |
+          export PATH="$PWD/bin:$PATH"
+
+          # list of boards with optional build flags
+          BOARDS_FLAGS=(
+            "adafruit:avr:trinket5"     # Adafruit Trinket (ATtiny85 @ 16MHz). Has only SoftwareSerial -> skip debug output
+          )
+
+          # list of sketches with optional build flags
+          SKETCHES_FLAGS=(
+            "examples/LIN_slave_SWSerial"
+            "examples/LIN_slave_RS485_SWSerial"
+          )
+
+          # misc build flags
+          #MISC_FLAGS="-Wall -Wextra -Wpedantic"
+          MISC_FLAGS="-Wall -Wextra"
+
+          # loop over sketches
+          for ITEM_SKETCHES_FLAGS in "${SKETCHES_FLAGS[@]}"; do
+          
+            # get sketch and corresponding sketch build flags
+            SKETCH_NAME=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f1)    # get 1st word
+            SKETCH_FLAGS=$(echo $ITEM_SKETCHES_FLAGS | cut -d' ' -f2-)  # get all other words
+            if [ "$SKETCH_FLAGS" == "$SKETCH_NAME" ]; then
+              SKETCH_FLAGS=""
+            fi
+            # echo "sketch: $SKETCH_NAME"
+            # echo "sketch flags: $SKETCH_FLAGS"
+
+            # loop over boards
+            for ITEM_BOARDS_FLAGS in "${BOARDS_FLAGS[@]}"; do
+
+              # get board and corresponding board build flags
+              BOARD_NAME=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f1)     # get 1st word
+              BOARD_FLAGS=$(echo $ITEM_BOARDS_FLAGS | cut -d' ' -f2-)   # get all other words
+              if [ "$BOARD_FLAGS" == "$BOARD_NAME" ]; then
+                BOARD_FLAGS=""
+              fi
+              # echo "board: $BOARD_NAME"
+              # echo "board flags: $BOARD_FLAGS"
+              
+              # build sketch
+              echo ""
+              echo ""
+              echo "build ketch '$SKETCH_NAME' for board '$BOARD_NAME'"
+              echo arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              arduino-cli compile --fqbn "$BOARD_NAME" --warnings all --build-property "compiler.cpp.extra_flags=$MISC_FLAGS $SKETCH_FLAGS $BOARD_FLAGS" "$SKETCH_NAME"
+              if [ $? -ne 0 ]; then
+                echo "ERROR: build failed"
+                exit 1
+              fi
+              
+            done # end loop over boards
+          done # end loop over sketches
