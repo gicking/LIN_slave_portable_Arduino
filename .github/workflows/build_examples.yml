@@ -78,15 +78,15 @@ jobs:
 
           # list of boards with optional build flags
           BOARDS_FLAGS=(
-            "arduino:avr:mega -DLIN_SLAVE_DEBUG_SERIAL=Serial -DLIN_SLAVE_DEBUG_LEVEL=3"            # Arduino Mega 2560 
+            "arduino:avr:mega -DLIN_SLAVE_DEBUG_LEVEL=3"            # Arduino Mega 2560 
           )
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
-            "examples/LIN_slave_NeoHWSerial_AVR"
-            "examples/LIN_slave_SWSerial"
-            "examples/LIN_slave_RS485_NeoHWSerial_AVR"
-            "examples/LIN_slave_RS485_SWSerial"
+            "examples/LIN_slave_NeoHWSerial_AVR -DLIN_SLAVE_DEBUG_SERIAL=NeoSerial"
+            "examples/LIN_slave_SWSerial -DLIN_SLAVE_DEBUG_SERIAL=Serial"
+            "examples/LIN_slave_RS485_NeoHWSerial_AVR -DLIN_SLAVE_DEBUG_SERIAL=NeoSerial"
+            "examples/LIN_slave_RS485_SWSerial -DLIN_SLAVE_DEBUG_SERIAL=Serial"
           )
 
           # misc build flags
