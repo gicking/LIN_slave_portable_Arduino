@@ -24,15 +24,16 @@
 /**
   \brief      Constructor for LIN node class using ESP8266 HardwareSerial 0
   \details    Constructor for LIN node class for using ESP8266 HardwareSerial 0. Inherit all methods from LIN_Slave_HardwareSerial, only different constructor
-  \param[in]  SwapPins    use alternate Serial2 Rx/Tx pins (default = false)
-  \param[in]  Version     LIN protocol version (default = v2)
-  \param[in]  NameLIN     LIN node name (default = "Slave")
-  \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
-  \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
+  \param[in]  SwapPins        use alternate Serial2 Rx/Tx pins (default = false)
+  \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
+  \param[in]  Version         LIN protocol version (default = v2)
+  \param[in]  NameLIN         LIN node name (default = "Slave")
+  \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
+  \param[in]  PinTxEN         optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_HardwareSerial_ESP8266::LIN_Slave_HardwareSerial_ESP8266(bool SwapPins, LIN_Slave_Base::version_t Version, const char NameLIN[], 
-  uint32_t TimeoutRx, const int8_t PinTxEN) : 
-  LIN_Slave_HardwareSerial(Serial, Version, NameLIN, TimeoutRx, PinTxEN)
+LIN_Slave_HardwareSerial_ESP8266::LIN_Slave_HardwareSerial_ESP8266(bool SwapPins, uint16_t MinFramePause, 
+  LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
+  LIN_Slave_HardwareSerial(Serial, MinFramePause, Version, NameLIN, TimeoutRx, PinTxEN)
 {
   // Debug serial initialized in begin() -> no debug output here
 
@@ -57,13 +58,35 @@ void LIN_Slave_HardwareSerial_ESP8266::begin(uint16_t Baudrate)
   if (this->swapPins == true)
     pSerial->swap();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP8266::begin()");
   #endif
 
 } // LIN_Slave_HardwareSerial_ESP8266::begin()
+
+
+
+/**
+  \brief      Close serial interface
+  \details    Close serial interface.
+*/
+void LIN_Slave_HardwareSerial_ESP8266::end()
+{
+  // call base class method
+  LIN_Slave_Base::end();
+    
+  // close serial interface
+  pSerial->end();
+
+  // optional debug output (debug level 2)
+  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP8266::end()");
+  #endif
+
+} // LIN_Slave_HardwareSerial_ESP8266::end()
 
 #endif // ARDUINO_ARCH_ESP8266
 

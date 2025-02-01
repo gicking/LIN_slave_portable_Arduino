@@ -75,7 +75,7 @@ uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
   // return frame checksum
   return (uint8_t) chk;
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::_calculateChecksum()");
@@ -208,7 +208,7 @@ void LIN_Slave_Base::begin(uint16_t Baudrate)
 */
 void LIN_Slave_Base::end()
 {
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::end()");
@@ -241,10 +241,10 @@ void LIN_Slave_Base::registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::Li
   this->callback[ID].type_numData = LIN_Slave_Base::MASTER_REQUEST | (NumData & 0x0F);
   this->callback[ID].fct = Fct;
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::registerMasterRequestHandler()");
+    LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::registerMasterRequestHandler()");
     LIN_SLAVE_DEBUG_SERIAL.print(": registered ID 0x");
     LIN_SLAVE_DEBUG_SERIAL.println(ID, HEX);
   #endif
@@ -269,10 +269,10 @@ void LIN_Slave_Base::registerSlaveResponseHandler(uint8_t ID, LIN_Slave_Base::Li
   this->callback[ID].type_numData = LIN_Slave_Base::SLAVE_RESPONSE | (NumData & 0x0F);
   this->callback[ID].fct = Fct;
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::registerSlaveResponseHandler()");
+    LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::registerSlaveResponseHandler()");
     LIN_SLAVE_DEBUG_SERIAL.print(": registered ID 0x");
     LIN_SLAVE_DEBUG_SERIAL.println(ID, HEX);
   #endif
@@ -298,16 +298,16 @@ void LIN_Slave_Base::handler()
     this->state = LIN_Slave_Base::STATE_DONE;
 
     // flush receive buffer
-    while (this->_serialAvailable())
+    while (this->available())
       this->_serialRead();
 
     // optionally disable RS485 transmitter
     _disableTransmitter();
 
-    // optional debug output
+    // optional debug output (debug level 1)
     #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
       LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-      LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+      LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
       LIN_SLAVE_DEBUG_SERIAL.print(": error: frame timeout after ");
       LIN_SLAVE_DEBUG_SERIAL.print((long) (micros() - this->timeLastRx));
       LIN_SLAVE_DEBUG_SERIAL.println("us");
@@ -329,20 +329,27 @@ void LIN_Slave_Base::handler()
     // optionally disable RS485 transmitter
     _disableTransmitter();
 
+    // optional debug output (debug level 3)
+    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+      LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+      LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
+      LIN_SLAVE_DEBUG_SERIAL.println(": BREAK detected ");
+    #endif
+
   } // if BREAK detected
 
 
   // A byte was received -> handle it
-  if (this->_serialAvailable())
+  if (this->available())
   {
     // read received byte and reset timeout timer
     uint8_t byteReceived = this->_serialRead();
     this->timeLastRx = micros();
 
-    // optional debug output
+    // optional debug output (debug level 3)
     #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
       LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-      LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+      LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
       if (this->_getBreakFlag() == true)
         LIN_SLAVE_DEBUG_SERIAL.print(": BRK, Rx=0x");
       else
@@ -357,7 +364,7 @@ void LIN_Slave_Base::handler()
       case LIN_Slave_Base::STATE_OFF:
         break;
 
-      // just to avoid compiler warning, do nothing. State is handled above
+      // just to avoid compiler warning, do nothing. Break state is handled above
       case LIN_Slave_Base::STATE_WAIT_FOR_BREAK:
         break;
       
@@ -385,10 +392,10 @@ void LIN_Slave_Base::handler()
           // optionally disable RS485 transmitter
           _disableTransmitter();
 
-          // optional debug output
+          // optional debug output (debug level 1)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": SYNC error, received 0x");
             LIN_SLAVE_DEBUG_SERIAL.println(byteReceived, HEX);
           #endif
@@ -414,10 +421,10 @@ void LIN_Slave_Base::handler()
           // optionally disable RS485 transmitter
           _disableTransmitter();
 
-          // optional debug output
+          // optional debug output (debug level 1)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": PID parity error, received 0x");
             LIN_SLAVE_DEBUG_SERIAL.print(this->pid, HEX);
             LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
@@ -448,10 +455,10 @@ void LIN_Slave_Base::handler()
           // advance state to receiving echo
           this->state = LIN_Slave_Base::STATE_RECEIVING_ECHO;
 
-          // optional debug output
+          // optional debug output (debug level 2)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": handle slave response PID 0x");
             LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
           #endif
@@ -473,10 +480,10 @@ void LIN_Slave_Base::handler()
         // ID is not registered -> wait for next break
         else
         {
-          // optional debug output
+          // optional debug output (debug level 2)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": drop frame PID 0x");
             LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
           #endif
@@ -515,10 +522,10 @@ void LIN_Slave_Base::handler()
           // optionally disable RS485 transmitter
           _disableTransmitter();
 
-          // optional debug output
+          // optional debug output (debug level 1)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": echo error, received 0x");
             LIN_SLAVE_DEBUG_SERIAL.print(byteReceived, HEX);
             LIN_SLAVE_DEBUG_SERIAL.print(", expected 0x");
@@ -551,10 +558,10 @@ void LIN_Slave_Base::handler()
           // call user-defined master request callback function. Only reachable if callback has been registered
           this->callback[id].fct(numData, bufData);
 
-          // optional debug output
+          // optional debug output (debug level 2)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": handle master request PID 0x");
             LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
           #endif
@@ -567,10 +574,10 @@ void LIN_Slave_Base::handler()
           // set error
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_CHK);
 
-          // optional debug output
+          // optional debug output (debug level 1)
           #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-            LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+            LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": CHK error, received 0x");
             LIN_SLAVE_DEBUG_SERIAL.print(byteReceived, HEX);
             LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
@@ -598,10 +605,10 @@ void LIN_Slave_Base::handler()
         // optionally disable RS485 transmitter
         _disableTransmitter();
 
-        // optional debug output
+        // optional debug output (debug level 1)
         #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 1)
           LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-          LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::handler()");
+          LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
           LIN_SLAVE_DEBUG_SERIAL.print(": error: illegal state ");
           LIN_SLAVE_DEBUG_SERIAL.print(this->state);
           LIN_SLAVE_DEBUG_SERIAL.println(", this should never happen...");

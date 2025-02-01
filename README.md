@@ -34,11 +34,28 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
 
 ## Notes
   - The `handler()` method must be called at least every 500us. Optionally it can be called from within [serialEvent()](https://reference.arduino.cc/reference/de/language/functions/communication/serial/serialevent/)
-  - In general, framing errors are **not** returned by Arduino `Serial` implementations. In these cases, frame synchronization is via a configurable inter-frame pause. Exceptions are 
-    - AVR via [NeoHWSerial](https://github.com/gicking/NeoHWSerial) library, which supports custom UART ISRs. 
-    - ESP32, which natively supports a `onReceiveError()` method
-  - for AVR `Serial` and `NeoHWSerial` instances are incompatible and must not be used within the same sketch. If possible use only `NeoHWSerial`, else you have to disable `LIN_slave_NeoHWSerial_AVR.h` and enable `LIN_slave_HardwareSerial.h` via macros
-  - ESP8266 and ESP32 [SoftwareSerial](https://github.com/plerup/espsoftwareserial) drops BREAK (=0x00 without stop bit) altogether. Therefore these platforms only support HardwareSerial
+  - Framing errors (FE) on BREAK reception are treated differently by serial interface implementations. Therefore, frame synchronization is handled differently, specifically:
+    - HardwareSerial on ESP32, NeoHWSerial on AVR:
+      - BREAK is received, FE flag is available
+      - sync on `Rx==0x00` (= BREAK) with `FE==true` 
+      - assert that *following* `Rx==0x55` (= SYNC)
+      - this is according to LIN standard and most robust
+    - HardwareSerial on AVR, SAMD & ESP8266:
+      - BREAK is received, FE flag **not** available
+      - sync on `Rx==0x00` (= BREAK) after minimal inter-frame pause
+      - assert that *following* `Rx==0x55` (= SYNC)
+      - this is **not** according to LIN standard and less robust
+    - SoftwareSerial on AVR
+      - BREAK is received, FE flag **not** available
+      - sync on `Rx==0x00` (= BREAK) after minimal inter-frame pause
+      - assert that *following* `Rx==0x55` (= SYNC)
+      - this is **not** according to LIN standard and less robust
+    - SoftwareSerial on ESP32 & ESP8266
+      - BREAK **dropped** due to nissing stop bit, FE flag **not** available
+      - sync on `Rx==0x55` (= SYNC) after minimal inter-frame pause
+      - this is **not** according to LIN standard and least robust
+
+  - for AVR `Serial` and `NeoHWSerial` instances are incompatible and must not be used within the same sketch. If possible use only `NeoHWSerial` for best frame synchronization (see above). Alternatively comment out `USE_NEOSERIAL` in file `LIN_slave_NeoHWSerial_AVR.h` to use standard `Serial`
   
 
 # Test Matrix

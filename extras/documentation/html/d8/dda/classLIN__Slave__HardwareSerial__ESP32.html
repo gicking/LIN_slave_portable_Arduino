@@ -127,6 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a63c0ed598a087aeca0a53d7a56a3402e" id="r_a63c0ed598a087aeca0a53d7a56a3402e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a63c0ed598a087aeca0a53d7a56a3402e">end</a> (void)</td></tr>
 <tr class="memdesc:a63c0ed598a087aeca0a53d7a56a3402e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close serial interface.  <br /></td></tr>
 <tr class="separator:a63c0ed598a087aeca0a53d7a56a3402e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03ae9cbb95114289973b7f8d5a14b32f" id="r_a03ae9cbb95114289973b7f8d5a14b32f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a03ae9cbb95114289973b7f8d5a14b32f">available</a> (void)</td></tr>
+<tr class="memdesc:a03ae9cbb95114289973b7f8d5a14b32f"><td class="mdescLeft">&#160;</td><td class="mdescRight">check if a byte is available in Rx buffer  <br /></td></tr>
+<tr class="separator:a03ae9cbb95114289973b7f8d5a14b32f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classLIN__Slave__Base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classLIN__Slave__Base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html">LIN_Slave_Base</a></td></tr>
 <tr class="memitem:aba97a58894c689735213d7999875cf62 inherit pub_methods_classLIN__Slave__Base" id="r_aba97a58894c689735213d7999875cf62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aba97a58894c689735213d7999875cf62">LIN_Slave_Base</a> (<a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aaf5d75f5cc443247e0850c7ed2e9e142">LIN_Slave_Base::version_t</a> Version=<a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aaf5d75f5cc443247e0850c7ed2e9e142a8898d5e1c3bbd2af237fb4d253f2a447">LIN_Slave_Base::LIN_V2</a>, const char NameLIN[]=&quot;Slave&quot;, uint32_t TimeoutRx=1500L, const int8_t PinTxEN=INT8_MIN)</td></tr>
 <tr class="memdesc:aba97a58894c689735213d7999875cf62 inherit pub_methods_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">LIN slave node constructor.  <br /></td></tr>
@@ -192,9 +195,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:af69728d4daccce67e2d315f18261c825" id="r_af69728d4daccce67e2d315f18261c825"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#af69728d4daccce67e2d315f18261c825">_resetBreakFlag</a> (void)</td></tr>
 <tr class="memdesc:af69728d4daccce67e2d315f18261c825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear break detection flag.  <br /></td></tr>
 <tr class="separator:af69728d4daccce67e2d315f18261c825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a201379aaa165967259e9cc48b98b7055" id="r_a201379aaa165967259e9cc48b98b7055"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a201379aaa165967259e9cc48b98b7055">_serialAvailable</a> (void)</td></tr>
-<tr class="memdesc:a201379aaa165967259e9cc48b98b7055"><td class="mdescLeft">&#160;</td><td class="mdescRight">check if a byte is available in Rx buffer  <br /></td></tr>
-<tr class="separator:a201379aaa165967259e9cc48b98b7055"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae14fe77767b0bed0f1ddd1b68b0c955" id="r_aae14fe77767b0bed0f1ddd1b68b0c955"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#aae14fe77767b0bed0f1ddd1b68b0c955">_serialPeek</a> (void)</td></tr>
 <tr class="memdesc:aae14fe77767b0bed0f1ddd1b68b0c955"><td class="mdescLeft">&#160;</td><td class="mdescRight">peek next byte from Rx buffer  <br /></td></tr>
 <tr class="separator:aae14fe77767b0bed0f1ddd1b68b0c955"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -204,9 +204,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ab15bc9e6eaf155f6133b8653bc68daab" id="r_ab15bc9e6eaf155f6133b8653bc68daab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#ab15bc9e6eaf155f6133b8653bc68daab">_serialWrite</a> (uint8_t buf[], uint8_t num)</td></tr>
 <tr class="memdesc:ab15bc9e6eaf155f6133b8653bc68daab"><td class="mdescLeft">&#160;</td><td class="mdescRight">write bytes to Tx buffer  <br /></td></tr>
 <tr class="separator:ab15bc9e6eaf155f6133b8653bc68daab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaff15d900d6e30bf1602c041bbdcacfd" id="r_aaff15d900d6e30bf1602c041bbdcacfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#aaff15d900d6e30bf1602c041bbdcacfd">_serialFlush</a> (void)</td></tr>
-<tr class="memdesc:aaff15d900d6e30bf1602c041bbdcacfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">flush Tx buffer  <br /></td></tr>
-<tr class="separator:aaff15d900d6e30bf1602c041bbdcacfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classLIN__Slave__Base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classLIN__Slave__Base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html">LIN_Slave_Base</a></td></tr>
 <tr class="memitem:aaa28023dc65ab83374119ee5054208c0 inherit pro_methods_classLIN__Slave__Base" id="r_aaa28023dc65ab83374119ee5054208c0"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0">_calculatePID</a> (uint8_t ID)</td></tr>
 <tr class="memdesc:aaa28023dc65ab83374119ee5054208c0 inherit pro_methods_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate protected frame ID.  <br /></td></tr>
@@ -472,70 +469,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a201379aaa165967259e9cc48b98b7055" name="a201379aaa165967259e9cc48b98b7055"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a201379aaa165967259e9cc48b98b7055">&#9670;&#160;</a></span>_serialAvailable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LIN_Slave_HardwareSerial_ESP32::_serialAvailable </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>check if a byte is available in Rx buffer </p>
-
-<p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a8eb91414cbd13e45371407b9cfec6fc1">LIN_Slave_Base</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00095">95</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
-
-</div>
-</div>
-<a id="aaff15d900d6e30bf1602c041bbdcacfd" name="aaff15d900d6e30bf1602c041bbdcacfd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaff15d900d6e30bf1602c041bbdcacfd">&#9670;&#160;</a></span>_serialFlush()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LIN_Slave_HardwareSerial_ESP32::_serialFlush </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>flush Tx buffer </p>
-
-<p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#ae540477fe80675182197818aa25325a7">LIN_Slave_Base</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00107">107</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
-
-</div>
-</div>
 <a id="aae14fe77767b0bed0f1ddd1b68b0c955" name="aae14fe77767b0bed0f1ddd1b68b0c955"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aae14fe77767b0bed0f1ddd1b68b0c955">&#9670;&#160;</a></span>_serialPeek()</h2>
 
@@ -564,7 +497,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a523ef437485067a20d63d505dfc4d689">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00098">98</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00095">95</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
 
 </div>
 </div>
@@ -596,7 +529,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00101">101</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00098">98</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
 
 </div>
 </div>
@@ -638,7 +571,39 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00104">104</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00101">101</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
+
+</div>
+</div>
+<a id="a03ae9cbb95114289973b7f8d5a14b32f" name="a03ae9cbb95114289973b7f8d5a14b32f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a03ae9cbb95114289973b7f8d5a14b32f">&#9670;&#160;</a></span>available()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LIN_Slave_HardwareSerial_ESP32::available </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>check if a byte is available in Rx buffer </p>
+
+<p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338">LIN_Slave_Base</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html#l00118">118</a> of file <a class="el" href="../../de/dd8/LIN__slave__HardwareSerial__ESP32_8h_source.html">LIN_slave_HardwareSerial_ESP32.h</a>.</p>
 
 </div>
 </div>

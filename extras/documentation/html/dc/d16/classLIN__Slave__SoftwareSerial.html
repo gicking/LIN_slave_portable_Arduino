@@ -125,6 +125,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaab43c030cb26e5a470b79aed98bdc61" id="r_aaab43c030cb26e5a470b79aed98bdc61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aaab43c030cb26e5a470b79aed98bdc61">end</a> (void)</td></tr>
 <tr class="memdesc:aaab43c030cb26e5a470b79aed98bdc61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close serial interface.  <br /></td></tr>
 <tr class="separator:aaab43c030cb26e5a470b79aed98bdc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace07cb9238a24d928a804997573bb074" id="r_ace07cb9238a24d928a804997573bb074"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ace07cb9238a24d928a804997573bb074">available</a> (void)</td></tr>
+<tr class="memdesc:ace07cb9238a24d928a804997573bb074"><td class="mdescLeft">&#160;</td><td class="mdescRight">check if a byte is available in Rx buffer  <br /></td></tr>
+<tr class="separator:ace07cb9238a24d928a804997573bb074"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4608ef585a300d4c3e0fe88defcabe98" id="r_a4608ef585a300d4c3e0fe88defcabe98"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98">handler</a> (void)</td></tr>
 <tr class="memdesc:a4608ef585a300d4c3e0fe88defcabe98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle LIN protocol and call user-defined frame handlers.  <br /></td></tr>
 <tr class="separator:a4608ef585a300d4c3e0fe88defcabe98"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,9 +168,6 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa8930ff60f123e8bf7ad0e356f765403" id="r_aa8930ff60f123e8bf7ad0e356f765403"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aa8930ff60f123e8bf7ad0e356f765403">_resetBreakFlag</a> (void)</td></tr>
 <tr class="memdesc:aa8930ff60f123e8bf7ad0e356f765403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear break detection flag.  <br /></td></tr>
 <tr class="separator:aa8930ff60f123e8bf7ad0e356f765403"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c55bed3411a8adb706297742bace2de" id="r_a2c55bed3411a8adb706297742bace2de"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a2c55bed3411a8adb706297742bace2de">_serialAvailable</a> (void)</td></tr>
-<tr class="memdesc:a2c55bed3411a8adb706297742bace2de"><td class="mdescLeft">&#160;</td><td class="mdescRight">check if a byte is available in Rx buffer  <br /></td></tr>
-<tr class="separator:a2c55bed3411a8adb706297742bace2de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b2d929ebe78abb843e6ac464a01d985" id="r_a1b2d929ebe78abb843e6ac464a01d985"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a1b2d929ebe78abb843e6ac464a01d985">_serialPeek</a> (void)</td></tr>
 <tr class="memdesc:a1b2d929ebe78abb843e6ac464a01d985"><td class="mdescLeft">&#160;</td><td class="mdescRight">peek next byte from Rx buffer  <br /></td></tr>
 <tr class="separator:a1b2d929ebe78abb843e6ac464a01d985"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,11 +175,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ab1aa5ea5521652dbe557b97bdea5086f"><td class="mdescLeft">&#160;</td><td class="mdescRight">read next byte from Rx buffer  <br /></td></tr>
 <tr class="separator:ab1aa5ea5521652dbe557b97bdea5086f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae43256e1eb94013f6461e8bb224c33af" id="r_ae43256e1eb94013f6461e8bb224c33af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ae43256e1eb94013f6461e8bb224c33af">_serialWrite</a> (uint8_t buf[], uint8_t num)</td></tr>
-<tr class="memdesc:ae43256e1eb94013f6461e8bb224c33af"><td class="mdescLeft">&#160;</td><td class="mdescRight">write bytes to Tx buffer  <br /></td></tr>
+<tr class="memdesc:ae43256e1eb94013f6461e8bb224c33af"><td class="mdescLeft">&#160;</td><td class="mdescRight">write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR  <br /></td></tr>
 <tr class="separator:ae43256e1eb94013f6461e8bb224c33af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b86896440040aa7ad02ed3d453119bd" id="r_a6b86896440040aa7ad02ed3d453119bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a6b86896440040aa7ad02ed3d453119bd">_serialFlush</a> (void)</td></tr>
-<tr class="memdesc:a6b86896440040aa7ad02ed3d453119bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">flush Tx buffer  <br /></td></tr>
-<tr class="separator:a6b86896440040aa7ad02ed3d453119bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classLIN__Slave__Base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classLIN__Slave__Base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html">LIN_Slave_Base</a></td></tr>
 <tr class="memitem:aaa28023dc65ab83374119ee5054208c0 inherit pro_methods_classLIN__Slave__Base" id="r_aaa28023dc65ab83374119ee5054208c0"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0">_calculatePID</a> (uint8_t ID)</td></tr>
 <tr class="memdesc:aaa28023dc65ab83374119ee5054208c0 inherit pro_methods_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate protected frame ID.  <br /></td></tr>
@@ -455,90 +452,6 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a2c55bed3411a8adb706297742bace2de" name="a2c55bed3411a8adb706297742bace2de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c55bed3411a8adb706297742bace2de">&#9670;&#160;</a></span>_serialAvailable()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool LIN_Slave_SoftwareSerial::_serialAvailable </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>check if a byte is available in Rx buffer </p>
-
-<p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a8eb91414cbd13e45371407b9cfec6fc1">LIN_Slave_Base</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00062">62</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="../../dc/d16/classLIN__Slave__SoftwareSerial_a2c55bed3411a8adb706297742bace2de_icgraph.png" border="0" usemap="#adc/d16/classLIN__Slave__SoftwareSerial_a2c55bed3411a8adb706297742bace2de_icgraph" alt=""/></div>
-<map name="adc/d16/classLIN__Slave__SoftwareSerial_a2c55bed3411a8adb706297742bace2de_icgraph" id="adc/d16/classLIN__Slave__SoftwareSerial_a2c55bed3411a8adb706297742bace2de_icgraph">
-<area shape="rect" title="check if a byte is available in Rx buffer" alt="" coords="240,5,427,45"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="5,5,192,45"/>
-<area shape="poly" title=" " alt="" coords="227,28,192,28,192,23,227,23"/>
-</map>
-</div>
-
-</div>
-</div>
-<a id="a6b86896440040aa7ad02ed3d453119bd" name="a6b86896440040aa7ad02ed3d453119bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b86896440040aa7ad02ed3d453119bd">&#9670;&#160;</a></span>_serialFlush()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void LIN_Slave_SoftwareSerial::_serialFlush </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>flush Tx buffer </p>
-
-<p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#ae540477fe80675182197818aa25325a7">LIN_Slave_Base</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00074">74</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="../../dc/d16/classLIN__Slave__SoftwareSerial_a6b86896440040aa7ad02ed3d453119bd_icgraph.png" border="0" usemap="#adc/d16/classLIN__Slave__SoftwareSerial_a6b86896440040aa7ad02ed3d453119bd_icgraph" alt=""/></div>
-<map name="adc/d16/classLIN__Slave__SoftwareSerial_a6b86896440040aa7ad02ed3d453119bd_icgraph" id="adc/d16/classLIN__Slave__SoftwareSerial_a6b86896440040aa7ad02ed3d453119bd_icgraph">
-<area shape="rect" title="flush Tx buffer" alt="" coords="240,5,427,45"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="5,5,192,45"/>
-<area shape="poly" title=" " alt="" coords="227,28,192,28,192,23,227,23"/>
-</map>
-</div>
-
-</div>
-</div>
 <a id="a1b2d929ebe78abb843e6ac464a01d985" name="a1b2d929ebe78abb843e6ac464a01d985"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b2d929ebe78abb843e6ac464a01d985">&#9670;&#160;</a></span>_serialPeek()</h2>
 
@@ -567,7 +480,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a523ef437485067a20d63d505dfc4d689">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00065">65</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00062">62</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -609,7 +522,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00068">68</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00065">65</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -657,11 +570,53 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>write bytes to Tx buffer </p>
+<p>write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR </p>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00071">71</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00068">68</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+
+</div>
+</div>
+<a id="ace07cb9238a24d928a804997573bb074" name="ace07cb9238a24d928a804997573bb074"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace07cb9238a24d928a804997573bb074">&#9670;&#160;</a></span>available()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LIN_Slave_SoftwareSerial::available </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>check if a byte is available in Rx buffer </p>
+
+<p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338">LIN_Slave_Base</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00091">91</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="../../dc/d16/classLIN__Slave__SoftwareSerial_ace07cb9238a24d928a804997573bb074_icgraph.png" border="0" usemap="#adc/d16/classLIN__Slave__SoftwareSerial_ace07cb9238a24d928a804997573bb074_icgraph" alt=""/></div>
+<map name="adc/d16/classLIN__Slave__SoftwareSerial_ace07cb9238a24d928a804997573bb074_icgraph" id="adc/d16/classLIN__Slave__SoftwareSerial_ace07cb9238a24d928a804997573bb074_icgraph">
+<area shape="rect" title="check if a byte is available in Rx buffer" alt="" coords="240,5,427,45"/>
+<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a4608ef585a300d4c3e0fe88defcabe98" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="5,5,192,45"/>
+<area shape="poly" title=" " alt="" coords="227,28,192,28,192,23,227,23"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -798,36 +753,34 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../dc/d16/classLIN__Slave__SoftwareSerial_a4608ef585a300d4c3e0fe88defcabe98_cgraph.png" border="0" usemap="#adc/d16/classLIN__Slave__SoftwareSerial_a4608ef585a300d4c3e0fe88defcabe98_cgraph" alt=""/></div>
 <map name="adc/d16/classLIN__Slave__SoftwareSerial_a4608ef585a300d4c3e0fe88defcabe98_cgraph" id="adc/d16/classLIN__Slave__SoftwareSerial_a4608ef585a300d4c3e0fe88defcabe98_cgraph">
-<area shape="rect" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="5,138,192,178"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04" title="Disable RS485 transmitter (DE=low)" alt="" coords="511,16,697,56"/>
-<area shape="poly" title=" " alt="" coords="112,136,134,110,163,79,198,50,239,28,304,10,371,3,437,5,497,11,497,16,437,10,372,9,305,15,241,33,201,54,167,83,138,113,116,140"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a2c55bed3411a8adb706297742bace2de" title="check if a byte is available in Rx buffer" alt="" coords="240,42,427,82"/>
-<area shape="poly" title=" " alt="" coords="140,136,239,92,258,84,260,89,241,97,142,141"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a6b86896440040aa7ad02ed3d453119bd" title="flush Tx buffer" alt="" coords="240,106,427,146"/>
-<area shape="poly" title=" " alt="" coords="192,143,226,138,227,144,192,148"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a1b2d929ebe78abb843e6ac464a01d985" title="peek next byte from Rx buffer" alt="" coords="240,170,427,210"/>
-<area shape="poly" title=" " alt="" coords="192,168,227,173,226,178,192,174"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ab1aa5ea5521652dbe557b97bdea5086f" title="read next byte from Rx buffer" alt="" coords="240,234,427,274"/>
-<area shape="poly" title=" " alt="" coords="142,176,241,220,260,227,258,232,239,225,140,181"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8" title="Handle LIN protocol and call user&#45;defined frame callbacks." alt="" coords="242,299,425,324"/>
-<area shape="poly" title=" " alt="" coords="118,177,170,230,204,259,241,284,259,292,256,297,239,289,201,264,166,234,114,180"/>
-<area shape="poly" title=" " alt="" coords="408,297,425,284,441,262,449,240,451,217,450,194,450,147,457,122,473,97,495,75,522,59,524,64,498,80,477,100,462,124,455,148,456,194,457,218,455,241,446,265,429,288,411,301"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9d9d9ba724af72dcf366b494a8b3d868" title="Calculate LIN frame checksum." alt="" coords="505,110,703,150"/>
-<area shape="poly" title=" " alt="" coords="406,297,425,284,437,270,444,255,448,224,452,192,459,176,473,160,490,148,493,153,476,164,464,179,457,193,453,225,449,256,442,273,428,288,409,301"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0" title="Calculate protected frame ID." alt="" coords="493,175,715,200"/>
-<area shape="poly" title=" " alt="" coords="402,297,425,284,441,267,448,248,456,229,473,211,486,204,488,208,476,215,460,232,453,250,445,270,428,288,404,301"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#ada94260537f5248e8ebca094bedc8198" title="Enable RS485 transmitter (DE=high)" alt="" coords="475,224,733,250"/>
-<area shape="poly" title=" " alt="" coords="387,296,426,284,449,272,474,260,507,250,509,255,476,265,452,276,428,289,389,302"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a719d9b03156111e4c38e894c203af350" title="Get break detection flag. Is hardware dependent." alt="" coords="491,274,717,299"/>
-<area shape="poly" title=" " alt="" coords="425,301,477,296,477,301,425,306"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d" title="Clear break detection flag. Is hardware dependent." alt="" coords="485,323,723,348"/>
-<area shape="poly" title=" " alt="" coords="425,317,471,321,471,327,425,322"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a8eb91414cbd13e45371407b9cfec6fc1" title="check if a byte is available in Rx buffer. Here dummy" alt="" coords="486,372,722,398"/>
-<area shape="poly" title=" " alt="" coords="367,322,475,358,512,367,510,372,474,364,366,327"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b" title="read next byte from Rx buffer. Here dummy" alt="" coords="499,422,709,447"/>
-<area shape="poly" title=" " alt="" coords="350,323,403,365,438,389,476,408,497,415,495,420,474,413,435,393,400,370,347,327"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b" title="write bytes to Tx buffer. Here dummy" alt="" coords="499,471,709,496"/>
-<area shape="poly" title=" " alt="" coords="345,323,394,389,432,426,476,457,490,464,487,469,473,462,429,430,390,392,341,326"/>
+<area shape="rect" title="Handle LIN protocol and call user&#45;defined frame handlers." alt="" coords="5,121,192,161"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04" title="Disable RS485 transmitter (DE=low)" alt="" coords="511,5,697,45"/>
+<area shape="poly" title=" " alt="" coords="120,119,171,78,204,58,239,43,304,26,372,17,437,13,497,14,497,19,438,18,372,22,305,31,241,48,206,63,174,83,123,123"/>
+<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a1b2d929ebe78abb843e6ac464a01d985" title="peek next byte from Rx buffer" alt="" coords="240,57,427,97"/>
+<area shape="poly" title=" " alt="" coords="172,119,246,98,247,103,173,124"/>
+<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ab1aa5ea5521652dbe557b97bdea5086f" title="read next byte from Rx buffer" alt="" coords="240,121,427,161"/>
+<area shape="poly" title=" " alt="" coords="192,139,226,139,226,144,192,144"/>
+<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ace07cb9238a24d928a804997573bb074" title="check if a byte is available in Rx buffer" alt="" coords="240,185,427,225"/>
+<area shape="poly" title=" " alt="" coords="173,159,247,179,246,184,172,164"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8" title="Handle LIN protocol and call user&#45;defined frame callbacks." alt="" coords="242,250,425,275"/>
+<area shape="poly" title=" " alt="" coords="125,159,177,198,241,235,262,243,260,248,239,240,174,202,122,163"/>
+<area shape="poly" title=" " alt="" coords="407,248,425,235,440,215,447,195,449,153,450,110,457,88,473,66,496,48,500,52,477,70,462,90,455,111,454,153,453,196,445,218,429,239,410,252"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9d9d9ba724af72dcf366b494a8b3d868" title="Calculate LIN frame checksum." alt="" coords="505,80,703,120"/>
+<area shape="poly" title=" " alt="" coords="405,248,425,235,436,223,443,211,448,184,453,157,461,143,473,130,491,118,494,123,476,134,465,146,459,159,453,185,448,212,441,226,428,239,408,252"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0" title="Calculate protected frame ID." alt="" coords="493,145,715,170"/>
+<area shape="poly" title=" " alt="" coords="399,247,425,235,440,222,448,208,457,193,473,179,486,173,488,177,476,184,461,196,453,210,444,225,428,240,401,252"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#ada94260537f5248e8ebca094bedc8198" title="Enable RS485 transmitter (DE=high)" alt="" coords="475,194,733,219"/>
+<area shape="poly" title=" " alt="" coords="391,247,474,229,523,219,524,225,475,235,392,253"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a719d9b03156111e4c38e894c203af350" title="Get break detection flag. Is hardware dependent." alt="" coords="491,243,717,269"/>
+<area shape="poly" title=" " alt="" coords="425,258,477,256,477,262,425,263"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d" title="Clear break detection flag. Is hardware dependent." alt="" coords="485,293,723,318"/>
+<area shape="poly" title=" " alt="" coords="415,273,510,288,509,293,414,278"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b" title="read next byte from Rx buffer. Here dummy" alt="" coords="499,342,709,367"/>
+<area shape="poly" title=" " alt="" coords="357,273,410,301,476,328,505,336,504,342,474,333,408,306,355,278"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b" title="write bytes to Tx buffer. Here dummy" alt="" coords="499,391,709,417"/>
+<area shape="poly" title=" " alt="" coords="347,273,399,325,436,354,476,378,494,385,492,390,473,382,433,358,396,329,344,277"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338" title="check if a byte is available in Rx buffer. Here dummy" alt="" coords="507,441,701,466"/>
+<area shape="poly" title=" " alt="" coords="344,274,362,306,392,348,430,391,476,427,495,436,493,441,473,432,426,395,387,352,358,309,339,277"/>
 </map>
 </div>
 

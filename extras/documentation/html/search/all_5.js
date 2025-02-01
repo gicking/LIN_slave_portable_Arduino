@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['geterror_0',['getError',['../d8/d65/classLIN__Slave__Base.html#ac89231e40b2f9dd3c2fe9f07db10a5d3',1,'LIN_Slave_Base']]],
-  ['getframe_1',['getFrame',['../d8/d65/classLIN__Slave__Base.html#a25e95e4e6856c903c9106bfd2abdf289',1,'LIN_Slave_Base']]],
-  ['getstate_2',['getState',['../d8/d65/classLIN__Slave__Base.html#a8a37d46f641f35c78429e49144ec3571',1,'LIN_Slave_Base']]]
+  ['fct_0',['fct',['../d7/d69/structLIN__Slave__Base_1_1callback__t.html#ad599310275618e0431e0d75648019656',1,'LIN_Slave_Base::callback_t']]],
+  ['flagbreak_1',['flagbreak',['../d8/d65/classLIN__Slave__Base.html#a148424f5c133d5198fe2936bb85b064a',1,'LIN_Slave_Base::flagBreak'],['../db/dae/classLIN__Slave__HardwareSerial.html#a3c5591dc50822f834a06fc70a7e602c3',1,'LIN_Slave_HardwareSerial::flagBreak'],['../d8/dda/classLIN__Slave__HardwareSerial__ESP32.html#a8857f4c1a6dc27c24a1648ed287d56fc',1,'LIN_Slave_HardwareSerial_ESP32::flagBreak']]],
+  ['frame_5ft_2',['frame_t',['../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e',1,'LIN_Slave_Base']]]
 ];

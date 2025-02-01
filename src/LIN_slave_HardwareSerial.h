@@ -7,9 +7,11 @@
   \author   Georg Icking-Konert
 */
 
-// for AVR platform use NeoHWSerial or enable this file and disable file LIN_slave_NeoHWSerial_AVR.h
-#if !defined(ARDUINO_ARCH_AVR)
-//if (1)
+// for AVR selection of HardwareSerial (sync on inter-frame pause) or NeoHWSerial (sync on BREAK)
+#include <LIN_slave_NeoHWSerial_AVR.h>
+
+// for AVR platform use NeoHWSerial or comment out USE_NEOSERIAL in file LIN_slave_NeoHWSerial_AVR.h
+#if !defined(ARDUINO_ARCH_AVR) || !defined(USE_NEOSERIAL)
 
 
 /*-----------------------------------------------------------------------------
@@ -56,9 +58,6 @@ class LIN_Slave_HardwareSerial : public LIN_Slave_Base
     void _resetBreakFlag(void);
 
 
-    /// @brief check if a byte is available in Rx buffer
-    inline bool _serialAvailable(void) { return pSerial->available(); }
-
     /// @brief peek next byte from Rx buffer
     inline uint8_t _serialPeek(void) { return pSerial->peek(); }
 
@@ -68,22 +67,22 @@ class LIN_Slave_HardwareSerial : public LIN_Slave_Base
     /// @brief write bytes to Tx buffer
     inline void _serialWrite(uint8_t buf[], uint8_t num) { pSerial->write(buf, num); }
 
-    /// @brief flush Tx buffer
-    inline void _serialFlush(void) { pSerial->flush(); }
-
 
   // PUBLIC METHODS
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, 
-      const char NameLIN[] = "Slave", uint16_t MinFramePause=1000L, uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
+    LIN_Slave_HardwareSerial(HardwareSerial &Interface, uint16_t MinFramePause=1000L, 
+      LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     void end(void);
+
+    /// @brief check if a byte is available in Rx buffer
+    inline bool available(void) { return pSerial->available(); }
 
     /// @brief Handle LIN protocol and call user-defined frame handlers
     virtual void handler(void);
@@ -96,7 +95,7 @@ class LIN_Slave_HardwareSerial : public LIN_Slave_Base
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_HW_SERIAL_H_
 
-#endif // !ARDUINO_ARCH_AVR
+#endif // !ARDUINO_ARCH_AVR || !USE_NEOSERIAL
 
 /*-----------------------------------------------------------------------------
     END OF FILE

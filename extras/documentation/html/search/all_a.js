@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['namelin_0',['nameLIN',['../d8/d65/classLIN__Slave__Base.html#aa5aa6a3ae48a088687cfeb2f5a8bb9d7',1,'LIN_Slave_Base']]],
-  ['no_5ferror_1',['NO_ERROR',['../d8/d65/classLIN__Slave__Base.html#a9118697f1b0c5070b995a0bf30d3aaa6ad4f6380772fc34eb819604f2949ade81',1,'LIN_Slave_Base']]],
-  ['numdata_2',['numData',['../d8/d65/classLIN__Slave__Base.html#a739236a55ae2465ee60003f9827f05b4',1,'LIN_Slave_Base']]]
+  ['master_5frequest_0',['MASTER_REQUEST',['../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209eae4de5ef67e779014a097b3cc7b26e150',1,'LIN_Slave_Base']]],
+  ['minframepause_1',['minFramePause',['../db/dae/classLIN__Slave__HardwareSerial.html#aed5ffb7aa9d9ab3447706b07dc4ec1aa',1,'LIN_Slave_HardwareSerial']]]
 ];

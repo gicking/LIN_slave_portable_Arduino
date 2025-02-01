@@ -187,7 +187,7 @@ void LIN_Slave_HardwareSerial_ESP32::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP32::begin()");
@@ -209,7 +209,7 @@ void LIN_Slave_HardwareSerial_ESP32::end()
   // close serial interface
   pSerial->end();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP32::end()");

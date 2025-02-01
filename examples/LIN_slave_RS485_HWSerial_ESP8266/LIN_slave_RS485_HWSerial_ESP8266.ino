@@ -28,7 +28,7 @@ Supported (=successfully tested) boards:
 #define SERIAL_DEBUG  Serial1
 
 
-// setup LIN node. Swap Serial pins to use Tx=D8 & Rx=D7 
+// setup LIN node. Swap Serial pins to use Tx=D8 & Rx=D7. Parameters: swapPins, pause-sync, version, name, timeout, TxEN
 LIN_Slave_HardwareSerial_ESP8266   LIN(true, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
 
 

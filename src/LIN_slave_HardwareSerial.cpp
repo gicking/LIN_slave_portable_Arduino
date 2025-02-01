@@ -53,14 +53,14 @@ void LIN_Slave_HardwareSerial::_resetBreakFlag()
   \brief      Constructor for LIN node class using generic HardwareSerial
   \details    Constructor for LIN node class for using generic HardwareSerial. Inherit all methods from LIN_Slave_Base, only different constructor
   \param[in]  Interface       serial interface for LIN
+  \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
   \param[in]  Version         LIN protocol version (default = v2)
   \param[in]  NameLIN         LIN node name (default = "Slave")
-  \param[in]  MinFramePause   min. inter-frame pause [us] to detect new frame (default = 1000)
   \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
   \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint16_t MinFramePause, uint32_t TimeoutRx, const int8_t PinTxEN) : 
+LIN_Slave_HardwareSerial::LIN_Slave_HardwareSerial(HardwareSerial &Interface, uint16_t MinFramePause, 
+  LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  
   // Debug serial initialized in begin() -> no debug output here
@@ -92,7 +92,7 @@ void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::begin()");
@@ -114,7 +114,7 @@ void LIN_Slave_HardwareSerial::end()
   // close serial interface
   pSerial->end();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::end()");
@@ -128,7 +128,7 @@ void LIN_Slave_HardwareSerial::end()
   \brief      Handle LIN protocol and call user-defined frame handlers
   \details    Handle LIN protocol and call user-defined frame handlers, both for master request and slave response frames. 
               BREAK detection is based on inter-frame timing only (Arduino doesn't store framing error) -> less reliable.
-              Note: received BREAK byte is consumed here to support also sync on SYNC byte. 
+              Note: received BREAK byte is consumed here to support also sync on SYNC byte if Rx byte w/o stop bit is ignored 
 */
 void LIN_Slave_HardwareSerial::handler()
 {

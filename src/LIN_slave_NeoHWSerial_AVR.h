@@ -7,9 +7,11 @@
   \author   Georg Icking-Konert
 */
 
-// for AVR platform optionally disable this file and enable file LIN_slave_HardwareSerial.h
-#if defined(ARDUINO_ARCH_AVR) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)
-//#if (0)
+// comment out to use HardwareSerial (sync on inter-frame pause) instead of NeoHWSerial (sync on BREAK)
+#define USE_NEOSERIAL 
+
+// for AVR platform use NeoHWSerial or comment out USE_NEOSERIAL above
+#if defined(ARDUINO_ARCH_AVR) && defined (USE_NEOSERIAL) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)
 
 
 /*-----------------------------------------------------------------------------
@@ -91,9 +93,6 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
     void _resetBreakFlag(void);
 
 
-    /// @brief check if a byte is available in Rx buffer
-    inline bool _serialAvailable(void) { return pSerial->available(); }
-
     /// @brief peek next byte from Rx buffer
     inline uint8_t _serialPeek(void) { return pSerial->peek(); }
 
@@ -103,22 +102,22 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
     /// @brief write bytes to Tx buffer
     inline void _serialWrite(uint8_t buf[], uint8_t num) { pSerial->write(buf, num); }
 
-    /// @brief flush Tx buffer
-    inline void _serialFlush(void) { pSerial->flush(); }
-
 
   // PUBLIC METHODS
   public:
 
     /// @brief Class constructor
-    LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2,
-      const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
+    LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, 
+      LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     void end(void);
+
+    /// @brief check if a byte is available in Rx buffer
+    inline bool available(void) { return pSerial->available(); }
 
 }; // class LIN_Slave_NeoHWSerial_AVR
 
@@ -128,7 +127,8 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_NEOHWSERIAL_AVR_H_
 
-#endif // ARDUINO_ARCH_AVR
+#endif // ARDUINO_ARCH_AVR && USE_NEOSERIAL
+
 
 /*-----------------------------------------------------------------------------
     END OF FILE

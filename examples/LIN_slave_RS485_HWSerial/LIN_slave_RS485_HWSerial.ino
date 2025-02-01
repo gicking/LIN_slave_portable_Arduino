@@ -29,7 +29,7 @@ Supported (=successfully tested) boards:
 #define SERIAL_DEBUG  Serial
 
 
-// setup LIN node
+// setup LIN node. Parameters: interface, pause-sync, version, name, timeout, TxEN
 LIN_Slave_HardwareSerial  LIN(Serial1, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
 
 

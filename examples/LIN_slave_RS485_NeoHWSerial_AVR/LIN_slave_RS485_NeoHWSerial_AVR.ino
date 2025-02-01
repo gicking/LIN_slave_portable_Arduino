@@ -29,7 +29,7 @@ Supported (=successfully tested) boards:
 #define SERIAL_DEBUG  NeoSerial
 
 
-// setup LIN node
+// setup LIN node. Parameters: interface, version, name, timeout, TxEN
 LIN_Slave_NeoHWSerial_AVR  LIN(NeoSerial1, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
 
 

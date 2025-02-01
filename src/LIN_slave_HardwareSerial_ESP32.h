@@ -91,9 +91,6 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
     void _resetBreakFlag(void);
 
 
-    /// @brief check if a byte is available in Rx buffer
-    inline bool _serialAvailable(void) { return pSerial->available(); }
-
     /// @brief peek next byte from Rx buffer
     inline uint8_t _serialPeek(void) { return pSerial->peek(); }
 
@@ -103,22 +100,22 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
     /// @brief write bytes to Tx buffer
     inline void _serialWrite(uint8_t buf[], uint8_t num) { pSerial->write(buf, num); }
 
-    /// @brief flush Tx buffer
-    inline void _serialFlush(void) { pSerial->flush(); }
-
 
   // PUBLIC METHODS
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx, LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2,
-      const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
+    LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx, 
+      LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
     void begin(uint16_t Baudrate = 19200);
     
     /// @brief Close serial interface
     void end(void);
+
+    /// @brief check if a byte is available in Rx buffer
+    inline bool available(void) { return pSerial->available(); }
 
 }; // class LIN_Slave_HardwareSerial_ESP32
 

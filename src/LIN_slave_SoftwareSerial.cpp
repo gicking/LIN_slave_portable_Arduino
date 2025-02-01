@@ -94,7 +94,7 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::begin()");
@@ -116,7 +116,7 @@ void LIN_Slave_SoftwareSerial::end()
   // close serial interface
   this->SWSerial.end();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::end()");
@@ -140,14 +140,16 @@ void LIN_Slave_SoftwareSerial::handler()
   static uint32_t   usLastByte = 0;
   
   // byte received -> check it
-  if (this->_serialAvailable())
+  if (this->available())
   {
-    // ESP32 & ESP8266: if 0x55 received and long time since last byte, start new frame  
+    // ESP32 & ESP8266 (BREAK is dropped due to missing stop bit): if SYNC=0x55 received and long time since last byte, start new frame  
     #if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266)
       if ((this->_serialPeek() == 0x55) && ((micros() - usLastByte) > this->minFramePause))
+      {
         this->flagBreak = true;
+      }
 
-    // other architectures: if 0x00 received and long time since last byte, start new frame and remove 0x00 from queue
+    // other architectures (BREAK is received): if BREAK=0x00 received and long time since last byte, start new frame and remove 0x00 from queue
     #else
       if ((this->_serialPeek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
       {
@@ -165,7 +167,7 @@ void LIN_Slave_SoftwareSerial::handler()
     // SoftwareSerial is blocking while sending -> skip reading echo
     if (this->state == LIN_Slave_Base::STATE_RECEIVING_ECHO)
     {
-      this->_serialFlush();
+      // propagate to DONE immediately
       this->state = LIN_Slave_Base::STATE_DONE;
 
       // optionally disable RS485 transmitter

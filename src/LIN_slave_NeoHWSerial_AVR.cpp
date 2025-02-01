@@ -31,12 +31,26 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
-    if ((byte ==0x00) && (status & (0x01 << FE0)))
-      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[0] = true;
+    // optional debug output (debug level 3)
+    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+      LIN_SLAVE_DEBUG_SERIAL.print("LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0()");
+      LIN_SLAVE_DEBUG_SERIAL.print(": Rx = 0x");
+      LIN_SLAVE_DEBUG_SERIAL.print(byte, HEX);
+      if (status & (0x01<< FE0))
+        LIN_SLAVE_DEBUG_SERIAL.println(", BREAK");
+      else
+        LIN_SLAVE_DEBUG_SERIAL.println();
+    #endif
 
-    // return false -> byte is not stored in Serial0 buffer
-    return false;
+    // on BREAK (=0x00 with framing error) set class variable and don't store in queue (return false)
+    if ((byte ==0x00) && (status & (0x01<< FE0)))
+    {
+      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[0] = true;
+      return false;
+    }
+
+    // return true -> byte is stored in Serial0 buffer
+    return true;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0()
 #endif
@@ -52,13 +66,27 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
     \param[in]  status  UART status byte
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1(uint8_t byte, uint8_t status)
-  {
-    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
-    if ((byte ==0x00) && (status & (0x01<< FE1)))
-      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[1] = true;
+  { 
+    // optional debug output (debug level 3)
+    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+      LIN_SLAVE_DEBUG_SERIAL.print("LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1()");
+      LIN_SLAVE_DEBUG_SERIAL.print(": Rx = 0x");
+      LIN_SLAVE_DEBUG_SERIAL.print(byte, HEX);
+      if (status & (0x01<< FE1))
+        LIN_SLAVE_DEBUG_SERIAL.println(", BREAK");
+      else
+        LIN_SLAVE_DEBUG_SERIAL.println();
+    #endif
 
-    // return false -> byte is not stored in Serial0 buffer
-    return false;
+    // on BREAK (=0x00 with framing error) set class variable and don't store in queue (return false)
+    if ((byte ==0x00) && (status & (0x01<< FE1)))
+    {
+      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[1] = true;
+      return false;
+    }
+
+    // return true -> byte is stored in Serial1 buffer
+    return true;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1()
 #endif
@@ -75,12 +103,26 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
-    if ((byte ==0x00) && (status & (0x01<< FE2)))
-      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[2] = true;
+    // optional debug output (debug level 3)
+    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+      LIN_SLAVE_DEBUG_SERIAL.print("LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2()");
+      LIN_SLAVE_DEBUG_SERIAL.print(": Rx = 0x");
+      LIN_SLAVE_DEBUG_SERIAL.print(byte, HEX);
+      if (status & (0x01<< FE2))
+        LIN_SLAVE_DEBUG_SERIAL.println(", BREAK");
+      else
+        LIN_SLAVE_DEBUG_SERIAL.println();
+    #endif
 
-    // return false -> byte is not stored in Serial0 buffer
-    return false;
+    // on BREAK (=0x00 with framing error) set class variable and don't store in queue (return false)
+    if ((byte ==0x00) && (status & (0x01<< FE2)))
+    {
+      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[2] = true;
+      return false;
+    }
+
+    // return true -> byte is stored in Serial2 buffer
+    return true;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2()
 #endif
@@ -97,12 +139,26 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
   */
   bool LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3(uint8_t byte, uint8_t status)
   {
-    // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
-    if ((byte ==0x00) && (status & (0x01<< FE3)))
-      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[3] = true;
+    // optional debug output (debug level 3)
+    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+      LIN_SLAVE_DEBUG_SERIAL.print("LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3()");
+      LIN_SLAVE_DEBUG_SERIAL.print(": Rx = 0x");
+      LIN_SLAVE_DEBUG_SERIAL.print(byte, HEX);
+      if (status & (0x01<< FE3))
+        LIN_SLAVE_DEBUG_SERIAL.println(", BREAK");
+      else
+        LIN_SLAVE_DEBUG_SERIAL.println();
+    #endif
 
-    // return false -> byte is not stored in Serial0 buffer
-    return false;
+    // on BREAK (=0x00 with framing error) set class variable and don't store in queue (return false)
+    if ((byte ==0x00) && (status & (0x01<< FE3)))
+    {
+      (LIN_Slave_NeoHWSerial_AVR::flagBreak)[3] = true;
+      return false;
+    }
+
+    // return true -> byte is stored in Serial3 buffer
+    return true;
 
   } // LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3()
 #endif
@@ -153,8 +209,8 @@ void LIN_Slave_NeoHWSerial_AVR::_resetBreakFlag()
   \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
   \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, LIN_Slave_Base::version_t Version, 
-  const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
+LIN_Slave_NeoHWSerial_AVR::LIN_Slave_NeoHWSerial_AVR(NeoHWSerial &Interface, 
+  LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  
   // Debug serial initialized in begin() -> no debug output here
@@ -214,7 +270,7 @@ void LIN_Slave_NeoHWSerial_AVR::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_NeoHWSerial_AVR::begin()");
@@ -236,7 +292,7 @@ void LIN_Slave_NeoHWSerial_AVR::end()
   // close serial interface
   pSerial->end();
 
-  // optional debug output
+  // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
     LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
     LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_NeoHWSerial_AVR::end()");

@@ -24,7 +24,7 @@ Supported (=successfully tested) boards:
 #define SERIAL_DEBUG  Serial
 
 
-// setup LIN node
+// setup LIN node. Parameters: interface, Rx, Tx, version, name, timeout, TxEN
 LIN_Slave_HardwareSerial_ESP32  LIN(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
 
 

@@ -58,20 +58,20 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     void _resetBreakFlag(void);
 
 
-    /// @brief check if a byte is available in Rx buffer
-    inline bool _serialAvailable(void) { return SWSerial.available(); }
-
     /// @brief peek next byte from Rx buffer
     inline uint8_t _serialPeek(void) { return SWSerial.peek(); }
 
     /// @brief read next byte from Rx buffer
     inline uint8_t _serialRead(void) { return SWSerial.read(); }
 
-    /// @brief write bytes to Tx buffer
-    inline void _serialWrite(uint8_t buf[], uint8_t num) { SWSerial.write(buf, num); }
-
-    /// @brief flush Tx buffer
-    inline void _serialFlush(void) { SWSerial.flush(); }
+    /// @brief write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR
+    inline void _serialWrite(uint8_t buf[], uint8_t num)
+    { 
+      SWSerial.stopListening();
+      SWSerial.write(buf, num); 
+      SWSerial.flush();
+      SWSerial.listen();
+    }
 
 
   // PUBLIC METHODS
@@ -86,6 +86,9 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     
     /// @brief Close serial interface
     void end(void);
+
+    /// @brief check if a byte is available in Rx buffer
+    inline bool available(void) { return SWSerial.available(); }
 
     /// @brief Handle LIN protocol and call user-defined frame handlers
     virtual void handler(void);

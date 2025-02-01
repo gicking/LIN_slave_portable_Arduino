@@ -23,11 +23,12 @@
 
 // optional LIN debug output @ 115.2kBaud. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
 #if !defined(LIN_SLAVE_DEBUG_SERIAL)
-  //#define LIN_SLAVE_DEBUG_SERIAL  Serial        //!< serial interface used for debug output. Comment out for none
-  //#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial     //!< serial interface used for debug output (required for AVR). Comment out for none
+  //#define LIN_SLAVE_DEBUG_SERIAL  Serial      //!< serial interface used for debug output. Comment out for none
+  //#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial   //!< serial interface used for debug output (required for AVR). Comment out for none
+  //#include <NeoHWSerial.h>                    // comment in/out together with previous line
 #endif
 #if !defined(LIN_SLAVE_DEBUG_LEVEL)
-  #define LIN_SLAVE_DEBUG_LEVEL   2             //!< debug verbosity 0..3 (1=errors only, 3=chatty)
+  //#define LIN_SLAVE_DEBUG_LEVEL   2           //!< debug verbosity 0..3 (1=errors only, 3=chatty)
 #endif
 
 /*-----------------------------------------------------------------------------
@@ -36,15 +37,6 @@
 
 // generic Arduino functions
 #include <Arduino.h>
-
-// required for debug on AVR via NeoSerial
-#if defined (LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_SERIAL == NeoSerial)
-  #if defined(ARDUINO_ARCH_AVR)
-    #include <NeoHWSerial.h>
-  #else
-    #error NeoSerial only available for AVR
-  #endif
-#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -164,9 +156,6 @@ class LIN_Slave_Base
     virtual void _resetBreakFlag(void);
 
 
-    /// @brief check if a byte is available in Rx buffer. Here dummy
-    virtual inline bool _serialAvailable(void) { return false; }
-
     /// @brief peek next byte from Rx buffer. Here dummy
     virtual inline uint8_t _serialPeek(void) { return 0x00; }
 
@@ -175,9 +164,6 @@ class LIN_Slave_Base
 
     /// @brief write bytes to Tx buffer. Here dummy
     virtual inline void _serialWrite(uint8_t buf[], uint8_t num) { (void) buf; (void) num; }
-
-    /// @brief flush Tx buffer. Here dummy
-    virtual inline void _serialFlush(void) { }
     
 
     /// @brief Enable RS485 transmitter (DE=high)
@@ -226,6 +212,9 @@ class LIN_Slave_Base
     /// @brief Close serial interface
     virtual void end(void);
     
+    /// @brief check if a byte is available in Rx buffer. Here dummy
+    virtual inline bool available(void) { return false; }
+
     
     /// @brief Reset LIN state machine
     inline void resetStateMachine(void)
