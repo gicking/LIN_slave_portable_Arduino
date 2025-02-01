@@ -5,7 +5,7 @@ Example code for LIN slave node using generic SoftwareSerial interface
 Note:
   - frame synchronization via inter-frame pause, due to lack of framing error detection in Arduino -> not standard compliant!
   - if available, propose to use Serial using proper BREAK detection, e.g. NeoHWSerial (AVR) or ESP32
-  - handling of frames can be done inside callback punctions. Console output below is optional 
+  - handling of frames can be done inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:
  - Arduino Mega 2560      https://store.arduino.cc/products/arduino-mega-2560-rev3

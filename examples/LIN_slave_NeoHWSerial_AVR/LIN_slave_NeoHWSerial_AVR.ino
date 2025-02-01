@@ -6,7 +6,7 @@ Note:
   - relies on NeoHWSerial for BREAK detection (install via Library manager)
   - to avoid linker conflict, only use NeoSerial in your code, not Serial
   - to use standard HardwareSerial (less robust), comment out USE_NEOSERIAL in file LIN_slave_NeoHWSerial_AVR.h
-  - handling of frames can be done inside callback punctions. Console output below is optional 
+  - handling of frames can be done inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:
  - Arduino Mega 2560      https://store.arduino.cc/products/arduino-mega-2560-rev3

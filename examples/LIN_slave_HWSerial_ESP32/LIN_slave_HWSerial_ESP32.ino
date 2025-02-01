@@ -3,7 +3,7 @@
 Example code for LIN slave node using ESP32 HardwareSerial interface
 
 Note:
-  - handling of frames can be done inside callback punctions. Console output below is optional
+  - handling of frames can be done inside callback functions. Console output below is optional
 
 Supported (=successfully tested) boards:
  - ESP32 Wroom-32UE       https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/

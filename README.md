@@ -74,6 +74,6 @@ Have fun!, Georg
 Revision History
 ----------------
 
-**v1.0 (pending)**
+**v1.0 (2025-02-01)**
   - initial release
 

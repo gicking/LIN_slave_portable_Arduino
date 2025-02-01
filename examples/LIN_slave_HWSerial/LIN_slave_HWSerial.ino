@@ -7,7 +7,7 @@ Note:
   - on AVR 
     - propose to use NeoHWSerial instead (uncomment USE_NEOSERIAL in file LIN_slave_NeoHWSerial_AVR.h)
     - to avoid linker conflict, only use NeoSerial in your code, not Serial
-  - handling of frames can be done inside callback punctions. Console output below is optional 
+  - handling of frames can be done inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:
  - Arduino Mega 2560      disabled NeoHWLibrary; https://store.arduino.cc/products/arduino-mega-2560-rev3

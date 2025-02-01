@@ -5,7 +5,7 @@ Example code for LIN slave node using ESP8266 HardwareSerial0 interface
 Note:
   - frame synchronization via inter-frame pause, due to lack of framing error detection in Arduino -> not standard compliant!
   - if available, propose to use Serial using proper BREAK detection, e.g. NeoHWSerial (AVR) or ESP32
-  - handling of frames can be done inside callback punctions. Console output below is optional 
+  - handling of frames can be done inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:
  - ESP8266 D1 mini        https://www.wemos.cc/en/latest/d1/d1_mini.html

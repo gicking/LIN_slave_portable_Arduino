@@ -24,6 +24,7 @@ nameLIN				KEYWORD2
 # class methods
 begin				KEYWORD2
 end					KEYWORD2
+available			KEYWORD2
 resetStateMachine	KEYWORD2
 getState			KEYWORD2
 resetError			KEYWORD2
