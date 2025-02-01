@@ -8,7 +8,7 @@
 */
 
 // comment out to use HardwareSerial (sync on inter-frame pause) instead of NeoHWSerial (sync on BREAK)
-#define USE_NEOSERIAL 
+#define USE_NEOSERIAL
 
 // for AVR platform use NeoHWSerial or comment out USE_NEOSERIAL above
 #if defined(ARDUINO_ARCH_AVR) && defined (USE_NEOSERIAL) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)

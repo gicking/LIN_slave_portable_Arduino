@@ -21,6 +21,11 @@
 // misc parameters
 #define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
 
+// required for CI test environment. Call arduino-cli with "-DINCLUDE_NEOHWSERIAL"
+#if defined(INCLUDE_NEOHWSERIAL)
+  #include <NeoHWSerial.h>
+#endif
+
 // optional LIN debug output @ 115.2kBaud. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
 #if !defined(LIN_SLAVE_DEBUG_SERIAL)
   //#define LIN_SLAVE_DEBUG_SERIAL  Serial      //!< serial interface used for debug output. Comment out for none
@@ -30,6 +35,7 @@
 #if !defined(LIN_SLAVE_DEBUG_LEVEL)
   //#define LIN_SLAVE_DEBUG_LEVEL   2           //!< debug verbosity 0..3 (1=errors only, 3=chatty)
 #endif
+
 
 /*-----------------------------------------------------------------------------
   INCLUDE FILES

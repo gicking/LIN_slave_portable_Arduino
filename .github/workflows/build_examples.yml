@@ -78,15 +78,16 @@ jobs:
 
           # list of boards with optional build flags
           BOARDS_FLAGS=(
-            "arduino:avr:mega -DLIN_SLAVE_DEBUG_LEVEL=3"            # Arduino Mega 2560 
+            "arduino:avr:mega -DLIN_SLAVE_DEBUG_LEVEL=3 -DLIN_SLAVE_DEBUG_SERIAL=NeoSerial -DINCLUDE_NEOHWSERIAL"   # Arduino Mega 2560 
           )
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
-            "examples/LIN_slave_NeoHWSerial_AVR -DLIN_SLAVE_DEBUG_SERIAL=NeoSerial"
-            "examples/LIN_slave_SWSerial -DLIN_SLAVE_DEBUG_SERIAL=Serial"
-            "examples/LIN_slave_RS485_NeoHWSerial_AVR -DLIN_SLAVE_DEBUG_SERIAL=NeoSerial"
-            "examples/LIN_slave_RS485_SWSerial -DLIN_SLAVE_DEBUG_SERIAL=Serial"
+            "examples/LIN_monitor_HWSerial"
+            "examples/LIN_slave_NeoHWSerial_AVR"
+            "examples/LIN_slave_RS485_NeoHWSerial_AVR"
+            "examples/LIN_slave_RS485_SWSerial"
+            "examples/LIN_slave_SWSerial"
           )
 
           # misc build flags
@@ -145,6 +146,7 @@ jobs:
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
+            "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial"
             "examples/LIN_slave_RS485_HWSerial"
           )
@@ -204,10 +206,11 @@ jobs:
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
+            "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial_ESP8266"
-            "examples/LIN_slave_SWSerial"
             "examples/LIN_slave_RS485_HWSerial_ESP8266"
             "examples/LIN_slave_RS485_SWSerial"
+            "examples/LIN_slave_SWSerial"
           )
 
           # misc build flags
@@ -265,10 +268,11 @@ jobs:
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
+            "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial_ESP32"
-            "examples/LIN_slave_SWSerial"
             "examples/LIN_slave_RS485_HWSerial_ESP32"
             "examples/LIN_slave_RS485_SWSerial"
+            "examples/LIN_slave_SWSerial"
           )
 
           # misc build flags
