@@ -101,8 +101,8 @@ void setup()
   LIN.begin(19200);
 
   // Register callback functions for frame IDs with expected data lengths
-  LIN.registerMasterRequestHandler(0x1A, handle_frame1, 4);
-  LIN.registerMasterRequestHandler(0x1B, handle_frame2, 6);
+  LIN.registerMasterRequestHandler(0x1A, handle_frame_0x1A, 4);
+  LIN.registerMasterRequestHandler(0x1B, handle_frame_0x1B, 6);
 
 } // setup()
 
@@ -110,80 +110,102 @@ void setup()
 
 void loop()
 {
-  // on byte received, handle it
+  // on byte received, call LIN slave protocol handler. Alternatively use serialEvent(), Ticker(), etc.
   if (LIN.available())
-  {
-    // call LIN slave protocol handler often
     LIN.handler();
-
-    // if LIN frame has finished, print it
-    if (LIN.getState() == LIN_Slave_Base::STATE_DONE)
-    {
-      // print result
-      #if defined(SERIAL_DEBUG)
-        
-        LIN_Slave_Base::frame_t   Type;
-        LIN_Slave_Base::error_t   error;
-        uint8_t                   Id;
-        uint8_t                   NumData;
-        uint8_t                   Data[8];
-      
-        // get frame data & error status
-        LIN.getFrame(Type, Id, NumData, Data);
-        error = LIN.getError();
-
-        SERIAL_DEBUG.print(LIN.nameLIN);
-        SERIAL_DEBUG.print(", ID=0x");
-        SERIAL_DEBUG.print(Id, HEX);
-        if (error != LIN_Slave_Base::NO_ERROR)
-        { 
-          SERIAL_DEBUG.print(", err=0x");
-          SERIAL_DEBUG.println(error, HEX);
-        }
-        else
-        {
-          SERIAL_DEBUG.print(", data=");        
-          for (uint8_t i=0; (i < NumData); i++)
-          {
-            SERIAL_DEBUG.print("0x");
-            SERIAL_DEBUG.print((int) Data[i], HEX);
-            SERIAL_DEBUG.print(" ");
-          }
-          SERIAL_DEBUG.println();
-        }
-
-      #endif // SERIAL_DEBUG
-
-      // reset state machine & error
-      LIN.resetStateMachine();
-      LIN.resetError();
-
-    } // if LIN frame finished
-
-  } // if pending byte in Rx buffer 
 
 } // loop()
 
 
+
 // Example for user-defined frame handler
-void handle_frame1(uint8_t NumData, uint8_t* Data)
+void handle_frame_0x1A(uint8_t NumData, uint8_t* Data)
 {
   // avoid unused parameter warning
   (void) NumData;
   (void) Data;
 
-  // add code to response on received data
+  //////
+  // add code to react on received data
+  //////
+  
+  // optionally print frame
+  #if defined(SERIAL_DEBUG)
+        
+    LIN_Slave_Base::error_t   error;
+      
+    // get frame data & error status
+    error = LIN.getError();
 
-} // handle_frame1()
+    SERIAL_DEBUG.print("ID=0x1A: ");
+    if (error != LIN_Slave_Base::NO_ERROR)
+    { 
+      SERIAL_DEBUG.print(", err=0x");
+      SERIAL_DEBUG.println(error, HEX);
+    }
+    else
+    {
+      SERIAL_DEBUG.print(", data=");        
+      for (uint8_t i=0; (i < NumData); i++)
+      {
+        SERIAL_DEBUG.print("0x");
+        SERIAL_DEBUG.print((int) Data[i], HEX);
+        SERIAL_DEBUG.print(" ");
+      }
+      SERIAL_DEBUG.println();
+    }
+
+  #endif // SERIAL_DEBUG
+
+  // reset state machine & error
+  LIN.resetStateMachine();
+  LIN.resetError();
+
+} // handle_frame_0x1A()
+
 
 
 // Example for user-defined frame handler
-void handle_frame2(uint8_t NumData, uint8_t* Data)
+void handle_frame_0x1B(uint8_t NumData, uint8_t* Data)
 {
   // avoid unused parameter warning
   (void) NumData;
   (void) Data;
 
-  // add code to response on received data
+  //////
+  // add code to react on received data
+  //////
+  
+  // optionally print frame
+  #if defined(SERIAL_DEBUG)
+        
+    LIN_Slave_Base::error_t   error;
+      
+    // get frame data & error status
+    error = LIN.getError();
 
-} // handle_frame2()
+    SERIAL_DEBUG.print("ID=0x1B: ");
+    if (error != LIN_Slave_Base::NO_ERROR)
+    { 
+      SERIAL_DEBUG.print(", err=0x");
+      SERIAL_DEBUG.println(error, HEX);
+    }
+    else
+    {
+      SERIAL_DEBUG.print(", data=");        
+      for (uint8_t i=0; (i < NumData); i++)
+      {
+        SERIAL_DEBUG.print("0x");
+        SERIAL_DEBUG.print((int) Data[i], HEX);
+        SERIAL_DEBUG.print(" ");
+      }
+      SERIAL_DEBUG.println();
+    }
+
+  #endif // SERIAL_DEBUG
+
+  // reset state machine & error
+  LIN.resetStateMachine();
+  LIN.resetError();
+
+} // handle_frame_0x1B()
