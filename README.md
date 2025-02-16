@@ -33,30 +33,34 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
 
 
 ## Notes
-  - The `handler()` method must be called at least every 500us. Optionally it can be called from within [serialEvent()](https://reference.arduino.cc/reference/de/language/functions/communication/serial/serialevent/)
-  - Framing errors (FE) on BREAK reception are treated differently by serial interface implementations. Therefore, frame synchronization is handled differently, specifically:
-    - HardwareSerial on ESP32, NeoHWSerial on AVR:
-      - BREAK is received, FE flag is available
-      - sync on `Rx==0x00` (= BREAK) with `FE==true` 
-      - assert that *following* `Rx==0x55` (= SYNC)
-      - this is according to LIN standard and most robust
-    - HardwareSerial on AVR, SAMD & ESP8266:
-      - BREAK is received, FE flag **not** available
-      - sync on `Rx==0x00` (= BREAK) after minimal inter-frame pause
-      - assert that *following* `Rx==0x55` (= SYNC)
-      - this is **not** according to LIN standard and less robust
-    - SoftwareSerial on AVR
-      - BREAK is received, FE flag **not** available
-      - sync on `Rx==0x00` (= BREAK) after minimal inter-frame pause
-      - assert that *following* `Rx==0x55` (= SYNC)
-      - this is **not** according to LIN standard and less robust
-    - SoftwareSerial on ESP32 & ESP8266
-      - BREAK **dropped** due to nissing stop bit, FE flag **not** available
-      - sync on `Rx==0x55` (= SYNC) after minimal inter-frame pause
-      - this is **not** according to LIN standard and least robust
 
-  - for AVR `Serial` and `NeoHWSerial` instances are incompatible and must not be used within the same sketch. If possible use only `NeoHWSerial` for best frame synchronization (see above). Alternatively comment out `USE_NEOSERIAL` in file `LIN_slave_NeoHWSerial_AVR.h` to use standard `Serial`
+  - The `handler()` method must be called at least every 500us. Optionally it can be called from within [serialEvent()](https://reference.arduino.cc/reference/de/language/functions/communication/serial/serialevent/)
+
+  - LIN frame synchronization is via the `BREAK` signal, which corresponds to a long dominant pulse. On the receiver side this corresponds to `0x00` with missing stop bit (aka framing error, `FE`). Unfortunately, the Arduino behavior on a `FE` event is not specified, and different implementations treat it differently. Therefore, this library has to handle frame synchronization differently, depending on `Serial` type. Specifically:
+
+    - ESP32 `HardwareSerial` and AVR `NeoHWSerial`:
+      - `BREAK` is received, `FE` flag **is** available
+      - sync on `Rx==0x00` (= `BREAK`) with `FE==true` 
+      - assert that `BREAK` is followed by `SYNC==0x55`
+      - this is according to LIN standard and most robust
+
+    - AVR, SAMD and ESP8266 `HardwareSerial`. AVR `SoftwareSerial`:
+      - `BREAK` is received, `FE` flag **not** available
+      - sync on `Rx==0x00` (= `BREAK`) after minimal inter-frame pause
+      - assert that `BREAK` is followed by `SYNC==0x55`
+      - this is **not** according to LIN standard and less robust
+
+    - ESP32 & ESP8266 `SoftwareSerial`: 
+      - `BREAK` **dropped** due to missing stop bit, `FE` flag **not** available
+      - sync on `Rx==0x55` (= `SYNC`) after minimal inter-frame pause
+      - this is **not** according to LIN standard and least robust
   
+  - As stated above, default `BREAK` detection on 8-bit AVR boards is via [`NeoHWSerial`](https://github.com/gicking/NeoHWSerial) library, which can detect `FE`. Notes
+
+    - `Serial` and `NeoHWSerial` instances are incompatible and must not be used within the same sketch. If possible use only `NeoHWSerial` for most robust frame synchronization
+    
+    - If that is not possible, comment out `USE_NEOSERIAL` in file `LIN_slave_NeoHWSerial_AVR.h` to use standard `HardwareSerial` with less robust synchronization
+
 
 # Test Matrix
 
