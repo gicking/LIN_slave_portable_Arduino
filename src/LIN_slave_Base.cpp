@@ -24,7 +24,7 @@
 /**
   \brief      Calculate protected frame ID
   \details    Calculate protected frame ID as described in LIN2.0 spec "2.3.1.3 Protected identifier field"
-  \param[in]  ID   frame ID (protected or unprotected)
+  \param[in]  ID    frame ID (protected or unprotected)
   \return     Protected frame ID
 */
 uint8_t LIN_Slave_Base::_calculatePID(uint8_t ID)
