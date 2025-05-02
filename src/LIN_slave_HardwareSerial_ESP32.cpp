@@ -97,7 +97,7 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
 bool LIN_Slave_HardwareSerial_ESP32::_getBreakFlag()
 {
   // return BREAK detection flag of respective Serialx
-  return (LIN_Slave_HardwareSerial_ESP32::flagBreak)[LIN_Slave_HardwareSerial_ESP32::idxSerial];
+  return (LIN_Slave_HardwareSerial_ESP32::flagBreak)[this->idxSerial];
 
 } // LIN_Slave_HardwareSerial_ESP32::_getBreakFlag()
 
@@ -110,7 +110,7 @@ bool LIN_Slave_HardwareSerial_ESP32::_getBreakFlag()
 void LIN_Slave_HardwareSerial_ESP32::_resetBreakFlag()
 {
   // clear BREAK detection flag of respective Serialx
-  (LIN_Slave_HardwareSerial_ESP32::flagBreak)[LIN_Slave_HardwareSerial_ESP32::idxSerial] = false;
+  (LIN_Slave_HardwareSerial_ESP32::flagBreak)[this->idxSerial] = false;
 
 } // LIN_Slave_HardwareSerial_ESP32::_resetBreakFlag()
 
@@ -156,31 +156,36 @@ void LIN_Slave_HardwareSerial_ESP32::begin(uint16_t Baudrate)
   // call base class method
   LIN_Slave_Base::begin(Baudrate);  
 
-  // open serial interface incl. used pins
-  pSerial->end();
-  pSerial->begin(this->baudrate, SERIAL_8N1, this->pinRx, this->pinTx);
-  while(!(*pSerial)) { }
+  // open serial interface incl. used pins with optional timeout
+  this->pSerial->end();
+  this->pSerial->begin(this->baudrate, SERIAL_8N1, this->pinRx, this->pinTx);
+  #if defined(LIN_SLAVE_LIN_PORT_TIMEOUT) && (LIN_SLAVE_LIN_PORT_TIMEOUT > 0)
+    uint32_t startMillis = millis();
+    while ((!(*(this->pSerial))) && (millis() - startMillis < LIN_SLAVE_LIN_PORT_TIMEOUT));
+  #else
+    while(!(*(this->pSerial)));
+  #endif
 
   // Attach corresponding error callback to Serialx receive handler
   #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 1)
-    if (pSerial == &Serial0)
+    if (this->pSerial == &Serial0)
     { 
-      LIN_Slave_HardwareSerial_ESP32::idxSerial = 0;
-      pSerial->onReceiveError(LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0);
+      this->idxSerial = 0;
+      this->pSerial->onReceiveError(this->_onSerialReceiveError0);
     }
   #endif
   #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 2)
-    if (pSerial == &Serial1)
+    if (this->pSerial == &Serial1)
     { 
-      LIN_Slave_HardwareSerial_ESP32::idxSerial = 1;
-      pSerial->onReceiveError(LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1);
+      this->idxSerial = 1;
+      this->pSerial->onReceiveError(this->_onSerialReceiveError1);
     }
   #endif
   #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 3)
-    if (pSerial == &Serial2)
+    if (this->pSerial == &Serial2)
     { 
-      LIN_Slave_HardwareSerial_ESP32::idxSerial = 2;
-      pSerial->onReceiveError(LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2);
+      this->idxSerial = 2;
+      this->pSerial->onReceiveError(this->_onSerialReceiveError2);
     }
   #endif
 
@@ -207,7 +212,7 @@ void LIN_Slave_HardwareSerial_ESP32::end()
   LIN_Slave_Base::end();
     
   // close serial interface
-  pSerial->end();
+  this->pSerial->end();
 
   // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)

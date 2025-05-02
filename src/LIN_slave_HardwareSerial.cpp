@@ -85,9 +85,14 @@ void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
   // call base class method
   LIN_Slave_Base::begin(Baudrate);  
 
-  // open serial interface
-  pSerial->begin(this->baudrate);
-  while(!(*pSerial));
+  // open serial interface with optional timeout
+  this->pSerial->begin(this->baudrate);
+  #if defined(LIN_SLAVE_LIN_PORT_TIMEOUT) && (LIN_SLAVE_LIN_PORT_TIMEOUT > 0)
+    uint32_t startMillis = millis();
+    while ((!(*(this->pSerial))) && (millis() - startMillis < LIN_SLAVE_LIN_PORT_TIMEOUT));
+  #else
+    while(!(*(this->pSerial)));
+  #endif
 
   // initialize variables
   this->_resetBreakFlag();
@@ -112,7 +117,7 @@ void LIN_Slave_HardwareSerial::end()
   LIN_Slave_Base::end();
     
   // close serial interface
-  pSerial->end();
+  this->pSerial->end();
 
   // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
@@ -136,13 +141,13 @@ void LIN_Slave_HardwareSerial::handler()
   static uint32_t   usLastByte = 0;
   
   // byte received -> check it
-  if (pSerial->available())
+  if (this->pSerial->available())
   {
     // if 0x00 received and long time since last byte, start new frame and remove 0x00 from queue
-    if ((pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
+    if ((this->pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
     {
       this->flagBreak = true;
-      pSerial->read();
+      this->pSerial->read();
     }
 
     // store time of this receive

@@ -24,20 +24,26 @@
 /**
   \brief      Calculate protected frame ID
   \details    Calculate protected frame ID as described in LIN2.0 spec "2.3.1.3 Protected identifier field"
-  \param[in]  ID    frame ID (protected or unprotected)
   \return     Protected frame ID
 */
-uint8_t LIN_Slave_Base::_calculatePID(uint8_t ID)
+uint8_t LIN_Slave_Base::_calculatePID(void)
 {
   uint8_t  pid;       // protected frame ID
   uint8_t  tmp;       // temporary variable for calculating parity bits
 
   // protect ID  with parity bits
-  pid  = (uint8_t) (ID & 0x3F);                                             // clear upper bits 6 & 7
+  pid  = (uint8_t) (this->id & 0x3F);                                       // clear upper bits 6 & 7
   tmp  = (uint8_t) ((pid ^ (pid>>1) ^ (pid>>2) ^ (pid>>4)) & 0x01);         // pid[6] = PI0 = ID0^ID1^ID2^ID4
   pid |= (uint8_t) (tmp << 6);
   tmp  = (uint8_t) (~((pid>>1) ^ (pid>>3) ^ (pid>>4) ^ (pid>>5)) & 0x01);   // pid[7] = PI1 = ~(ID1^ID3^ID4^ID5)
   pid |= (uint8_t) (tmp << 7);
+
+  // print debug message (debug level 3)
+  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::_calculatePID(): PID=0x");
+    LIN_SLAVE_DEBUG_SERIAL.println((int) pid, HEX);
+  #endif
 
   // return protected ID
   return pid;
@@ -55,13 +61,13 @@ uint8_t LIN_Slave_Base::_calculatePID(uint8_t ID)
 */
 uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
 {
-  uint16_t chk=0x00;
+  uint16_t chk = 0x00;  // frame checksum
 
   // LIN2.x uses extended checksum which includes protected ID, i.e. including parity bits
   // LIN1.x uses classical checksum only over data bytes
   // Diagnostic frames with ID 0x3C and 0x3D/0x7D always use classical checksum (see LIN spec "2.3.1.5 Checkum")
   if (!((this->version == LIN_V1) || (pid == 0x3C) || (pid == 0x7D)))    // if version 2  & no diagnostic frames (0x3C=60 (PID=0x3C) or 0x3D=61 (PID=0x7D))
-    chk = (uint16_t) this->pid;
+    chk = (uint16_t) this->_calculatePID();
 
   // loop over data bytes
   for (uint8_t i = 0; i < NumData; i++)
@@ -70,16 +76,17 @@ uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
     if (chk>255)
       chk -= 255;
   }
-  chk = (uint8_t)(0xFF - ((uint8_t) chk));   // bitwise invert
+  chk = (uint8_t)(0xFF - ((uint8_t) chk));   // bitwise invert and strip upper byte
+
+  // optional debug output (debug level 3)
+  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::_calculateChecksum(): CHK=0x");
+    LIN_SLAVE_DEBUG_SERIAL.println((int) chk, HEX);
+  #endif
 
   // return frame checksum
   return (uint8_t) chk;
-
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::_calculateChecksum()");
-  #endif
 
 } // LIN_Slave_Base::_calculateChecksum()
 
@@ -137,7 +144,7 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
   // initialize slave node properties
   this->state     = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;     // status of LIN state machine
   this->error     = LIN_Slave_Base::NO_ERROR;                 // last LIN error. Is latched
-  for (uint8_t i=0; i<64; i++)
+  for (uint8_t i = 0; i < 64; i++)
   {
     this->callback[i].type_numData = 0x00;                    // frame type (high nibble) and number of data bytes (low nibble)
     this->callback[i].fct = nullptr;                          // user callback functions (IDs 0x00 - 0x3F)
@@ -147,7 +154,7 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
   this->pid         = 0x00;                                   // protected frame identifier
   this->id          = 0x00;                                   // unprotected frame identifier
   this->numData     = 0;                                      // number of data bytes in frame
-  for (uint8_t i=0; i<9; i++)
+  for (uint8_t i = 0; i < 9; i++)
     this->bufData[i] = 0x00;                                  // init data bytes (max 8B) + chk
   this->idxData    = 0;                                       // current index in bufData
   this->timeLastRx = 0;                                       // time [ms] of last received byte in frame
@@ -170,18 +177,15 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
 */
 void LIN_Slave_Base::begin(uint16_t Baudrate)
 {
-  // For optional debugging
+  // initialize debug interface with optional timeout
   #if defined(LIN_SLAVE_DEBUG_SERIAL)
     LIN_SLAVE_DEBUG_SERIAL.begin(115200);
-    while (!LIN_SLAVE_DEBUG_SERIAL);
-  #endif
-
-  // print debug message (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::begin(");
-    LIN_SLAVE_DEBUG_SERIAL.print((int) Baudrate);
-    LIN_SLAVE_DEBUG_SERIAL.println(")");
+    #if defined(LIN_SLAVE_DEBUG_PORT_TIMEOUT) && (LIN_SLAVE_DEBUG_PORT_TIMEOUT > 0)
+      uint32_t startMillis = millis();
+      while ((!LIN_SLAVE_DEBUG_SERIAL) && (millis() - startMillis < LIN_SLAVE_DEBUG_PORT_TIMEOUT));
+    #else
+      while (!LIN_SLAVE_DEBUG_SERIAL);
+    #endif    
   #endif
 
   // store parameters in class variables
@@ -198,6 +202,14 @@ void LIN_Slave_Base::begin(uint16_t Baudrate)
     pinMode(this->pinTxEN, OUTPUT);
   }
 
+  // print debug message (debug level 2)
+  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::begin(");
+    LIN_SLAVE_DEBUG_SERIAL.print((int) Baudrate);
+    LIN_SLAVE_DEBUG_SERIAL.println("): ok");
+  #endif
+
 } // LIN_Slave_Base::begin()
 
 
@@ -208,18 +220,18 @@ void LIN_Slave_Base::begin(uint16_t Baudrate)
 */
 void LIN_Slave_Base::end()
 {
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::end()");
-  #endif
-
   // set slave node properties
   this->error = LIN_Slave_Base::NO_ERROR;                     // last LIN error. Is latched
   this->state = LIN_Slave_Base::STATE_OFF;                    // status of LIN state machine
 
   // optionally disable RS485 transmitter
   _disableTransmitter();
+
+  // optional debug output (debug level 2)
+  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
+    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
+    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_Base::end(): ok");
+  #endif
 
 } // LIN_Slave_Base::end()
 
@@ -234,7 +246,7 @@ void LIN_Slave_Base::end()
 */
 void LIN_Slave_Base::registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::LinMessageCallback Fct, uint8_t NumData)
 {  
-  // drop parity bits -> non-protected ID = 0..63
+  // drop parity bits -> non-protected ID=0..63
   ID &= 0x3F;
 
   // register user callback function for master request frame
@@ -262,7 +274,7 @@ void LIN_Slave_Base::registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::Li
 */
 void LIN_Slave_Base::registerSlaveResponseHandler(uint8_t ID, LIN_Slave_Base::LinMessageCallback Fct, uint8_t NumData)
 {
-  // drop parity bits -> non-protected ID = 0..63
+  // drop parity bits -> non-protected ID=0..63
   ID &= 0x3F;
 
   // register user callback function for slave response frame
@@ -312,6 +324,9 @@ void LIN_Slave_Base::handler()
       LIN_SLAVE_DEBUG_SERIAL.print((long) (micros() - this->timeLastRx));
       LIN_SLAVE_DEBUG_SERIAL.println("us");
     #endif
+
+    // return immediately
+    return;
 
   } // if frame receive timeout
 
@@ -412,7 +427,7 @@ void LIN_Slave_Base::handler()
         this->id  = byteReceived & 0x3F;   // extract ID, drop parity bits
 
         // check PID parity bits 7+8
-        if (this->pid != this->_calculatePID(this->id))
+        if (this->pid != this->_calculatePID())
         {
           // set error and abort frame
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_PID);
@@ -428,7 +443,7 @@ void LIN_Slave_Base::handler()
             LIN_SLAVE_DEBUG_SERIAL.print(": PID parity error, received 0x");
             LIN_SLAVE_DEBUG_SERIAL.print(this->pid, HEX);
             LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
-            LIN_SLAVE_DEBUG_SERIAL.println(this->_calculatePID(this->id), HEX);
+            LIN_SLAVE_DEBUG_SERIAL.println(this->_calculatePID(), HEX);
           #endif
           
         } // PID error

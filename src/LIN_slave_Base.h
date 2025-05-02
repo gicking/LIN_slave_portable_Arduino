@@ -19,21 +19,26 @@
 -----------------------------------------------------------------------------*/
 
 // misc parameters
-#define LIN_SLAVE_BUFLEN_NAME   30            //!< max. length of node name
+#define LIN_SLAVE_BUFLEN_NAME           30            //!< max. length of node name
+#define LIN_SLAVE_LIN_PORT_TIMEOUT      3000          //!< optional LIN.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 
 // required for CI test environment. Call arduino-cli with "-DINCLUDE_NEOHWSERIAL"
 #if defined(INCLUDE_NEOHWSERIAL)
   #include <NeoHWSerial.h>
 #endif
 
-// optional LIN debug output @ 115.2kBaud. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
+// optional LIN debug output @ 115.2kBaud. Comment out for none. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
 #if !defined(LIN_SLAVE_DEBUG_SERIAL)
-  //#define LIN_SLAVE_DEBUG_SERIAL  Serial      //!< serial interface used for debug output. Comment out for none
-  //#define LIN_SLAVE_DEBUG_SERIAL  NeoSerial   //!< serial interface used for debug output (required for AVR). Comment out for none
-  //#include <NeoHWSerial.h>                    // comment in/out together with previous line
+  //#define LIN_SLAVE_DEBUG_SERIAL      Serial        //!< serial interface used for debug output
+  //#define LIN_SLAVE_DEBUG_SERIAL      NeoSerial     //!< serial interface used for debug output (optional on AVR)
+  //#include <NeoHWSerial.h>                          // comment in/out together with previous line
+  //#define LIN_MASTER_DEBUG_SERIAL     SerialUSB     //!< serial interface used for debug output (optional on Due)
 #endif
 #if !defined(LIN_SLAVE_DEBUG_LEVEL)
-  //#define LIN_SLAVE_DEBUG_LEVEL   2           //!< debug verbosity 0..3 (1=errors only, 3=chatty)
+  #define LIN_SLAVE_DEBUG_LEVEL         2             //!< debug verbosity 0..3 (1=errors only, 3=chatty)
+#endif
+#if !defined(LIN_SLAVE_DEBUG_PORT_TIMEOUT)
+  #define LIN_SLAVE_DEBUG_PORT_TIMEOUT  3000          //!< optional LIN_SLAVE_DEBUG_SERIAL.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 #endif
 
 
@@ -150,7 +155,7 @@ class LIN_Slave_Base
   protected:
   
     /// @brief Calculate protected frame ID
-    uint8_t _calculatePID(uint8_t ID);
+    uint8_t _calculatePID(void);
   
     /// @brief Calculate LIN frame checksum
     uint8_t _calculateChecksum(uint8_t NumData, uint8_t Data[]);

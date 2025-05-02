@@ -177,7 +177,7 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
 bool LIN_Slave_NeoHWSerial_AVR::_getBreakFlag()
 {
   // return BREAK detection flag of respective Serialx
-  return (LIN_Slave_NeoHWSerial_AVR::flagBreak)[LIN_Slave_NeoHWSerial_AVR::idxSerial];
+  return (this->flagBreak)[this->idxSerial];
 
 } // LIN_Slave_NeoHWSerial_AVR::_getBreakFlag()
 
@@ -190,7 +190,7 @@ bool LIN_Slave_NeoHWSerial_AVR::_getBreakFlag()
 void LIN_Slave_NeoHWSerial_AVR::_resetBreakFlag()
 {
   // clear BREAK detection flag of respective Serialx
-  (LIN_Slave_NeoHWSerial_AVR::flagBreak)[LIN_Slave_NeoHWSerial_AVR::idxSerial] = false;
+  (this->flagBreak)[this->idxSerial] = false;
 
 } // LIN_Slave_NeoHWSerial_AVR::_resetBreakFlag()
 
@@ -232,37 +232,42 @@ void LIN_Slave_NeoHWSerial_AVR::begin(uint16_t Baudrate)
   // call base class method
   LIN_Slave_Base::begin(Baudrate);  
 
-  // open serial interface incl. used pins
-  pSerial->end();
-  pSerial->begin(this->baudrate);
-  while(!(*pSerial)) { }
+  // open serial interface incl. used pins with optional timeout
+  this->pSerial->end();
+  this->pSerial->begin(this->baudrate);
+  #if defined(LIN_SLAVE_LIN_PORT_TIMEOUT) && (LIN_SLAVE_LIN_PORT_TIMEOUT > 0)
+    uint32_t startMillis = millis();
+    while ((!(*(this->pSerial))) && (millis() - startMillis < LIN_SLAVE_LIN_PORT_TIMEOUT));
+  #else
+    while(!(*(this->pSerial)));
+  #endif
 
   // Attach corresponding error callback to Serialx receive handler
   #if defined(HAVE_HWSERIAL0)
-    if (pSerial == &NeoSerial)
+    if (this->pSerial == &NeoSerial)
     { 
-      LIN_Slave_NeoHWSerial_AVR::idxSerial = 0;
-      pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0);
+      this->idxSerial = 0;
+      this->pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0);
     }
   #endif
   #if defined(HAVE_HWSERIAL1)
-    if (pSerial == &NeoSerial1)
+    if (this->pSerial == &NeoSerial1)
     { 
-      LIN_Slave_NeoHWSerial_AVR::idxSerial = 1;
+      this->idxSerial = 1;
       pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1);
     }
   #endif
   #if defined(HAVE_HWSERIAL2)
-    if (pSerial == &NeoSerial2)
+    if (this->pSerial == &NeoSerial2)
     { 
-      LIN_Slave_NeoHWSerial_AVR::idxSerial = 2;
+      this->idxSerial = 2;
       pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2);
     }
   #endif
   #if defined(HAVE_HWSERIAL3)
-    if (pSerial == &NeoSerial3)
+    if (this->pSerial == &NeoSerial3)
     { 
-      LIN_Slave_NeoHWSerial_AVR::idxSerial = 3;
+      this->idxSerial = 3;
       pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3);
     }
   #endif
@@ -290,7 +295,7 @@ void LIN_Slave_NeoHWSerial_AVR::end()
   LIN_Slave_Base::end();
     
   // close serial interface
-  pSerial->end();
+  this->pSerial->end();
 
   // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)

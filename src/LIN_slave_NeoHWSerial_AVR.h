@@ -94,13 +94,13 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
 
 
     /// @brief peek next byte from Rx buffer
-    inline uint8_t _serialPeek(void) { return pSerial->peek(); }
+    inline uint8_t _serialPeek(void) { return this->pSerial->peek(); }
 
     /// @brief read next byte from Rx buffer
-    inline uint8_t _serialRead(void) { return pSerial->read(); }
+    inline uint8_t _serialRead(void) { return this->pSerial->read(); }
 
     /// @brief write bytes to Tx buffer
-    inline void _serialWrite(uint8_t buf[], uint8_t num) { pSerial->write(buf, num); }
+    inline void _serialWrite(uint8_t buf[], uint8_t num) { this->pSerial->write(buf, num); }
 
 
   // PUBLIC METHODS
@@ -117,7 +117,7 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
     void end(void);
 
     /// @brief check if a byte is available in Rx buffer
-    inline bool available(void) { return pSerial->available(); }
+    inline bool available(void) { return this->pSerial->available(); }
 
 }; // class LIN_Slave_NeoHWSerial_AVR
 

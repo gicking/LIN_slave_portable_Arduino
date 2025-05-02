@@ -59,18 +59,18 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
 
 
     /// @brief peek next byte from Rx buffer
-    inline uint8_t _serialPeek(void) { return SWSerial.peek(); }
+    inline uint8_t _serialPeek(void) { return this->SWSerial.peek(); }
 
     /// @brief read next byte from Rx buffer
-    inline uint8_t _serialRead(void) { return SWSerial.read(); }
+    inline uint8_t _serialRead(void) { return this->SWSerial.read(); }
 
     /// @brief write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR
     inline void _serialWrite(uint8_t buf[], uint8_t num)
     { 
-      SWSerial.stopListening();
-      SWSerial.write(buf, num); 
-      SWSerial.flush();
-      SWSerial.listen();
+      this->SWSerial.stopListening();
+      this->SWSerial.write(buf, num); 
+      this->SWSerial.flush();
+      this->SWSerial.listen();
     }
 
 
@@ -88,7 +88,7 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     void end(void);
 
     /// @brief check if a byte is available in Rx buffer
-    inline bool available(void) { return SWSerial.available(); }
+    inline bool available(void) { return this->SWSerial.available(); }
 
     /// @brief Handle LIN protocol and call user-defined frame handlers
     virtual void handler(void);

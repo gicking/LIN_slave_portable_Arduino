@@ -87,7 +87,7 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   // call base class method
   LIN_Slave_Base::begin(Baudrate);  
 
-  // open serial interface incl. used pins
+  // open serial interface incl. used pins. Timeout not required here
   this->SWSerial.end();
   this->SWSerial.begin(this->baudrate);
 

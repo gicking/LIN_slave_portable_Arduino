@@ -56,7 +56,7 @@ void LIN_Slave_HardwareSerial_ESP8266::begin(uint16_t Baudrate)
 
   // optionally route Serial0 to alternate pins
   if (this->swapPins == true)
-    pSerial->swap();
+    this->pSerial->swap();
 
   // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
@@ -78,7 +78,7 @@ void LIN_Slave_HardwareSerial_ESP8266::end()
   LIN_Slave_Base::end();
     
   // close serial interface
-  pSerial->end();
+  this->pSerial->end();
 
   // optional debug output (debug level 2)
   #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
