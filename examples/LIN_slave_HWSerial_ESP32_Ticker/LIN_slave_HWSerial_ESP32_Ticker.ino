@@ -1,6 +1,6 @@
 /*********************
 
-Example code for LIN slave node using ESP32 HardwareSerial interface
+Example code for LIN slave nodewith background operation via Ticker using ESP32 HardwareSerial interface
 
 Note:
   - handling of frames can be done inside callback functions. Console output below is optional
@@ -11,6 +11,7 @@ Supported (=successfully tested) boards:
 **********************/
 
 // include files
+#include <Ticker.h>
 #include <LIN_slave_HardwareSerial_ESP32.h>
 
 // board pin definitions (GPIOn is referred to as n)
@@ -26,42 +27,19 @@ Supported (=successfully tested) boards:
 // setup LIN node. Parameters: interface, Rx, Tx, version, name, timeout, TxEN
 LIN_Slave_HardwareSerial_ESP32  LIN(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave");
 
+// task scheduler for background
+Ticker taskHandler;
 
-// call once
-void setup()
+
+// call LIN background handler
+void LIN_handler()
 {
-  // for debug output
-  #if defined(SERIAL_DEBUG)
-    SERIAL_DEBUG.begin(115200);
-    while(!SERIAL_DEBUG);
-  #endif // SERIAL_DEBUG
-
-  // indicate background operation
-  pinMode(PIN_TOGGLE, OUTPUT);
-
-  // indicate LIN status via pin
-  pinMode(PIN_ERROR, OUTPUT);
-
-  // open LIN interface
-  LIN.begin(19200);
-
-  // Register callback functions for frame IDs with expected data lengths
-  LIN.registerMasterRequestHandler(0x1A, handle_Request, 4);
-  LIN.registerSlaveResponseHandler(0x05, handle_Response, 6);
-
-} // setup()
-
-
-void loop()
-{
-  // indicate core load
-  digitalWrite(PIN_TOGGLE, !digitalRead(PIN_TOGGLE));
-
   // on byte received, handle it
   if (LIN.available())
   {
     // call LIN slave protocol handler often
     LIN.handler();
+
 
     // if LIN frame has finished, print it
     if (LIN.getState() == LIN_Slave_Base::STATE_DONE)
@@ -134,6 +112,45 @@ void loop()
     } // if LIN frame finished
 
   } // if pending byte in Rx buffer 
+
+} // LIN_handler()
+
+
+// call once
+void setup()
+{
+  // for debug output
+  #if defined(SERIAL_DEBUG)
+    SERIAL_DEBUG.begin(115200);
+    while(!SERIAL_DEBUG);
+  #endif // SERIAL_DEBUG
+
+  // indicate background operation
+  pinMode(PIN_TOGGLE, OUTPUT);
+
+  // indicate LIN status via pin
+  pinMode(PIN_ERROR, OUTPUT);
+
+  // open LIN interface
+  LIN.begin(19200);
+
+  // Register callback functions for frame IDs with expected data lengths
+  LIN.registerMasterRequestHandler(0x1A, handle_Request, 4);
+  LIN.registerSlaveResponseHandler(0x05, handle_Response, 6);
+
+  // add LIN background tasks
+  taskHandler.attach_us(100, LIN_handler);              // LIN background handler
+
+} // setup()
+
+
+void loop()
+{
+  // indicate core load
+  digitalWrite(PIN_TOGGLE, !digitalRead(PIN_TOGGLE));
+
+  // add dummy blocking function to show that LIN is handled "in background"
+  delay(1000);
 
 } // loop()
 

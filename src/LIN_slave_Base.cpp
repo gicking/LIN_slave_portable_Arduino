@@ -61,12 +61,12 @@ uint8_t LIN_Slave_Base::_calculatePID(void)
 */
 uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
 {
-  uint16_t chk = 0x00;  // frame checksum
+  uint16_t chk = 0x00;    // frame checksum
 
   // LIN2.x uses extended checksum which includes protected ID, i.e. including parity bits
   // LIN1.x uses classical checksum only over data bytes
-  // Diagnostic frames with ID 0x3C and 0x3D/0x7D always use classical checksum (see LIN spec "2.3.1.5 Checkum")
-  if (!((this->version == LIN_V1) || (pid == 0x3C) || (pid == 0x7D)))    // if version 2  & no diagnostic frames (0x3C=60 (PID=0x3C) or 0x3D=61 (PID=0x7D))
+  // Diagnostic frames with protected/unprotected ID 0x3C/0x3C and 0x7D/0x3D always use classical checksum (see LIN spec "2.3.1.5 Checkum")
+  if (!((this->version == LIN_V1) || (id == 0x3C) || (id == 0x3D)))    // if version 2  & no diagnostic frames (0x3C=60 (PID=0x3C) or 0x3D=61 (PID=0x7D))
     chk = (uint16_t) this->_calculatePID();
 
   // loop over data bytes
@@ -151,8 +151,7 @@ LIN_Slave_Base::LIN_Slave_Base(LIN_Slave_Base::version_t Version, const char Nam
   }
 
   // initialize frame properties
-  this->pid         = 0x00;                                   // protected frame identifier
-  this->id          = 0x00;                                   // unprotected frame identifier
+  this->id          = 0x00;                                   // received frame identifier
   this->numData     = 0;                                      // number of data bytes in frame
   for (uint8_t i = 0; i < 9; i++)
     this->bufData[i] = 0x00;                                  // init data bytes (max 8B) + chk
@@ -423,11 +422,10 @@ void LIN_Slave_Base::handler()
       // sync field has been received, waiting for protected ID
       case LIN_Slave_Base::STATE_WAIT_FOR_PID:
 
-        this->pid = byteReceived;          // received (protected) ID
-        this->id  = byteReceived & 0x3F;   // extract ID, drop parity bits
+        this->id = byteReceived;          // received (protected) ID
 
         // check PID parity bits 7+8
-        if (this->pid != this->_calculatePID())
+        if (this->id != this->_calculatePID())
         {
           // set error and abort frame
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_PID);
@@ -441,7 +439,7 @@ void LIN_Slave_Base::handler()
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
             LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": PID parity error, received 0x");
-            LIN_SLAVE_DEBUG_SERIAL.print(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.print(this->id, HEX);
             LIN_SLAVE_DEBUG_SERIAL.print(", calculated 0x");
             LIN_SLAVE_DEBUG_SERIAL.println(this->_calculatePID(), HEX);
           #endif
@@ -475,7 +473,7 @@ void LIN_Slave_Base::handler()
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
             LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": handle slave response PID 0x");
-            LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.println(this->id, HEX);
           #endif
 
         } // if slave response frame
@@ -500,7 +498,7 @@ void LIN_Slave_Base::handler()
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
             LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": drop frame PID 0x");
-            LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.println(this->id, HEX);
           #endif
 
           // reset state machine
@@ -578,7 +576,7 @@ void LIN_Slave_Base::handler()
             LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
             LIN_SLAVE_DEBUG_SERIAL.print(": LIN_Slave_Base::handler()");
             LIN_SLAVE_DEBUG_SERIAL.print(": handle master request PID 0x");
-            LIN_SLAVE_DEBUG_SERIAL.println(this->pid, HEX);
+            LIN_SLAVE_DEBUG_SERIAL.println(this->id, HEX);
           #endif
 
         } // if checksum ok

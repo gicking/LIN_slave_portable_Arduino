@@ -270,6 +270,7 @@ jobs:
           SKETCHES_FLAGS=(
             "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial_ESP32"
+            "examples/LIN_slave_HWSerial_ESP32_Ticker"
             "examples/LIN_slave_RS485_HWSerial_ESP32"
             "examples/LIN_slave_RS485_SWSerial"
             "examples/LIN_slave_SWSerial"

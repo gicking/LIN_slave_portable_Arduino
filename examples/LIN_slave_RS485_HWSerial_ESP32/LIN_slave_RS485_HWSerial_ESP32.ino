@@ -64,9 +64,6 @@ void loop()
     // call LIN slave protocol handler often
     LIN.handler();
 
-    // indicate error status via pin
-    digitalWrite(PIN_ERROR, LIN.getError());
-
 
     // if LIN frame has finished, print it
     if (LIN.getState() == LIN_Slave_Base::STATE_DONE)

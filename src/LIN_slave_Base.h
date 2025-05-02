@@ -135,8 +135,7 @@ class LIN_Slave_Base
     LIN_Slave_Base::callback_t  callback[64];   //!< array of user callback functions for IDs 0x00..0x3F
 
     // latest frame properties
-    uint8_t                   pid;              //!< protected frame identifier
-    uint8_t                   id;               //!< unprotected frame identifier
+    uint8_t                   id;               //!< received frame identifier
     LIN_Slave_Base::frame_t   type;             //!< frame type (master request or slave response)
     uint8_t                   numData;          //!< number of data bytes in frame
     uint8_t                   bufData[9];       //!< buffer for data bytes (max. 8B) + checksum
@@ -291,7 +290,7 @@ class LIN_Slave_Base
 
       noInterrupts();                         // for data consistency temporarily disable ISRs
       Type    = this->type;                   // frame type 
-      Id      = this->id;                     // frame ID
+      Id      = this->id;                     // received frame ID
       NumData = this->numData;                // number of data bytes (excl. BREAK, SYNC, ID, CHK)
       memcpy(Data, this->bufData, NumData);   // copy data bytes w/o checksum
       interrupts();                           // re-enable ISRs
