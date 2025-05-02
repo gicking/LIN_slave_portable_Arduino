@@ -97,7 +97,7 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
 bool LIN_Slave_HardwareSerial_ESP32::_getBreakFlag()
 {
   // return BREAK detection flag of respective Serialx
-  return (LIN_Slave_HardwareSerial_ESP32::flagBreak)[this->idxSerial];
+  return (this->flagBreak)[this->idxSerial];
 
 } // LIN_Slave_HardwareSerial_ESP32::_getBreakFlag()
 
@@ -110,7 +110,7 @@ bool LIN_Slave_HardwareSerial_ESP32::_getBreakFlag()
 void LIN_Slave_HardwareSerial_ESP32::_resetBreakFlag()
 {
   // clear BREAK detection flag of respective Serialx
-  (LIN_Slave_HardwareSerial_ESP32::flagBreak)[this->idxSerial] = false;
+  (this->flagBreak)[this->idxSerial] = false;
 
 } // LIN_Slave_HardwareSerial_ESP32::_resetBreakFlag()
 

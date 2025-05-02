@@ -247,28 +247,28 @@ void LIN_Slave_NeoHWSerial_AVR::begin(uint16_t Baudrate)
     if (this->pSerial == &NeoSerial)
     { 
       this->idxSerial = 0;
-      this->pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive0);
+      this->pSerial->attachInterrupt(this->_onSerialReceive0);
     }
   #endif
   #if defined(HAVE_HWSERIAL1)
     if (this->pSerial == &NeoSerial1)
     { 
       this->idxSerial = 1;
-      pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive1);
+      pSerial->attachInterrupt(this->_onSerialReceive1);
     }
   #endif
   #if defined(HAVE_HWSERIAL2)
     if (this->pSerial == &NeoSerial2)
     { 
       this->idxSerial = 2;
-      pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive2);
+      pSerial->attachInterrupt(this->_onSerialReceive2);
     }
   #endif
   #if defined(HAVE_HWSERIAL3)
     if (this->pSerial == &NeoSerial3)
     { 
       this->idxSerial = 3;
-      pSerial->attachInterrupt(LIN_Slave_NeoHWSerial_AVR::_onSerialReceive3);
+      pSerial->attachInterrupt(this->_onSerialReceive3);
     }
   #endif
 
