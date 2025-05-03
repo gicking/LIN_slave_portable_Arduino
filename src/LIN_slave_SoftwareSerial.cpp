@@ -94,11 +94,8 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::begin()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_FULL(2, "ok");
 
 } // LIN_Slave_SoftwareSerial::begin()
 
@@ -116,11 +113,8 @@ void LIN_Slave_SoftwareSerial::end()
   // close serial interface
   this->SWSerial.end();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_SoftwareSerial::end()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_HEADER(2);
 
 } // LIN_Slave_SoftwareSerial::end()
 
@@ -146,15 +140,27 @@ void LIN_Slave_SoftwareSerial::handler()
     #if defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_ESP8266)
       if ((this->_serialPeek() == 0x55) && ((micros() - usLastByte) > this->minFramePause))
       {
+        // set BREAK flag
         this->flagBreak = true;
+
+        // print debug message
+        DEBUG_PRINT_FULL(3, "BRK detected");
+
       }
 
     // other architectures (BREAK is received): if BREAK=0x00 received and long time since last byte, start new frame and remove 0x00 from queue
     #else
       if ((this->_serialPeek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
       {
+        // set BREAK flag
         this->flagBreak = true;
+
+        // remove 0x00 from FiFo buffer
         this->_serialRead();
+
+        // print debug message
+        DEBUG_PRINT_FULL(3, "BRK detected");
+
       }
     #endif
 

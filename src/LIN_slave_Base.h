@@ -30,7 +30,7 @@
 // optional LIN debug output @ 115.2kBaud. Comment out for none. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
 #if !defined(LIN_SLAVE_DEBUG_SERIAL)
   //#define LIN_SLAVE_DEBUG_SERIAL      Serial        //!< serial interface used for debug output
-  //#define LIN_SLAVE_DEBUG_SERIAL      NeoSerial     //!< serial interface used for debug output (optional on AVR)
+  //#define LIN_SLAVE_DEBUG_SERIAL      NeoSerial     //!< serial interface used for debug output (optional on AVR, not together with HardwareSerial!)
   //#include <NeoHWSerial.h>                          // comment in/out together with previous line
   //#define LIN_MASTER_DEBUG_SERIAL     SerialUSB     //!< serial interface used for debug output (optional on Due)
 #endif
@@ -40,6 +40,50 @@
 #if !defined(LIN_SLAVE_DEBUG_PORT_TIMEOUT)
   #define LIN_SLAVE_DEBUG_PORT_TIMEOUT  3000          //!< optional LIN_SLAVE_DEBUG_SERIAL.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 #endif
+#if !defined(LIN_MASTER_DEBUG_BUFSIZE)
+  #define LIN_MASTER_DEBUG_BUFSIZE      128           //!< optional buffer for debug messages 
+#endif
+
+// define logging macros for optional debug output.
+// Use with printf() format like: DEBUG_PRINT_FULL(2, "Text=%s, Value=%d", text, value);
+#if defined(LIN_MASTER_DEBUG_SERIAL)
+  
+  #define DEBUG_PRINT_HEADER(level) \
+    do { \
+      if (LIN_MASTER_DEBUG_LEVEL >= level) { \
+        LIN_MASTER_DEBUG_SERIAL.print(this->nameLIN); \
+        LIN_MASTER_DEBUG_SERIAL.print(F(": ")); \
+        LIN_MASTER_DEBUG_SERIAL.print(__PRETTY_FUNCTION__); \
+        LIN_MASTER_DEBUG_SERIAL.print(F(": ")); \
+      } \
+    } while(0)
+
+  #define DEBUG_PRINT_BODY(level, fmt, ...) \
+    do { \
+      if (LIN_MASTER_DEBUG_LEVEL >= level) { \
+        char debug_buf[LIN_MASTER_DEBUG_BUFSIZE]; \
+        snprintf(debug_buf, sizeof(debug_buf), (fmt), ##__VA_ARGS__); \
+        LIN_MASTER_DEBUG_SERIAL.print(debug_buf); \
+        LIN_MASTER_DEBUG_SERIAL.println(); \
+      } \
+    } while(0)
+
+  #define DEBUG_PRINT_FULL(level, fmt, ...) \
+    do { \
+      DEBUG_PRINT_HEADER(level); \
+      DEBUG_PRINT_BODY(level, fmt, ##__VA_ARGS__); \
+    } while(0)
+  
+
+// no debug output -> omit logging macro
+#else
+
+  // do nothing. Use safe empty macros
+  #define DEBUG_PRINT_HEADER(level)         do {} while (0)
+  #define DEBUG_PRINT_BODY(level, fmt, ...) do {} while (0)
+  #define DEBUG_PRINT_FULL(level, fmt, ...) do {} while (0)
+
+#endif // LIN_MASTER_DEBUG_SERIAL
 
 
 /*-----------------------------------------------------------------------------
@@ -135,7 +179,8 @@ class LIN_Slave_Base
     LIN_Slave_Base::callback_t  callback[64];   //!< array of user callback functions for IDs 0x00..0x3F
 
     // latest frame properties
-    uint8_t                   id;               //!< received frame identifier
+    uint8_t                   pid;              //!< protected frame identifier (0..255)
+    uint8_t                   id;               //!< unprotected frame identifier (0..63)
     LIN_Slave_Base::frame_t   type;             //!< frame type (master request or slave response)
     uint8_t                   numData;          //!< number of data bytes in frame
     uint8_t                   bufData[9];       //!< buffer for data bytes (max. 8B) + checksum
@@ -178,11 +223,9 @@ class LIN_Slave_Base
 
     /// @brief Enable RS485 transmitter (DE=high)
     inline void _enableTransmitter(void)
-    { 
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::_enableTransmitter()");
-      #endif
+    {   
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       // enable tranmitter
       if (this->pinTxEN >= 0)
@@ -193,15 +236,13 @@ class LIN_Slave_Base
     /// @brief Disable RS485 transmitter (DE=low)
     inline void _disableTransmitter(void)
     { 
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::_disableTransmitter()");
-      #endif
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       // disable tranmitter
       if (this->pinTxEN >= 0)
         digitalWrite(this->pinTxEN, LOW);
-
+            
     } // _disableTransmitter()
 
 
@@ -229,10 +270,8 @@ class LIN_Slave_Base
     /// @brief Reset LIN state machine
     inline void resetStateMachine(void)
     {
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::resetStateMachine()");
-      #endif
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       // reset state      
       this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;
@@ -242,10 +281,8 @@ class LIN_Slave_Base
     /// @brief Getter for LIN state machine state
     inline LIN_Slave_Base::state_t getState(void)
     {
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::getState()");
-      #endif
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       // return state
       return this->state;
@@ -256,10 +293,8 @@ class LIN_Slave_Base
     /// @brief Clear error of LIN state machine
     inline void resetError(void) 
     {
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::resetError()");
-      #endif
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       // reset error
       this->error = LIN_Slave_Base::NO_ERROR;
@@ -269,10 +304,8 @@ class LIN_Slave_Base
     /// @brief Getter for LIN state machine error
     inline LIN_Slave_Base::error_t getError(void)
     {
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::getError()");
-      #endif
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       // return error
       return this->error;
@@ -283,10 +316,8 @@ class LIN_Slave_Base
     /// @brief Getter for LIN frame
     inline void getFrame(LIN_Slave_Base::frame_t &Type, uint8_t &Id, uint8_t &NumData, uint8_t Data[])
     { 
-      // print debug message (debug level 3)
-      #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-        LIN_SLAVE_DEBUG_SERIAL.println("LIN_Slave_Base::getFrame()");
-      #endif
+      // print debug message
+      DEBUG_PRINT_HEADER(3);
 
       noInterrupts();                         // for data consistency temporarily disable ISRs
       Type    = this->type;                   // frame type 

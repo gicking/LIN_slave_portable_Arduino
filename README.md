@@ -80,7 +80,11 @@ Revision History
 
 **v1.1 (xxxx-xx-xx)**
   - harmonize with [LIN master portable](https://github.com/gicking/LIN_master_portable_Arduino)
+  - simplified debug output via macro
+  - renamed `SERIAL_DEBUG` to `SERIAL_CONSOLE` to avoid mixup with (internal) debug output
   - add ESP32 Ticker example to support blocking user functions in `loop()`
+  - full regresstion tests and add some comments
+  - update reference
 
 **v1.0 (2025-02-01)**
   - initial release

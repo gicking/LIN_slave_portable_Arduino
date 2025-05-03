@@ -13,6 +13,7 @@
 // include files
 #include <LIN_slave_HardwareSerial_ESP32.h>
 
+
 // definition of static class variables (see https://stackoverflow.com/a/51091696)
 bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
 
@@ -23,6 +24,7 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
 **************************/
 
 #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 1)
+
   /**
     \brief      Static callback function for ESP32 Serial0 error
     \details    Static callback function for ESP32 Serial0 error. For a BRK this is called after onReceiveFunction() -> use polling in loop()
@@ -39,11 +41,13 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
     }
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0()
-#endif
+
+#endif // LIN_SLAVE_ESP32_MAX_SERIAL >= 1
 
 
 
 #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 2)
+
   /**
     \brief      Static callback function for ESP32 Serial1 error
     \details    Static callback function for ESP32 Serial1 error. For a BRK this is called after onReceiveFunction() -> use polling in loop()
@@ -60,11 +64,12 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
     }
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1()
-#endif
 
+#endif // LIN_SLAVE_ESP32_MAX_SERIAL >= 2 
 
 
 #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 3)
+
   /**
     \brief      Static callback function for ESP32 Serial2 error
     \details    Static callback function for ESP32 Serial2 error. For a BRK this is called after onReceiveFunction() -> use polling in loop()
@@ -81,7 +86,8 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
     }
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2()
-#endif
+
+#endif // LIN_SLAVE_ESP32_MAX_SERIAL >= 3
 
 
 
@@ -192,12 +198,9 @@ void LIN_Slave_HardwareSerial_ESP32::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP32::begin()");
-  #endif
-
+  // print debug message
+  DEBUG_PRINT_FULL(2, "ok");
+  
 } // LIN_Slave_HardwareSerial_ESP32::begin()
 
 
@@ -214,11 +217,8 @@ void LIN_Slave_HardwareSerial_ESP32::end()
   // close serial interface
   this->pSerial->end();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP32::end()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_HEADER(2);
 
 } // LIN_Slave_HardwareSerial_ESP32::end()
 

@@ -58,11 +58,8 @@ void LIN_Slave_HardwareSerial_ESP8266::begin(uint16_t Baudrate)
   if (this->swapPins == true)
     this->pSerial->swap();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP8266::begin()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_FULL(2, "ok, pin swap=%d", (int) this->swapPins);
 
 } // LIN_Slave_HardwareSerial_ESP8266::begin()
 
@@ -80,11 +77,8 @@ void LIN_Slave_HardwareSerial_ESP8266::end()
   // close serial interface
   this->pSerial->end();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial_ESP8266::end()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_HEADER(2);
 
 } // LIN_Slave_HardwareSerial_ESP8266::end()
 

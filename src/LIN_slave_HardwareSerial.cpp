@@ -10,7 +10,7 @@
 // include files
 #include <LIN_slave_HardwareSerial.h>
 
-// optional file, see LIN_slave_HardwareSerial.h
+// optional on AVR, see LIN_slave_NeoHWSerial_AVR.h
 #if defined(_LIN_SLAVE_HW_SERIAL_H_)
 
 
@@ -97,11 +97,8 @@ void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
   // initialize variables
   this->_resetBreakFlag();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::begin()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_FULL(2, "ok");
 
 } // LIN_Slave_HardwareSerial::begin()
 
@@ -119,11 +116,8 @@ void LIN_Slave_HardwareSerial::end()
   // close serial interface
   this->pSerial->end();
 
-  // optional debug output (debug level 2)
-  #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 2)
-    LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN);
-    LIN_SLAVE_DEBUG_SERIAL.println(": LIN_Slave_HardwareSerial::end()");
-  #endif
+  // print debug message
+  DEBUG_PRINT_HEADER(2);
 
 } // LIN_Slave_HardwareSerial::end()
 
@@ -140,10 +134,13 @@ void LIN_Slave_HardwareSerial::handler()
   // sync frames based on inter-frame pause (not standard compliant!) 
   static uint32_t   usLastByte = 0;
   
+  // print debug message
+  //DEBUG_PRINT_FULL(3, "state=%d", (int) this->state);
+
   // byte received -> check it
   if (this->pSerial->available())
   {
-    // if 0x00 received and long time since last byte, start new frame and remove 0x00 from queue
+    // 0x00 received and long time since last byte (=BREAK) -> start new frame and remove 0x00 from queue
     if ((this->pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
     {
       this->flagBreak = true;
