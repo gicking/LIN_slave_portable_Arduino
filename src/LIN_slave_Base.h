@@ -48,6 +48,7 @@
 // Use with printf() format like: DEBUG_PRINT(2, "Text=%s, Value=%d", text, value);
 #if defined(LIN_SLAVE_DEBUG_SERIAL)
   
+  // debug output macro for normal class methods
   #define DEBUG_PRINT(level, fmt, ...) \
     do { \
       if (LIN_SLAVE_DEBUG_LEVEL >= level) { \
@@ -61,6 +62,7 @@
       } \
     } while(0)
   
+  // debug output macro for static class methods and functions
   #define DEBUG_PRINT_STATIC(level, fmt, ...) \
     do { \
       if (LIN_SLAVE_DEBUG_LEVEL >= level) { \
