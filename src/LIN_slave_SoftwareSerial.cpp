@@ -95,7 +95,7 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
   this->_resetBreakFlag();
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "ok");
+  DEBUG_PRINT(2, "ok");
 
 } // LIN_Slave_SoftwareSerial::begin()
 
@@ -114,7 +114,7 @@ void LIN_Slave_SoftwareSerial::end()
   this->SWSerial.end();
 
   // print debug message
-  DEBUG_PRINT_HEADER(2);
+  DEBUG_PRINT(2, " ");
 
 } // LIN_Slave_SoftwareSerial::end()
 
@@ -144,7 +144,7 @@ void LIN_Slave_SoftwareSerial::handler()
         this->flagBreak = true;
 
         // print debug message
-        DEBUG_PRINT_FULL(3, "BRK detected");
+        DEBUG_PRINT(3, "BRK detected");
 
       }
 
@@ -159,7 +159,7 @@ void LIN_Slave_SoftwareSerial::handler()
         this->_serialRead();
 
         // print debug message
-        DEBUG_PRINT_FULL(3, "BRK detected");
+        DEBUG_PRINT(3, "BRK detected");
 
       }
     #endif

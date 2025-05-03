@@ -29,10 +29,10 @@
 
 // optional LIN debug output @ 115.2kBaud. Comment out for none. When using together with NeoHWSerial on AVR must use NeoSerialx to avoid linker conflict
 #if !defined(LIN_SLAVE_DEBUG_SERIAL)
-  //#define LIN_SLAVE_DEBUG_SERIAL      Serial        //!< serial interface used for debug output
-  //#define LIN_SLAVE_DEBUG_SERIAL      NeoSerial     //!< serial interface used for debug output (optional on AVR, not together with HardwareSerial!)
-  //#include <NeoHWSerial.h>                          // comment in/out together with previous line
-  //#define LIN_MASTER_DEBUG_SERIAL     SerialUSB     //!< serial interface used for debug output (optional on Due)
+  //#define LIN_SLAVE_DEBUG_SERIAL      Serial          //!< serial interface used for debug output
+  //#define LIN_SLAVE_DEBUG_SERIAL      NeoSerial       //!< serial interface used for debug output (optional on AVR, not together with HardwareSerial!)
+  //#include <NeoHWSerial.h>                            // comment in/out together with previous line
+  //#define LIN_SLAVE_DEBUG_SERIAL     SerialUSB        //!< serial interface used for debug output (optional on Due)
 #endif
 #if !defined(LIN_SLAVE_DEBUG_LEVEL)
   #define LIN_SLAVE_DEBUG_LEVEL         2             //!< debug verbosity 0..3 (1=errors only, 3=chatty)
@@ -40,38 +40,36 @@
 #if !defined(LIN_SLAVE_DEBUG_PORT_TIMEOUT)
   #define LIN_SLAVE_DEBUG_PORT_TIMEOUT  3000          //!< optional LIN_SLAVE_DEBUG_SERIAL.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 #endif
-#if !defined(LIN_MASTER_DEBUG_BUFSIZE)
-  #define LIN_MASTER_DEBUG_BUFSIZE      128           //!< optional buffer for debug messages 
+#if !defined(LIN_SLAVE_DEBUG_BUFSIZE)
+  #define LIN_SLAVE_DEBUG_BUFSIZE      128            //!< optional buffer for debug messages 
 #endif
 
 // define logging macros for optional debug output.
-// Use with printf() format like: DEBUG_PRINT_FULL(2, "Text=%s, Value=%d", text, value);
-#if defined(LIN_MASTER_DEBUG_SERIAL)
+// Use with printf() format like: DEBUG_PRINT(2, "Text=%s, Value=%d", text, value);
+#if defined(LIN_SLAVE_DEBUG_SERIAL)
   
-  #define DEBUG_PRINT_HEADER(level) \
+  #define DEBUG_PRINT(level, fmt, ...) \
     do { \
-      if (LIN_MASTER_DEBUG_LEVEL >= level) { \
-        LIN_MASTER_DEBUG_SERIAL.print(this->nameLIN); \
-        LIN_MASTER_DEBUG_SERIAL.print(F(": ")); \
-        LIN_MASTER_DEBUG_SERIAL.print(__PRETTY_FUNCTION__); \
-        LIN_MASTER_DEBUG_SERIAL.print(F(": ")); \
-      } \
-    } while(0)
-
-  #define DEBUG_PRINT_BODY(level, fmt, ...) \
-    do { \
-      if (LIN_MASTER_DEBUG_LEVEL >= level) { \
-        char debug_buf[LIN_MASTER_DEBUG_BUFSIZE]; \
+      if (LIN_SLAVE_DEBUG_LEVEL >= level) { \
+        LIN_SLAVE_DEBUG_SERIAL.print(this->nameLIN); \
+        LIN_SLAVE_DEBUG_SERIAL.print(F(": ")); \
+        LIN_SLAVE_DEBUG_SERIAL.print(__PRETTY_FUNCTION__); \
+        LIN_SLAVE_DEBUG_SERIAL.print(F(": ")); \
+        char debug_buf[LIN_SLAVE_DEBUG_BUFSIZE]; \
         snprintf(debug_buf, sizeof(debug_buf), (fmt), ##__VA_ARGS__); \
-        LIN_MASTER_DEBUG_SERIAL.print(debug_buf); \
-        LIN_MASTER_DEBUG_SERIAL.println(); \
+        LIN_SLAVE_DEBUG_SERIAL.println(debug_buf); \
       } \
     } while(0)
-
-  #define DEBUG_PRINT_FULL(level, fmt, ...) \
+  
+  #define DEBUG_PRINT_STATIC(level, fmt, ...) \
     do { \
-      DEBUG_PRINT_HEADER(level); \
-      DEBUG_PRINT_BODY(level, fmt, ##__VA_ARGS__); \
+      if (LIN_SLAVE_DEBUG_LEVEL >= level) { \
+        LIN_SLAVE_DEBUG_SERIAL.print(__PRETTY_FUNCTION__); \
+        LIN_SLAVE_DEBUG_SERIAL.print(F(": ")); \
+        char debug_buf[LIN_SLAVE_DEBUG_BUFSIZE]; \
+        snprintf(debug_buf, sizeof(debug_buf), (fmt), ##__VA_ARGS__); \
+        LIN_SLAVE_DEBUG_SERIAL.println(debug_buf); \
+      } \
     } while(0)
   
 
@@ -79,11 +77,10 @@
 #else
 
   // do nothing. Use safe empty macros
-  #define DEBUG_PRINT_HEADER(level)         do {} while (0)
-  #define DEBUG_PRINT_BODY(level, fmt, ...) do {} while (0)
-  #define DEBUG_PRINT_FULL(level, fmt, ...) do {} while (0)
+  #define DEBUG_PRINT(level, fmt, ...) do {} while (0)
+  #define DEBUG_PRINT_STATIC(level, fmt, ...) do {} while (0)
 
-#endif // LIN_MASTER_DEBUG_SERIAL
+#endif // LIN_SLAVE_DEBUG_SERIAL
 
 
 /*-----------------------------------------------------------------------------
@@ -199,7 +196,7 @@ class LIN_Slave_Base
   protected:
   
     /// @brief Calculate protected frame ID
-    uint8_t _calculatePID(void);
+    uint8_t _calculatePID(uint8_t ID);
   
     /// @brief Calculate LIN frame checksum
     uint8_t _calculateChecksum(uint8_t NumData, uint8_t Data[]);
@@ -225,7 +222,7 @@ class LIN_Slave_Base
     inline void _enableTransmitter(void)
     {   
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       // enable tranmitter
       if (this->pinTxEN >= 0)
@@ -237,7 +234,7 @@ class LIN_Slave_Base
     inline void _disableTransmitter(void)
     { 
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       // disable tranmitter
       if (this->pinTxEN >= 0)
@@ -271,7 +268,7 @@ class LIN_Slave_Base
     inline void resetStateMachine(void)
     {
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       // reset state      
       this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;
@@ -282,7 +279,7 @@ class LIN_Slave_Base
     inline LIN_Slave_Base::state_t getState(void)
     {
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       // return state
       return this->state;
@@ -294,7 +291,7 @@ class LIN_Slave_Base
     inline void resetError(void) 
     {
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       // reset error
       this->error = LIN_Slave_Base::NO_ERROR;
@@ -305,7 +302,7 @@ class LIN_Slave_Base
     inline LIN_Slave_Base::error_t getError(void)
     {
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       // return error
       return this->error;
@@ -317,7 +314,7 @@ class LIN_Slave_Base
     inline void getFrame(LIN_Slave_Base::frame_t &Type, uint8_t &Id, uint8_t &NumData, uint8_t Data[])
     { 
       // print debug message
-      DEBUG_PRINT_HEADER(3);
+      DEBUG_PRINT(3, " ");
 
       noInterrupts();                         // for data consistency temporarily disable ISRs
       Type    = this->type;                   // frame type 

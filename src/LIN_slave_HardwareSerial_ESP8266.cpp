@@ -59,7 +59,7 @@ void LIN_Slave_HardwareSerial_ESP8266::begin(uint16_t Baudrate)
     this->pSerial->swap();
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "ok, pin swap=%d", (int) this->swapPins);
+  DEBUG_PRINT(2, "ok, pin swap=%d", (int) this->swapPins);
 
 } // LIN_Slave_HardwareSerial_ESP8266::begin()
 
@@ -78,7 +78,7 @@ void LIN_Slave_HardwareSerial_ESP8266::end()
   this->pSerial->end();
 
   // print debug message
-  DEBUG_PRINT_HEADER(2);
+  DEBUG_PRINT(2, " ");
 
 } // LIN_Slave_HardwareSerial_ESP8266::end()
 

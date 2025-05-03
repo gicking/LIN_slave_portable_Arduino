@@ -36,9 +36,16 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
     // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((Serial.peek() == 0x00) && (Err == UART_BREAK_ERROR))
     {
+      // set BREAK flag for Serial0
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[0] = true;
-      Serial.read();
-    }
+
+      // remove 0x00 from queue
+      uint8_t byte = Serial.read();
+
+      // print debug message
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
+
+    } // if BREAK detected
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError0()
 
@@ -59,9 +66,16 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
     // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((Serial1.peek() == 0x00) && (Err == UART_BREAK_ERROR))
     {
+      // set BREAK flag for Serial1
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[1] = true;
-      Serial1.read();
-    }
+
+      // remove 0x00 from queue
+      uint8_t byte = Serial1.read();
+
+      // print debug message
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
+
+    } // if BREAK detected
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError1()
 
@@ -81,9 +95,16 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
     // on BREAK (=0x00 with framing error) set class variable and remove 0x00 from queue
     if ((Serial2.peek() == 0x00) && (Err == UART_BREAK_ERROR))
     {
+      // set BREAK flag for Serial2
       (LIN_Slave_HardwareSerial_ESP32::flagBreak)[2] = true;
-      Serial2.read();
-    }
+
+      // remove 0x00 from queue
+      uint8_t byte = Serial2.read();
+
+      // print debug message
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
+
+    } // if BREAK detected
 
   } // LIN_Slave_HardwareSerial_ESP32::_onSerialReceiveError2()
 
@@ -199,7 +220,7 @@ void LIN_Slave_HardwareSerial_ESP32::begin(uint16_t Baudrate)
   this->_resetBreakFlag();
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "ok");
+  DEBUG_PRINT(2, "ok");
   
 } // LIN_Slave_HardwareSerial_ESP32::begin()
 
@@ -218,7 +239,7 @@ void LIN_Slave_HardwareSerial_ESP32::end()
   this->pSerial->end();
 
   // print debug message
-  DEBUG_PRINT_HEADER(2);
+  DEBUG_PRINT(2, " ");
 
 } // LIN_Slave_HardwareSerial_ESP32::end()
 

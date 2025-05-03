@@ -24,22 +24,23 @@
 /**
   \brief      Calculate protected frame ID
   \details    Calculate protected frame ID as described in LIN2.0 spec "2.3.1.3 Protected identifier field"
+  \param[in]  ID  frame ID to protect (protected or unprotected)
   \return     Protected frame ID
 */
-uint8_t LIN_Slave_Base::_calculatePID(void)
+uint8_t LIN_Slave_Base::_calculatePID(uint8_t ID)
 {
-  uint8_t  pid_tmp;   // calculated protected frame ID
+  uint8_t  pid_tmp;   // protected ID
   uint8_t  tmp;       // temporary variable for calculating parity bits
 
   // protect ID  with parity bits
-  pid_tmp  = (uint8_t) (this->id & 0x3F);                                                   // clear upper bits 6 & 7
+  pid_tmp  = (uint8_t) (ID & 0x3F);                                                         // clear upper bits 6 & 7
   tmp  = (uint8_t) ((pid_tmp ^ (pid_tmp>>1) ^ (pid_tmp>>2) ^ (pid_tmp>>4)) & 0x01);         // pid[6] = PI0 = ID0^ID1^ID2^ID4
   pid_tmp |= (uint8_t) (tmp << 6);
   tmp  = (uint8_t) (~((pid_tmp>>1) ^ (pid_tmp>>3) ^ (pid_tmp>>4) ^ (pid_tmp>>5)) & 0x01);   // pid[7] = PI1 = ~(ID1^ID3^ID4^ID5)
   pid_tmp |= (uint8_t) (tmp << 7);
 
   // print debug message
-  DEBUG_PRINT_FULL(3, "PID=0x%02X", pid_tmp);
+  DEBUG_PRINT(3, "ID=0x%02X / PID=0x%02X", (ID & 0x3F), pid_tmp);
 
   // return protected ID
   return pid_tmp;
@@ -62,8 +63,8 @@ uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
   // LIN2.x uses extended checksum which includes protected ID, i.e. including parity bits
   // LIN1.x uses classical checksum only over data bytes
   // Diagnostic frames with ID=0x3C/PID=0x3C and ID=0x3D/PID=0x7D always use classical checksum (see LIN spec "2.3.1.5 Checkum")
-  if (!((this->version == LIN_V1) || (id == 0x3C) || (id == 0x3D)))
-    chk = (uint16_t) this->_calculatePID();
+  if (!((this->version == LIN_V1) || (this->id == 0x3C) || (this->id == 0x3D)))
+    chk = (uint16_t) this->_calculatePID(this->id);
 
   // loop over data bytes
   for (uint8_t i = 0; i < NumData; i++)
@@ -75,7 +76,7 @@ uint8_t LIN_Slave_Base::_calculateChecksum(uint8_t NumData, uint8_t Data[])
   chk = (uint8_t)(0xFF - ((uint8_t) chk));   // bitwise invert and strip upper byte
 
   // print debug message
-  DEBUG_PRINT_FULL(3, "CHK=0x%02X", chk);
+  DEBUG_PRINT(3, "CHK=0x%02X", chk);
 
   // return frame checksum
   return (uint8_t) chk;
@@ -187,7 +188,7 @@ void LIN_Slave_Base::begin(uint16_t Baudrate)
   }
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "BR=%d", (int) Baudrate);
+  DEBUG_PRINT(2, "BR=%d", (int) Baudrate);
 
 } // LIN_Slave_Base::begin()
 
@@ -207,7 +208,7 @@ void LIN_Slave_Base::end()
   _disableTransmitter();
 
   // print debug message
-  DEBUG_PRINT_HEADER(2);
+  DEBUG_PRINT(2, " ");
 
 } // LIN_Slave_Base::end()
 
@@ -230,7 +231,7 @@ void LIN_Slave_Base::registerMasterRequestHandler(uint8_t ID, LIN_Slave_Base::Li
   this->callback[ID].fct = Fct;
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "registered ID 0x%02X", ID);
+  DEBUG_PRINT(2, "registered ID=0x%02X / PID=0x%02X", ID, this->_calculatePID(ID));
 
 } // LIN_Slave_Base::registerMasterRequestHandler
 
@@ -253,7 +254,7 @@ void LIN_Slave_Base::registerSlaveResponseHandler(uint8_t ID, LIN_Slave_Base::Li
   this->callback[ID].fct = Fct;
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "registered ID 0x%02X", ID);
+  DEBUG_PRINT(2, "registered ID=0x%02X / PID=0x%02X", ID, this->_calculatePID(ID));
 
 } // LIN_Slave_Base::registerSlaveResponseHandler
 
@@ -268,7 +269,7 @@ void LIN_Slave_Base::handler()
   uint8_t   chk_calc;
 
   // print debug message
-  //DEBUG_PRINT_FULL(3, "state=%d", (int) this->state);
+  //DEBUG_PRINT(3, "state=%d", (int) this->state);
 
   // on receive timeout [us] within frame reset state machine
   if (!(this->state | (LIN_Slave_Base::STATE_OFF | LIN_Slave_Base::STATE_WAIT_FOR_BREAK | LIN_Slave_Base::STATE_DONE)) && 
@@ -286,7 +287,7 @@ void LIN_Slave_Base::handler()
     _disableTransmitter();
     
     // print debug message
-    DEBUG_PRINT_FULL(1, "frame timeout after %ldus", (long) (micros() - this->timeLastRx));
+    DEBUG_PRINT(1, "frame timeout after %ldus", (long) (micros() - this->timeLastRx));
 
     // return immediately
     return;
@@ -308,7 +309,7 @@ void LIN_Slave_Base::handler()
     _disableTransmitter();
     
     // print debug message
-    DEBUG_PRINT_FULL(3, "BREAK detected");
+    DEBUG_PRINT(3, "BREAK detected");
 
   } // if BREAK detected
 
@@ -320,13 +321,8 @@ void LIN_Slave_Base::handler()
     uint8_t byteReceived = this->_serialRead();
     this->timeLastRx = micros();
 
-    // print debug message. BREAK is consumed -> treat explicitely
-    #if defined(LIN_SLAVE_DEBUG_SERIAL) && (LIN_SLAVE_DEBUG_LEVEL >= 3)
-      if (this->_getBreakFlag() == true)
-        DEBUG_PRINT_FULL(3, "BRK, Rx=0x%02X", byteReceived);
-      else
-        DEBUG_PRINT_FULL(3, "Rx=0x%02X", byteReceived);
-    #endif
+    // print debug message
+    //DEBUG_PRINT(3, "Rx=0x%02X", byteReceived);
 
     // handle byte
     switch (this->state)
@@ -350,7 +346,7 @@ void LIN_Slave_Base::handler()
         if (byteReceived == 0x55)
         {
           // print debug message
-          DEBUG_PRINT_FULL(3, "SYNC detected");
+          DEBUG_PRINT(3, "SYNC detected");
 
           this->idxData = 0;
           this->state = LIN_Slave_Base::STATE_WAIT_FOR_PID;
@@ -371,7 +367,7 @@ void LIN_Slave_Base::handler()
           _disableTransmitter();
 
           // print debug message
-          DEBUG_PRINT_FULL(1, "SYNC error, received 0x%02X", byteReceived);
+          DEBUG_PRINT(1, "SYNC error, received 0x%02X", byteReceived);
 
           // return immediately
           return;
@@ -391,7 +387,7 @@ void LIN_Slave_Base::handler()
         this->id = this->pid & 0x3F;
 
         // check PID parity bits 7+8
-        if (this->pid != this->_calculatePID())
+        if (this->pid != this->_calculatePID(this->id))
         {
           // set error and abort frame
           this->error = (LIN_Slave_Base::error_t) ((int) this->error | (int) LIN_Slave_Base::ERROR_PID);
@@ -405,7 +401,7 @@ void LIN_Slave_Base::handler()
           _disableTransmitter();
 
           // print debug message
-          DEBUG_PRINT_FULL(1, "PID parity error, received 0x%02X,  calculated 0x%02X", this->pid, this->_calculatePID());
+          DEBUG_PRINT(1, "PID parity error, received 0x%02X, calculated 0x%02X", this->pid, this->_calculatePID(this->id));
           
           // return immediately
           return;
@@ -421,7 +417,7 @@ void LIN_Slave_Base::handler()
           this->numData = this->callback[this->id].type_numData & 0x0F;
           
           // print debug message
-          DEBUG_PRINT_FULL(2, "handle slave response PID 0x%02X", this->id);
+          DEBUG_PRINT(2, "handle slave response PID 0x%02X", this->pid);
 
           // call the user-defined callback function for this ID
           this->callback[this->id].fct(this->numData, this->bufData);
@@ -458,7 +454,7 @@ void LIN_Slave_Base::handler()
         else
         {
           // print debug message
-          DEBUG_PRINT_FULL(2, "drop frame PID 0x%02X", this->id);
+          DEBUG_PRINT(2, "drop frame PID 0x%02X", this->pid);
 
           // reset state machine
           this->state = LIN_Slave_Base::STATE_WAIT_FOR_BREAK;
@@ -499,7 +495,7 @@ void LIN_Slave_Base::handler()
           _disableTransmitter();
 
           // print debug message
-          DEBUG_PRINT_FULL(1, "echo error, received 0x%02X, expected 0x%02X", byteReceived, this->bufData[(this->idxData)-1]);
+          DEBUG_PRINT(1, "echo error, received 0x%02X, expected 0x%02X", byteReceived, this->bufData[(this->idxData)-1]);
 
           // return immediately
           return;
@@ -531,7 +527,7 @@ void LIN_Slave_Base::handler()
           this->callback[id].fct(numData, bufData);
 
           // print debug message
-          DEBUG_PRINT_FULL(2, "handle master request PID 0x%02X", this->pid);
+          DEBUG_PRINT(2, "handle master request PID 0x%02X", this->pid);
 
         } // if checksum ok
         
@@ -550,7 +546,7 @@ void LIN_Slave_Base::handler()
           _disableTransmitter();
                 
           // print debug message
-          DEBUG_PRINT_FULL(1, "CHK error, received 0x%02X, calculated 0x%02X", byteReceived, chk_calc);
+          DEBUG_PRINT(1, "CHK error, received 0x%02X, calculated 0x%02X", byteReceived, chk_calc);
 
           // return immediately
           return;
@@ -581,7 +577,7 @@ void LIN_Slave_Base::handler()
         _disableTransmitter();
 
         // print debug message
-        DEBUG_PRINT_FULL(1, "illegal state %d, this should never happen...", this->state);
+        DEBUG_PRINT(1, "illegal state %d, this should never happen...", this->state);
 
         // return immediately
         return;

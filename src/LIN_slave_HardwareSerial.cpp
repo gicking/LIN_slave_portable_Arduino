@@ -98,7 +98,7 @@ void LIN_Slave_HardwareSerial::begin(uint16_t Baudrate)
   this->_resetBreakFlag();
 
   // print debug message
-  DEBUG_PRINT_FULL(2, "ok");
+  DEBUG_PRINT(2, "ok");
 
 } // LIN_Slave_HardwareSerial::begin()
 
@@ -117,7 +117,7 @@ void LIN_Slave_HardwareSerial::end()
   this->pSerial->end();
 
   // print debug message
-  DEBUG_PRINT_HEADER(2);
+  DEBUG_PRINT(2, " ");
 
 } // LIN_Slave_HardwareSerial::end()
 
@@ -135,7 +135,7 @@ void LIN_Slave_HardwareSerial::handler()
   static uint32_t   usLastByte = 0;
   
   // print debug message
-  //DEBUG_PRINT_FULL(3, "state=%d", (int) this->state);
+  //DEBUG_PRINT(3, "state=%d", (int) this->state);
 
   // byte received -> check it
   if (this->pSerial->available())

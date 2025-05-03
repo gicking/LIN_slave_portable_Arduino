@@ -40,14 +40,14 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[0] = true;
 
       // print debug message
-      DEBUG_PRINT_FULL(3, "Rx=0x%02X, BRK", byte);
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
 
       // return true -> byte is dropped
       return false;
     }
 
     // print debug message
-    DEBUG_PRINT_FULL(3, "Rx=0x%02X", byte);
+    DEBUG_PRINT_STATIC(3, "Rx=0x%02X", byte);
 
     // return true -> byte is stored in Serial0 buffer
     return true;
@@ -75,14 +75,14 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[1] = true;
 
       // print debug message
-      DEBUG_PRINT_FULL(3, "Rx=0x%02X, BRK", byte);
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
 
       // return true -> byte is dropped
       return false;
     }
 
     // print debug message
-    DEBUG_PRINT_FULL(3, "Rx=0x%02X", byte);
+    DEBUG_PRINT_STATIC(3, "Rx=0x%02X", byte);
 
     // return true -> byte is stored in Serial1 buffer
     return true;
@@ -110,14 +110,14 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[2] = true;
 
       // print debug message
-      DEBUG_PRINT_FULL(3, "Rx=0x%02X, BRK", byte);
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
 
       // return true -> byte is dropped
       return false;
     }
 
     // print debug message
-    DEBUG_PRINT_FULL(3, "Rx=0x%02X", byte);
+    DEBUG_PRINT_STATIC(3, "Rx=0x%02X", byte);
 
     // return true -> byte is stored in Serial2 buffer
     return true;
@@ -145,14 +145,14 @@ bool LIN_Slave_NeoHWSerial_AVR::flagBreak[];
       (LIN_Slave_NeoHWSerial_AVR::flagBreak)[3] = true;
 
       // print debug message
-      DEBUG_PRINT_FULL(3, "Rx=0x%02X, BRK", byte);
+      DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
 
       // return true -> byte is dropped
       return false;
     }
 
     // print debug message
-    DEBUG_PRINT_FULL(3, "Rx=0x%02X", byte);
+    DEBUG_PRINT_STATIC(3, "Rx=0x%02X", byte);
 
     // return true -> byte is stored in Serial3 buffer
     return true;
@@ -296,7 +296,7 @@ void LIN_Slave_NeoHWSerial_AVR::end()
   this->pSerial->end();
 
   // print debug message
-  DEBUG_PRINT_HEADER(2);
+  DEBUG_PRINT(2, " ");
 
 } // LIN_Slave_NeoHWSerial_AVR::end()
 
