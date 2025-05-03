@@ -160,7 +160,6 @@ void handle_Request(uint8_t NumData, uint8_t* Data)
 } // handle_Request()
 
 
-
 // Example for user-defined Slave Response handler
 void handle_Response(uint8_t NumData, uint8_t* Data)
 {

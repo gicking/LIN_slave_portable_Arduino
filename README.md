@@ -78,7 +78,7 @@ Have fun!, Georg
 Revision History
 ----------------
 
-**v1.1 (xxxx-xx-xx)**
+**v1.1 (2025-05-03)**
   - harmonize with [LIN master portable](https://github.com/gicking/LIN_master_portable_Arduino)
   - simplified debug output via macro
   - renamed `SERIAL_DEBUG` to `SERIAL_CONSOLE` to avoid mixup with (internal) debug output

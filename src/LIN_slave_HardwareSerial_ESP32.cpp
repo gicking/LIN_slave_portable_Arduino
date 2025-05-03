@@ -42,6 +42,9 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
       // remove 0x00 from queue
       uint8_t byte = Serial.read();
 
+      // avoid unused variable warning in case of no debug output
+      (void) byte; 
+
       // print debug message
       DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
 
@@ -72,6 +75,9 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
       // remove 0x00 from queue
       uint8_t byte = Serial1.read();
 
+      // avoid unused variable warning in case of no debug output
+      (void) byte; 
+
       // print debug message
       DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);
 
@@ -100,6 +106,9 @@ bool LIN_Slave_HardwareSerial_ESP32::flagBreak[LIN_SLAVE_ESP32_MAX_SERIAL];
 
       // remove 0x00 from queue
       uint8_t byte = Serial2.read();
+
+      // avoid unused variable warning in case of no debug output
+      (void) byte; 
 
       // print debug message
       DEBUG_PRINT_STATIC(3, "Rx=0x%02X, BRK", byte);

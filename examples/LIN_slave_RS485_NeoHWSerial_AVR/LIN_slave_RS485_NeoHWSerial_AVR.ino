@@ -4,7 +4,8 @@ Example code for LIN slave node using AVR NeoHWSerial interface
 
 Note:
   - relies on NeoHWSerial for BREAK detection (install via Library manager)
-  - to avoid linker conflict, only use NeoSerial in your code, not Serial 
+  - to avoid linker conflict, only use NeoSerial in your code, not Serial
+  - to use standard HardwareSerial (less robust), comment out USE_NEOSERIAL in file LIN_slave_NeoHWSerial_AVR.h
   - handling of frames can be done inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:

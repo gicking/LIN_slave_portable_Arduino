@@ -25,19 +25,19 @@ Supported (=successfully tested) boards:
   #define PIN_LIN_RX      10        // receive pin for LIN
   #define PIN_TOGGLE      30        // pin to demonstrate background operation
   #define PIN_ERROR       32        // indicate LIN return status
-  #define SERIAL_CONSOLE	NeoSerial // serial I/F for console output (comment for no output) 
+  #define SERIAL_CONSOLE  NeoSerial // serial I/F for console output (comment for no output) 
 #elif defined(ARDUINO_ESP8266_WEMOS_D1MINI)
   #define PIN_LIN_TX      D8
   #define PIN_LIN_RX      D7
   #define PIN_TOGGLE      D1
   #define PIN_ERROR       D2
-  #define SERIAL_CONSOLE	Serial1   // Use Tx-only UART1 on pin D4 via UART<->USB adapter
+  #define SERIAL_CONSOLE  Serial1   // Use Tx-only UART1 on pin D4 via UART<->USB adapter
 #elif defined(ARDUINO_ESP32_WROOM_DA)
   #define PIN_LIN_TX      17
   #define PIN_LIN_RX      16
   #define PIN_TOGGLE      19
   #define PIN_ERROR       18
-  #define SERIAL_CONSOLE	Serial
+  #define SERIAL_CONSOLE  Serial
 #elif defined(ARDUINO_AVR_TRINKET3) || defined(ARDUINO_AVR_TRINKET5)
   #define PIN_LIN_TX      2
   #define PIN_LIN_RX      0

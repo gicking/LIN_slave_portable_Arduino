@@ -21,7 +21,7 @@ Supported (=successfully tested) boards:
 #define PIN_TXEN      21        // pin to switch RS485 Tx direction (=DE)
 
 // serial I/F for console output (comment for no output)
-#define SERIAL_CONSOLE  Serial
+//#define SERIAL_CONSOLE  Serial
 
 // SERIAL_CONSOLE.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 #define SERIAL_CONSOLE_BEGIN_TIMEOUT  3000
@@ -70,7 +70,6 @@ void loop()
   {
     // call LIN slave protocol handler often
     LIN.handler();
-
 
     // if LIN frame has finished, print it
     if (LIN.getState() == LIN_Slave_Base::STATE_DONE)

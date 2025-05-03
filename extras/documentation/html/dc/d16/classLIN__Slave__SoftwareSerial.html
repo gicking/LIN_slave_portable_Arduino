@@ -263,10 +263,10 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:af1c21fc3081d728cfc2c0b8a123b2970 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">array of user callback functions for IDs 0x00..0x3F  <br /></td></tr>
 <tr class="separator:af1c21fc3081d728cfc2c0b8a123b2970 inherit pro_attribs_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base" id="r_ac6efdc8cf01f1db1825c71ff6dc8ff24"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#ac6efdc8cf01f1db1825c71ff6dc8ff24">pid</a></td></tr>
-<tr class="memdesc:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">protected frame identifier  <br /></td></tr>
+<tr class="memdesc:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">protected frame identifier (0..255)  <br /></td></tr>
 <tr class="separator:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base" id="r_a7a41744083963d6bd50f466867620059"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7a41744083963d6bd50f466867620059">id</a></td></tr>
-<tr class="memdesc:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">unprotected frame identifier  <br /></td></tr>
+<tr class="memdesc:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">unprotected frame identifier (0..63)  <br /></td></tr>
 <tr class="separator:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a743f4376c7876156836a42bee3db8550 inherit pro_attribs_classLIN__Slave__Base" id="r_a743f4376c7876156836a42bee3db8550"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">LIN_Slave_Base::frame_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a743f4376c7876156836a42bee3db8550">type</a></td></tr>
 <tr class="memdesc:a743f4376c7876156836a42bee3db8550 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">frame type (master request or slave response)  <br /></td></tr>
@@ -699,7 +699,7 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aed021e90f2f0c3bf65af6e1f57964d90">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00111">111</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00108">108</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -747,7 +747,7 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00137">137</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00131">131</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -766,21 +766,22 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="125,159,177,198,241,235,262,243,260,248,239,240,174,202,122,163"/>
 <area shape="poly" title=" " alt="" coords="407,248,425,235,440,215,447,195,449,153,450,110,457,88,473,66,496,48,500,52,477,70,462,90,455,111,454,153,453,196,445,218,429,239,410,252"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9d9d9ba724af72dcf366b494a8b3d868" title="Calculate LIN frame checksum." alt="" coords="505,80,703,120"/>
-<area shape="poly" title=" " alt="" coords="405,248,425,235,436,223,443,211,448,184,453,157,461,143,473,130,491,118,494,123,476,134,465,146,459,159,453,185,448,212,441,226,428,239,408,252"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0" title="Calculate protected frame ID." alt="" coords="493,145,715,170"/>
-<area shape="poly" title=" " alt="" coords="399,247,425,235,440,222,448,208,457,193,473,179,486,173,488,177,476,184,461,196,453,210,444,225,428,240,401,252"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#ada94260537f5248e8ebca094bedc8198" title="Enable RS485 transmitter (DE=high)" alt="" coords="475,194,733,219"/>
-<area shape="poly" title=" " alt="" coords="391,247,474,229,523,219,524,225,475,235,392,253"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a719d9b03156111e4c38e894c203af350" title="Get break detection flag. Is hardware dependent." alt="" coords="491,243,717,269"/>
-<area shape="poly" title=" " alt="" coords="425,258,477,256,477,262,425,263"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d" title="Clear break detection flag. Is hardware dependent." alt="" coords="485,293,723,318"/>
-<area shape="poly" title=" " alt="" coords="415,273,510,288,509,293,414,278"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b" title="read next byte from Rx buffer. Here dummy" alt="" coords="499,342,709,367"/>
-<area shape="poly" title=" " alt="" coords="357,273,410,301,476,328,505,336,504,342,474,333,408,306,355,278"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b" title="write bytes to Tx buffer. Here dummy" alt="" coords="499,391,709,417"/>
-<area shape="poly" title=" " alt="" coords="347,273,399,325,436,354,476,378,494,385,492,390,473,382,433,358,396,329,344,277"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338" title="check if a byte is available in Rx buffer. Here dummy" alt="" coords="507,441,701,466"/>
-<area shape="poly" title=" " alt="" coords="344,274,362,306,392,348,430,391,476,427,495,436,493,441,473,432,426,395,387,352,358,309,339,277"/>
+<area shape="poly" title=" " alt="" coords="404,248,425,235,436,224,442,212,448,188,454,162,461,149,473,137,491,124,494,129,476,141,466,152,459,164,453,189,447,214,440,227,428,239,407,252"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0" title="Calculate protected frame ID." alt="" coords="781,117,1003,142"/>
+<area shape="poly" title=" " alt="" coords="398,248,425,235,440,222,448,208,457,193,473,180,526,163,600,149,767,133,768,138,601,155,527,168,476,185,461,197,453,211,444,225,428,240,401,252"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#ada94260537f5248e8ebca094bedc8198" title="Enable RS485 transmitter (DE=high)" alt="" coords="475,195,733,221"/>
+<area shape="poly" title=" " alt="" coords="390,247,474,229,519,221,520,226,475,235,391,253"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a719d9b03156111e4c38e894c203af350" title="Get break detection flag. Is hardware dependent." alt="" coords="491,245,717,270"/>
+<area shape="poly" title=" " alt="" coords="425,258,477,257,477,263,425,264"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d" title="Clear break detection flag. Is hardware dependent." alt="" coords="485,294,723,319"/>
+<area shape="poly" title=" " alt="" coords="412,273,512,289,511,294,411,278"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b" title="read next byte from Rx buffer. Here dummy" alt="" coords="499,343,709,369"/>
+<area shape="poly" title=" " alt="" coords="358,273,411,301,476,328,510,338,508,343,474,333,408,306,355,278"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b" title="write bytes to Tx buffer. Here dummy" alt="" coords="499,393,709,418"/>
+<area shape="poly" title=" " alt="" coords="348,274,400,325,436,354,476,378,497,386,495,391,473,382,433,358,396,329,344,278"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338" title="check if a byte is available in Rx buffer. Here dummy" alt="" coords="507,442,701,467"/>
+<area shape="poly" title=" " alt="" coords="344,274,362,306,392,348,430,391,476,427,496,436,493,441,473,432,426,395,388,351,358,309,339,277"/>
+<area shape="poly" title=" " alt="" coords="704,107,768,114,767,119,703,113"/>
 </map>
 </div>
 

@@ -20,33 +20,33 @@ Supported (=successfully tested) boards:
 
 // board pin definitions. Note: for supported Rx pins see https://docs.arduino.cc/learn/built-in-libraries/software-serial/
 #if defined(ARDUINO_AVR_MEGA2560)
-  #include <NeoHWSerial.h>        // use NeoHWSerial to avoid linker conflict for UART ISRs
-  #define PIN_LIN_TX    18        // transmit pin for LIN
-  #define PIN_LIN_RX    10        // receive pin for LIN
-  #define PIN_TXEN      17        // pin to switch RS485 Tx direction (=DE)
-  #define PIN_TOGGLE    30        // pin to demonstrate background operation
-  #define PIN_ERROR     32        // indicate LIN return status
-  #define SERIAL_CONSOLE	NeoSerial // serial I/F for console output (comment for no output) 
+  #include <NeoHWSerial.h>          // use NeoHWSerial to avoid linker conflict for UART ISRs
+  #define PIN_LIN_TX      18        // transmit pin for LIN
+  #define PIN_LIN_RX      10        // receive pin for LIN
+  #define PIN_TXEN        17        // pin to switch RS485 Tx direction (=DE)
+  #define PIN_TOGGLE      30        // pin to demonstrate background operation
+  #define PIN_ERROR       32        // indicate LIN return status
+  #define SERIAL_CONSOLE  NeoSerial // serial I/F for console output (comment for no output) 
 #elif defined(ARDUINO_ESP8266_WEMOS_D1MINI)
-  #define PIN_LIN_TX    D8
-  #define PIN_LIN_RX    D7
-  #define PIN_TXEN      D3
-  #define PIN_TOGGLE    D1
-  #define PIN_ERROR     D2
-  #define SERIAL_CONSOLE	Serial1   // Use Tx-only UART1 on pin D4 via UART<->USB adapter
+  #define PIN_LIN_TX      D8
+  #define PIN_LIN_RX      D7
+  #define PIN_TXEN        D3
+  #define PIN_TOGGLE      D1
+  #define PIN_ERROR       D2
+  #define SERIAL_CONSOLE  Serial1   // Use Tx-only UART1 on pin D4 via UART<->USB adapter
 #elif defined(ARDUINO_ESP32_WROOM_DA)
-  #define PIN_LIN_TX    17
-  #define PIN_LIN_RX    16
-  #define PIN_TXEN      21
-  #define PIN_TOGGLE    19
-  #define PIN_ERROR     18
-  #define SERIAL_CONSOLE	Serial
+  #define PIN_LIN_TX      17
+  #define PIN_LIN_RX      16
+  #define PIN_TXEN        21
+  #define PIN_TOGGLE      19
+  #define PIN_ERROR       18
+  #define SERIAL_CONSOLE  Serial
 #elif defined(ARDUINO_AVR_TRINKET3) || defined(ARDUINO_AVR_TRINKET5)
-  #define PIN_LIN_TX    2
-  #define PIN_LIN_RX    0
-  #define PIN_TXEN      4
-  #define PIN_TOGGLE    1
-  #define PIN_ERROR     3
+  #define PIN_LIN_TX      2
+  #define PIN_LIN_RX      0
+  #define PIN_TXEN        4
+  #define PIN_TOGGLE      1
+  #define PIN_ERROR       3
   // Trinket has no HW-Serial!
 #else
   #error adapt parameters to board   

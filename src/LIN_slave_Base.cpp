@@ -29,7 +29,7 @@
 */
 uint8_t LIN_Slave_Base::_calculatePID(uint8_t ID)
 {
-  uint8_t  pid_tmp;   // protected ID
+  uint8_t  pid_tmp;   // protected ID (pid already used as class variable)
   uint8_t  tmp;       // temporary variable for calculating parity bits
 
   // protect ID  with parity bits

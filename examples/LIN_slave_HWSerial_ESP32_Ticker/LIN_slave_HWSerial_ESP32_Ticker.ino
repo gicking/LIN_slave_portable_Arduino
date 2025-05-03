@@ -156,8 +156,8 @@ void loop()
   // indicate core load
   digitalWrite(PIN_TOGGLE, !digitalRead(PIN_TOGGLE));
 
-  // add dummy blocking function to show that LIN is handled "in background"
-  delay(1000);
+  // add blocking function to show that LIN is handled "in background" by Ticker
+  delay(5);
 
 } // loop()
 

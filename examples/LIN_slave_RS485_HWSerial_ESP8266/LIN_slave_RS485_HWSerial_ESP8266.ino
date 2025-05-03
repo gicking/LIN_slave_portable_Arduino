@@ -25,7 +25,7 @@ Supported (=successfully tested) boards:
 #define PIN_ERROR     D2
 
 // serial I/F for console output (comment for no output). Use Tx-only UART1 on pin D4 via UART<->USB adapter
-#define SERIAL_CONSOLE  Serial1
+//#define SERIAL_CONSOLE  Serial1
 
 // SERIAL_CONSOLE.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 #define SERIAL_CONSOLE_BEGIN_TIMEOUT  3000
@@ -60,9 +60,8 @@ void setup()
   // Register callback functions for frame IDs with expected data lengths
   LIN.registerMasterRequestHandler(0x1A, handle_Request, 4);
   LIN.registerSlaveResponseHandler(0x05, handle_Response, 6);
-  
-} // setup()
 
+} // setup()
 
 
 void loop()

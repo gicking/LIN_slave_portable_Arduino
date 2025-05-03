@@ -3,8 +3,10 @@
 Example code for LIN slave node using generic HardwareSerial interface
 
 Note:
-  - frame synchronization via inter-frame pause, due to lack of framing error detection in Arduino -> not standard compliant!
-  - if available, propose to use Serial using proper BREAK detection, e.g. NeoHWSerial (AVR) or ESP32
+  - frame synchronization via inter-frame pause -> not standard compliant! For details see README.md
+  - on AVR 
+    - propose to use NeoHWSerial instead (uncomment USE_NEOSERIAL in file LIN_slave_NeoHWSerial_AVR.h)
+    - to avoid linker conflict, only use NeoSerial in your code, not Serial
   - handling of frames can be done inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:
@@ -26,7 +28,7 @@ Supported (=successfully tested) boards:
 #define PIN_ERROR     32
 
 // serial I/F for console output (comment for no output)
-#define SERIAL_CONSOLE  Serial
+//#define SERIAL_CONSOLE  Serial
 
 // SERIAL_CONSOLE.begin() timeout [ms] (<=0 -> no timeout). Is relevant for native USB ports, if USB is not connected 
 #define SERIAL_CONSOLE_BEGIN_TIMEOUT  3000
@@ -75,7 +77,6 @@ void loop()
   {
     // call LIN slave protocol handler often
     LIN.handler();
-
 
     // if LIN frame has finished, print it
     if (LIN.getState() == LIN_Slave_Base::STATE_DONE)

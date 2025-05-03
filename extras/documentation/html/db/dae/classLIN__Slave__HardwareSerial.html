@@ -228,10 +228,10 @@ Protected Attributes</h2></td></tr>
 <tr class="memdesc:af1c21fc3081d728cfc2c0b8a123b2970 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">array of user callback functions for IDs 0x00..0x3F  <br /></td></tr>
 <tr class="separator:af1c21fc3081d728cfc2c0b8a123b2970 inherit pro_attribs_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base" id="r_ac6efdc8cf01f1db1825c71ff6dc8ff24"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#ac6efdc8cf01f1db1825c71ff6dc8ff24">pid</a></td></tr>
-<tr class="memdesc:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">protected frame identifier  <br /></td></tr>
+<tr class="memdesc:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">protected frame identifier (0..255)  <br /></td></tr>
 <tr class="separator:ac6efdc8cf01f1db1825c71ff6dc8ff24 inherit pro_attribs_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base" id="r_a7a41744083963d6bd50f466867620059"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a7a41744083963d6bd50f466867620059">id</a></td></tr>
-<tr class="memdesc:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">unprotected frame identifier  <br /></td></tr>
+<tr class="memdesc:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">unprotected frame identifier (0..63)  <br /></td></tr>
 <tr class="separator:a7a41744083963d6bd50f466867620059 inherit pro_attribs_classLIN__Slave__Base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a743f4376c7876156836a42bee3db8550 inherit pro_attribs_classLIN__Slave__Base" id="r_a743f4376c7876156836a42bee3db8550"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a48276bf84de47e284af2160895f0209e">LIN_Slave_Base::frame_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a743f4376c7876156836a42bee3db8550">type</a></td></tr>
 <tr class="memdesc:a743f4376c7876156836a42bee3db8550 inherit pro_attribs_classLIN__Slave__Base"><td class="mdescLeft">&#160;</td><td class="mdescRight">frame type (master request or slave response)  <br /></td></tr>
@@ -686,7 +686,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented in <a class="el" href="../../db/dcb/classLIN__Slave__HardwareSerial__ESP8266.html#a3eb64cbb2268aa9ff0fb9d3c510fe678">LIN_Slave_HardwareSerial_ESP8266</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html#l00114">114</a> of file <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html">LIN_slave_HardwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html#l00111">111</a> of file <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html">LIN_slave_HardwareSerial.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -731,7 +731,7 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html#l00138">138</a> of file <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html">LIN_slave_HardwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html#l00132">132</a> of file <a class="el" href="../../d9/d56/LIN__slave__HardwareSerial_8cpp_source.html">LIN_slave_HardwareSerial.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -741,9 +741,9 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8" title="Handle LIN protocol and call user&#45;defined frame callbacks." alt="" coords="247,234,429,259"/>
 <area shape="poly" title=" " alt="" coords="199,244,233,244,233,249,199,249"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a9d9d9ba724af72dcf366b494a8b3d868" title="Calculate LIN frame checksum." alt="" coords="507,5,706,45"/>
-<area shape="poly" title=" " alt="" coords="342,233,360,197,389,149,427,98,450,75,476,55,493,45,496,50,479,60,454,79,431,102,393,152,365,199,347,235"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0" title="Calculate protected frame ID." alt="" coords="496,70,717,95"/>
-<area shape="poly" title=" " alt="" coords="346,232,396,171,433,135,476,106,494,97,497,102,479,110,436,139,400,174,350,236"/>
+<area shape="poly" title=" " alt="" coords="343,233,361,199,390,152,429,104,476,62,500,48,502,53,479,66,433,107,394,156,366,201,348,235"/>
+<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0" title="Calculate protected frame ID." alt="" coords="784,42,1005,67"/>
+<area shape="poly" title=" " alt="" coords="345,232,395,170,432,134,476,106,529,89,603,76,770,59,770,64,604,81,530,94,478,110,436,138,399,173,350,236"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a7d128f517fa36393d58246f8f3759b04" title="Disable RS485 transmitter (DE=low)" alt="" coords="513,120,700,160"/>
 <area shape="poly" title=" " alt="" coords="358,232,410,201,476,170,499,162,501,167,478,174,413,206,360,236"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#ada94260537f5248e8ebca094bedc8198" title="Enable RS485 transmitter (DE=high)" alt="" coords="477,185,736,210"/>
@@ -758,6 +758,7 @@ Here is the call graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="352,258,402,312,438,342,479,367,499,375,497,380,476,372,435,346,399,315,348,261"/>
 <area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338" title="check if a byte is available in Rx buffer. Here dummy" alt="" coords="510,431,703,457"/>
 <area shape="poly" title=" " alt="" coords="348,258,366,291,395,334,433,379,479,416,498,426,495,431,476,421,429,383,390,338,361,294,343,261"/>
+<area shape="poly" title=" " alt="" coords="706,33,771,39,770,45,706,38"/>
 </map>
 </div>
 
