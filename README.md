@@ -64,7 +64,7 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
 
 # Test Matrix
 
-An *ok* in the below test matrix indicates that normal master request frames are received, slave responses are sent and bus disconnection is detected (-> error). No extensive testing of *all* possible error cases was performed. Please let me know if you experience unexpected errors.
+An *ok* in the below test matrix indicates that normal master request frames are received, slave responses are sent and bus disconnection is detected (-> error). Also, code execution starts with only external supple, i.e. USB not connected. No extensive testing of *all* possible error cases was performed. Please let me know if you experience unexpected errors.
 
 ![Test Matrix](./extras/testing/Board_Tests.png?)
 
