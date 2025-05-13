@@ -146,7 +146,7 @@ void setup()
   LIN.registerSlaveResponseHandler(0x05, handle_Response, 6);
 
   // add LIN background tasks
-  taskHandler.attach_us(100, LIN_handler);              // LIN background handler
+  taskHandler.attach(0.0001, LIN_handler);              // LIN background handler
 
 } // setup()
 

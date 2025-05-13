@@ -36,6 +36,8 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
 
   - The `handler()` method must be called at least every 500us. Optionally it can be called from within [serialEvent()](https://reference.arduino.cc/reference/de/language/functions/communication/serial/serialevent/)
 
+  - For ESP32 and ESP8266, library `EspSoftwareSerial` must be installed, even if `SoftwareSerial` is not used in project 
+
   - LIN frame synchronization is via the `BREAK` signal, which corresponds to a long dominant pulse. On the receiver side this corresponds to `0x00` with missing stop bit (aka framing error, `FE`). Unfortunately, the Arduino behavior on a `FE` event is not specified, and different implementations treat it differently. Therefore, this library has to handle frame synchronization differently, depending on `Serial` type. Specifically:
 
     - ESP32 `HardwareSerial` and AVR `NeoHWSerial`:
@@ -77,6 +79,12 @@ Have fun!, Georg
 
 Revision History
 ----------------
+
+**v1.2 (xxxx-xx-xx)**
+  - add dependency on `EspSoftwareSerial` in `library.properties`
+  - add notes for `EspSoftwareSerial` dependency
+  - in ESP32 Ticker example use standard `Ticker.attach()` instead of Espressif specific `Ticker.attach_us()`
+  - add ESP32 Nano w/ Arduino ESP32 core to integration tests
 
 **v1.1 (2025-05-03)**
   - harmonize with [LIN master portable](https://github.com/gicking/LIN_master_portable_Arduino)
