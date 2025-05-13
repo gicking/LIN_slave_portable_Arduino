@@ -83,7 +83,7 @@ Revision History
 **v1.2 (xxxx-xx-xx)**
   - add dependency on `EspSoftwareSerial` in `library.properties`
   - add notes for `EspSoftwareSerial` dependency
-  - in ESP32 Ticker example use standard `Ticker.attach()` instead of Espressif specific `Ticker.attach_us()`
+  - in ESP32 Ticker example use standard `Ticker.attach()` instead of Espressif specific `Ticker.attach_us()`. Note: ESP8266 has 1ms minimum
   - add ESP32 Nano w/ Arduino ESP32 core to integration tests
 
 **v1.1 (2025-05-03)**
