@@ -167,7 +167,7 @@ void LIN_Slave_HardwareSerial_ESP32::_resetBreakFlag()
   \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
   \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
 */
-LIN_Slave_HardwareSerial_ESP32::LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx,
+LIN_Slave_HardwareSerial_ESP32::LIN_Slave_HardwareSerial_ESP32(Stream &Interface, uint8_t PinRx, uint8_t PinTx,
   LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {

@@ -60,7 +60,7 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
   // PRIVATE VARIABLES
   public:
 
-    HardwareSerial        *pSerial;                              //!< pointer to serial interface used for LIN
+    Stream                *pSerial;                              //!< pointer to serial interface used for LIN
     uint8_t               pinRx;                                 //!< pin used for receive
     uint8_t               pinTx;                                 //!< pin used for transmit
     uint8_t               idxSerial;                             //!< index to flagBreak[] of this instance
@@ -110,7 +110,7 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx, 
+    LIN_Slave_HardwareSerial_ESP32(Stream &Interface, uint8_t PinRx, uint8_t PinTx, 
       LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
