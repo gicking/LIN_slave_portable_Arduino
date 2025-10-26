@@ -40,6 +40,11 @@
   #define LIN_SLAVE_ESP32_MAX_SERIAL   2 
 #endif
 
+// define Serial0 if not already done in board definition, see https://github.com/gicking/LIN_slave_portable_Arduino/issues/3
+#if !defined(Serial0)
+  #define Serial0                      Serial
+#endif
+
 
 /*-----------------------------------------------------------------------------
   GLOBAL CLASS
