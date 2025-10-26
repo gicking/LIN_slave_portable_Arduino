@@ -41,8 +41,8 @@
 #endif
 
 // define Serial0 if not already done in board definition, see https://github.com/gicking/LIN_slave_portable_Arduino/issues/3
-#if !defined(Serial0)
-  #define Serial0                      Serial
+#if !defined(Serial0) && defined(Serial)
+  #define Serial0      Serial
 #endif
 
 
