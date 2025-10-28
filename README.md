@@ -84,7 +84,7 @@ Revision History
   - add dependency on `EspSoftwareSerial` in `library.properties`
   - add notes for `EspSoftwareSerial` dependency
   - in ESP32 Ticker example use standard `Ticker.attach()` instead of Espressif specific `Ticker.attach_us()`. Note: ESP8266 has 1ms minimum
-  - add ESP32 Nano w/ Arduino ESP32 core to integration tests
+  - add to integration tests: ESP32 Nano (Arduino ESP32 core) and Wemos Lolin32 Lite (Espressif ESP32 core)
 
 **v1.1 (2025-05-03)**
   - harmonize with [LIN master portable](https://github.com/gicking/LIN_master_portable_Arduino)
