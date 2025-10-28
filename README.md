@@ -80,7 +80,7 @@ Have fun!, Georg
 Revision History
 ----------------
 
-**v1.2 (xxxx-xx-xx)**
+**v1.2 (2025-10-28)**
   - add dependency on `EspSoftwareSerial` in `library.properties`
   - add notes for `EspSoftwareSerial` dependency
   - in ESP32 Ticker example use standard `Ticker.attach()` instead of Espressif specific `Ticker.attach_us()`. Note: ESP8266 has 1ms minimum
