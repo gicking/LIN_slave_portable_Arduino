@@ -204,11 +204,15 @@ void LIN_Slave_HardwareSerial_ESP32::begin(uint16_t Baudrate)
 
   // Attach corresponding error callback to Serialx receive handler
   #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 1)
-    if (this->pSerial == &Serial0)
-    { 
-      this->idxSerial = 0;
-      this->pSerial->onReceiveError(this->_onSerialReceiveError0);
-    }
+    #if defined(Serial0)
+      if (this->pSerial == &Serial0)
+    #elif defined(Serial)
+      if (this->pSerial == &Serial)
+    #endif
+      { 
+        this->idxSerial = 0;
+        this->pSerial->onReceiveError(this->_onSerialReceiveError0);
+      }
   #endif
   #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 2)
     if (this->pSerial == &Serial1)
