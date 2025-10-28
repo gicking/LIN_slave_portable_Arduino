@@ -40,11 +40,6 @@
   #define LIN_SLAVE_ESP32_MAX_SERIAL   2 
 #endif
 
-// map Serial0 to Serial for some boards, see https://github.com/gicking/LIN_slave_portable_Arduino/issues/3
-#if !defined(Serial) && defined(Serial0)
-  #define Serial    Serial0
-#endif
-
 
 /*-----------------------------------------------------------------------------
   GLOBAL CLASS
@@ -60,7 +55,7 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
   // PRIVATE VARIABLES
   public:
 
-    Stream                *pSerial;                              //!< pointer to serial interface used for LIN
+    HardwareSerial        *pSerial;                              //!< pointer to serial interface used for LIN
     uint8_t               pinRx;                                 //!< pin used for receive
     uint8_t               pinTx;                                 //!< pin used for transmit
     uint8_t               idxSerial;                             //!< index to flagBreak[] of this instance
@@ -110,7 +105,7 @@ class LIN_Slave_HardwareSerial_ESP32 : public LIN_Slave_Base
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial_ESP32(Stream &Interface, uint8_t PinRx, uint8_t PinTx, 
+    LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx, 
       LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface

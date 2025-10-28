@@ -167,7 +167,7 @@ void LIN_Slave_HardwareSerial_ESP32::_resetBreakFlag()
   \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
   \param[in]  TimeoutRx   timeout [us] for bytes in frame (default = 1500)
 */
-LIN_Slave_HardwareSerial_ESP32::LIN_Slave_HardwareSerial_ESP32(Stream &Interface, uint8_t PinRx, uint8_t PinTx,
+LIN_Slave_HardwareSerial_ESP32::LIN_Slave_HardwareSerial_ESP32(HardwareSerial &Interface, uint8_t PinRx, uint8_t PinTx,
   LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {
@@ -204,7 +204,7 @@ void LIN_Slave_HardwareSerial_ESP32::begin(uint16_t Baudrate)
 
   // Attach corresponding error callback to Serialx receive handler
   #if (LIN_SLAVE_ESP32_MAX_SERIAL >= 1)
-    if (this->pSerial == &Serial)
+    if (this->pSerial == &Serial0)
     { 
       this->idxSerial = 0;
       this->pSerial->onReceiveError(this->_onSerialReceiveError0);
