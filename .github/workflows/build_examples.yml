@@ -1,6 +1,6 @@
 name: Build library examples
 
-# Trigger workflow on push & pull requests, and periodically (min,hour, day of month, month, day of week
+# Trigger workflow on push & pull requests, and periodically (min, hour, day of month, month, day of week)
 on:
   push:
   pull_request:
@@ -217,7 +217,6 @@ jobs:
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
-            "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial"
             "examples/LIN_slave_SWSerial"
           )
@@ -335,7 +334,6 @@ jobs:
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
-            "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial"
             "examples/LIN_slave_SWSerial"
           )
@@ -516,7 +514,6 @@ jobs:
 
           # list of sketches with optional build flags
           SKETCHES_FLAGS=(
-            "examples/LIN_monitor_HWSerial"
             "examples/LIN_slave_HWSerial"
             "examples/LIN_slave_SWSerial"
           )

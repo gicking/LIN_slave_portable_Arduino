@@ -8,10 +8,11 @@ Note:
   - act on received frame inside callback functions. Console output below is optional 
 
 Supported (=successfully tested) boards:
- - Arduino Mega 2560      https://store.arduino.cc/products/arduino-mega-2560-rev3
- - Arduino Due            https://store.arduino.cc/products/arduino-due
- - ESP8266 D1 mini        https://www.wemos.cc/en/latest/d1/d1_mini.html
- - ESP32 Wroom-32UE       https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/
+  - Arduino Mega 2560      https://store.arduino.cc/products/arduino-mega-2560-rev3
+  - Arduino Due            https://store.arduino.cc/products/arduino-due
+  - Arduino Nano ESP32-S3   https://docs.arduino.cc/hardware/nano-esp32/
+  - ESP8266 D1 mini        https://www.wemos.cc/en/latest/d1/d1_mini.html
+  - ESP32 Wroom-32UE       https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/
 
 **********************/
 
