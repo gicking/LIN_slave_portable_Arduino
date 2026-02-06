@@ -25,11 +25,13 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
   - supports LIN protocoll via RS485 with Tx direction switching
   
 ## Supported Boards (with additional LIN hardware)
-  - AVR boards, e.g. [Arduino Uno](https://store.arduino.cc/products/arduino-uno-rev3), [Mega](https://store.arduino.cc/products/arduino-mega-2560-rev3) or [Nano](https://store.arduino.cc/products/arduino-nano)
+  - Arduino AVR boards, e.g. [Uno](https://store.arduino.cc/products/arduino-uno-rev3), [Mega](https://store.arduino.cc/products/arduino-mega-2560-rev3) or [Nano](https://store.arduino.cc/products/arduino-nano)
+  - Arduino AVR Cortex-M boards, e.g. [Due](https://store.arduino.cc/products/arduino-due)
+  - Arduino Renesas Cortex-M boards, e.g. [Uno R4 Minima](https://docs.arduino.cc/hardware/uno-r4-minima/)
   - ATtiny boards, e.g. [Adafruit Trinket](https://www.adafruit.com/product/1501) (only SoftwareSerial)
-  - SAM boards, e.g. [Arduino Due](https://store.arduino.cc/products/arduino-due)
-  - ESP32 boards, e.g. [Espressif Wroom-32U](https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/) 
-  - ESP8266 boards, [Wemos D1 mini](https://www.wemos.cc/en/latest/d1/d1_mini.html)
+  - ESP32 boards, e.g. [Arduino Nano-ESP32](https://docs.arduino.cc/hardware/nano-esp32/) or [Espressif Wroom-32U](https://www.etechnophiles.com/esp32-dev-board-pinout-specifications-datasheet-and-schematic/)
+  - ESP8266 boards, e.g. [Wemos D1 mini](https://www.wemos.cc/en/latest/d1/d1_mini.html)
+  - STM32 boards, e.g. [Nucleo-STM32L432KC](https://www.st.com/en/evaluation-tools/nucleo-l432kc.html)
 
 
 ## Notes
@@ -46,14 +48,21 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
       - assert that `BREAK` is followed by `SYNC==0x55`
       - this is according to LIN standard and most robust
 
-    - AVR, SAMD and ESP8266 `HardwareSerial`. AVR `SoftwareSerial`:
+    - AVR, SAMD, ESP8266 and STM32 `HardwareSerial`. AVR  and Renesas `SoftwareSerial`:
       - `BREAK` is received, `FE` flag **not** available
       - sync on `Rx==0x00` (= `BREAK`) after minimal inter-frame pause
       - assert that `BREAK` is followed by `SYNC==0x55`
       - this is **not** according to LIN standard and less robust
 
-    - ESP32 & ESP8266 `SoftwareSerial`: 
+    - Renesas `HardwareSerial`. ESP32 & ESP8266 `SoftwareSerial`: 
       - `BREAK` **dropped** due to missing stop bit, `FE` flag **not** available
+      - sync on `Rx==0x55` (= `SYNC`) after minimal inter-frame pause
+      - this is **not** according to LIN standard and least robust
+
+    - STM32 `SoftwareSerial`: 
+      - `BREAK` is received, but sometimes `Rx!=0x00`, `FE` flag **not** available
+      flag **not** available
+      - ignore `BREAK` due to unreliable value
       - sync on `Rx==0x55` (= `SYNC`) after minimal inter-frame pause
       - this is **not** according to LIN standard and least robust
   
@@ -79,6 +88,11 @@ Have fun!, Georg
 
 Revision History
 ----------------
+
+**v1.3 (2025-02-06)**
+  - add support for ESP32-S3, Nano Every, STM32, and Uno R4 Minima (no HWSerial, see [issue](https://github.com/arduino/ArduinoCore-renesas/issues/524))
+  - consolidate examples for different boards and LIN/RS485 interfaces
+  - remove `Ticker` examples, due to standard 1ms min. period too long
 
 **v1.2 (2025-10-28)**
   - add dependency on `EspSoftwareSerial` in `library.properties`

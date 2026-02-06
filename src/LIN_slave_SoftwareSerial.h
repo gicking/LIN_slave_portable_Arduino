@@ -8,7 +8,8 @@
 */
 
 // assert platform which supports SoftwareSerial. Note: ARDUINO_ARCH_ESP32 requires library ESPSoftwareSerial
-#if defined(ARDUINO_ARCH_AVR) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32) 
+#if defined(ARDUINO_ARCH_AVR) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32) || \
+  defined(ARDUINO_ARCH_MEGAAVR) || defined(ARDUINO_ARCH_STM32) || defined(ARDUINO_ARCH_RENESAS)
 
 /*-----------------------------------------------------------------------------
   MODULE DEFINITION FOR MULTIPLE INCLUSION
@@ -64,13 +65,21 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
     /// @brief read next byte from Rx buffer
     inline uint8_t _serialRead(void) { return this->SWSerial.read(); }
 
-    /// @brief write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR
+    /// @brief write bytes to Tx buffer (blocking)
     inline void _serialWrite(uint8_t buf[], uint8_t num)
     { 
-      this->SWSerial.stopListening();
-      this->SWSerial.write(buf, num); 
-      this->SWSerial.flush();
-      this->SWSerial.listen();
+      // Renesas does not support stopListening()/listen()
+      #if defined(ARDUINO_ARCH_RENESAS)
+        this->SWSerial.write(buf, num); 
+        this->SWSerial.flush();
+      
+      // Disable receive to avoid inter-byte pauses on AVR
+      #else
+        this->SWSerial.stopListening();
+        this->SWSerial.write(buf, num); 
+        this->SWSerial.flush();
+        this->SWSerial.listen();
+      #endif
     }
 
 
@@ -99,9 +108,13 @@ class LIN_Slave_SoftwareSerial : public LIN_Slave_Base
 /*-----------------------------------------------------------------------------
     END OF MODULE DEFINITION FOR MULTIPLE INLUSION
 -----------------------------------------------------------------------------*/
-#endif // _LIN_SLAVE_SW_SERIAL_H_
+#endif // _LIN_MASTER_SW_SERIAL_H_
 
-#endif // ARDUINO_ARCH_AVR || ARDUINO_ARCH_ESP8266 || ARDUINO_ARCH_ESP32
+#else // ARDUINO_ARCH_AVR || ARDUINO_ARCH_ESP8266 || ARDUINO_ARCH_ESP32 || ARDUINO_ARCH_MEGAAVR || ARDUINO_ARCH_STM32 || ARDUINO_ARCH_RENESAS
+
+  #error architecture not yet supported
+
+#endif
 
 /*-----------------------------------------------------------------------------
     END OF FILE

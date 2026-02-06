@@ -11,7 +11,7 @@
 #define USE_NEOSERIAL
 
 // for AVR platform use NeoHWSerial or comment out USE_NEOSERIAL above
-#if defined(ARDUINO_ARCH_AVR) && defined (USE_NEOSERIAL) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)
+#if defined (USE_NEOSERIAL) && defined(ARDUINO_ARCH_AVR) && !defined(ARDUINO_AVR_TRINKET3) && !defined(ARDUINO_AVR_TRINKET5)
 
 
 /*-----------------------------------------------------------------------------
@@ -127,7 +127,7 @@ class LIN_Slave_NeoHWSerial_AVR : public LIN_Slave_Base
 -----------------------------------------------------------------------------*/
 #endif // _LIN_SLAVE_NEOHWSERIAL_AVR_H_
 
-#endif // ARDUINO_ARCH_AVR && USE_NEOSERIAL
+#endif // USE_NEOSERIAL && ARDUINO_ARCH_AVR || ARDUINO_ARCH_MEGAAVR
 
 
 /*-----------------------------------------------------------------------------

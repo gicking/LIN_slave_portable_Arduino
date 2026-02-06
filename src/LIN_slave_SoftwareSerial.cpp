@@ -7,11 +7,11 @@
   \author   Georg Icking-Konert
 */
 
-// assert platform which supports SoftwareSerial. Note: ARDUINO_ARCH_ESP32 requires library ESPSoftwareSerial
-#if defined(ARDUINO_ARCH_AVR) || defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32) 
-
 // include files
 #include <LIN_slave_SoftwareSerial.h>
+
+// assert platform which supports SoftwareSerial. Note: ARDUINO_ARCH_ESP32 requires library ESPSoftwareSerial
+#if defined(_LIN_SLAVE_SW_SERIAL_H_) 
 
 
 /**************************
@@ -61,9 +61,15 @@ void LIN_Slave_SoftwareSerial::_resetBreakFlag()
   \param[in]  TimeoutRx     timeout [us] for bytes in frame (default = 1500)
   \param[in]  PinTxEN       optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, uint16_t MinFramePause, 
-  LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN):
-  LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN), SWSerial(PinRx, PinTx, InverseLogic)
+#if defined(ARDUINO_ARCH_RENESAS)   // for Renesas core inverse logic is parameter for begin()
+  LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, uint16_t MinFramePause, 
+    LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN):
+    LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN), SWSerial(PinRx, PinTx)
+#else
+  LIN_Slave_SoftwareSerial::LIN_Slave_SoftwareSerial(uint8_t PinRx, uint8_t PinTx, bool InverseLogic, uint16_t MinFramePause, 
+    LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN):
+    LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN), SWSerial(PinRx, PinTx, InverseLogic)
+#endif
 {  
   // Debug serial initialized in begin() -> no debug output here
 
@@ -89,7 +95,11 @@ void LIN_Slave_SoftwareSerial::begin(uint16_t Baudrate)
 
   // open serial interface incl. used pins. Timeout not required here
   this->SWSerial.end();
-  this->SWSerial.begin(this->baudrate);
+  #if defined(ARDUINO_ARCH_RENESAS)
+    this->SWSerial.begin(this->baudrate, SERIAL_8N1, this->inverseLogic);
+  #else
+    this->SWSerial.begin(this->baudrate);
+  #endif
 
   // initialize variables
   this->_resetBreakFlag();
@@ -148,6 +158,21 @@ void LIN_Slave_SoftwareSerial::handler()
 
       }
 
+    // STM32 (BREAK is received, but value !=0x00): if byte received and long time since last byte, start new frame and remove byte from queue
+    #elif defined(ARDUINO_ARCH_STM32)
+      if ((micros() - usLastByte) > this->minFramePause)
+      {
+        // set BREAK flag
+        this->flagBreak = true;
+
+        // remove byte from FiFo buffer
+        this->_serialRead();
+
+        // print debug message
+        DEBUG_PRINT(3, "BRK detected");
+
+      }
+
     // other architectures (BREAK is received): if BREAK=0x00 received and long time since last byte, start new frame and remove 0x00 from queue
     #else
       if ((this->_serialPeek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
@@ -185,7 +210,7 @@ void LIN_Slave_SoftwareSerial::handler()
 } // LIN_Slave_SoftwareSerial::handler()
 
 
-#endif // ARDUINO_ARCH_AVR || ARDUINO_ARCH_ESP8266 || ARDUINO_ARCH_ESP32
+#endif // _LIN_SLAVE_SW_SERIAL_H_
 
 /*-----------------------------------------------------------------------------
     END OF FILE

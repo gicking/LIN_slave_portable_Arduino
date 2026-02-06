@@ -137,15 +137,29 @@ void LIN_Slave_HardwareSerial::handler()
   // print debug message
   //DEBUG_PRINT(3, "state=%d", (int) this->state);
 
-  // byte received -> check it
+  // byte received
   if (this->pSerial->available())
   {
-    // 0x00 received and long time since last byte (=BREAK) -> start new frame and remove 0x00 from queue
-    if ((this->pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
-    {
-      this->flagBreak = true;
-      this->pSerial->read();
-    }
+    // Renesas (BREAK is not received): sync on inter-frame pause and SYNC=0x55
+    #if defined(ARDUINO_ARCH_RENESAS)
+
+      // SYNC=0x55 received and long time since last byte -> start new frame. Don't remove 0x55 from FIFO
+      if ((this->pSerial->peek() == 0x55) && ((micros() - usLastByte) > this->minFramePause))
+      {
+        this->flagBreak = true;
+      }
+    
+    // Default (BREAK=0x00 received but FE not available) -> sync on inter-frame pause and BREAK=0x00
+    #else
+      
+      // BREAK=0x00 received and long time since last byte -> start new frame and remove 0x00 from FIFO
+      if ((this->pSerial->peek() == 0x00) && ((micros() - usLastByte) > this->minFramePause))
+      {
+        this->flagBreak = true;
+        this->pSerial->read();
+      }
+    
+    #endif // !ARDUINO_ARCH_RENESAS
 
     // store time of this receive
     usLastByte = micros();
@@ -157,7 +171,7 @@ void LIN_Slave_HardwareSerial::handler()
 
 } // LIN_Slave_HardwareSerial::handler()
 
-#endif // !ARDUINO_ARCH_AVR
+#endif // _LIN_SLAVE_HW_SERIAL_H_
 
 /*-----------------------------------------------------------------------------
     END OF FILE

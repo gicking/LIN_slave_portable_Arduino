@@ -300,7 +300,7 @@ void LIN_Slave_NeoHWSerial_AVR::end()
 
 } // LIN_Slave_NeoHWSerial_AVR::end()
 
-#endif // ARDUINO_ARCH_AVR
+#endif // _LIN_SLAVE_NEOHWSERIAL_AVR_H_
 
 /*-----------------------------------------------------------------------------
     END OF FILE

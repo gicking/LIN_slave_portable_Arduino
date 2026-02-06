@@ -7,11 +7,11 @@
   \author   Georg Icking-Konert
 */
 
-// assert ESP32 platform
-#if defined(ARDUINO_ARCH_ESP32)
-
 // include files
 #include <LIN_slave_HardwareSerial_ESP32.h>
+
+// assert ESP32 platform
+#if defined(_LIN_SLAVE_HW_SERIAL_ESP32_H_)
 
 
 // definition of static class variables (see https://stackoverflow.com/a/51091696)
@@ -256,7 +256,7 @@ void LIN_Slave_HardwareSerial_ESP32::end()
 
 } // LIN_Slave_HardwareSerial_ESP32::end()
 
-#endif // ARDUINO_ARCH_ESP32
+#endif // _LIN_SLAVE_HW_SERIAL_ESP32_H_
 
 /*-----------------------------------------------------------------------------
     END OF FILE

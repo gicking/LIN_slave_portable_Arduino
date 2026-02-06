@@ -26,7 +26,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="../../Logo_small.jpg"/></td>
   <td id="projectalign">
-   <div id="projectname">LIN_slave_portable_Arduino<span id="projectnumber">&#160;1.4</span>
+   <div id="projectname">LIN_slave_portable_Arduino<span id="projectnumber">&#160;1.3</span>
    </div>
    <div id="projectbrief">Arduino library for Local Interconnect Network slave node emulation</div>
   </td>
@@ -175,7 +175,7 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ab1aa5ea5521652dbe557b97bdea5086f"><td class="mdescLeft">&#160;</td><td class="mdescRight">read next byte from Rx buffer  <br /></td></tr>
 <tr class="separator:ab1aa5ea5521652dbe557b97bdea5086f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae43256e1eb94013f6461e8bb224c33af" id="r_ae43256e1eb94013f6461e8bb224c33af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#ae43256e1eb94013f6461e8bb224c33af">_serialWrite</a> (uint8_t buf[], uint8_t num)</td></tr>
-<tr class="memdesc:ae43256e1eb94013f6461e8bb224c33af"><td class="mdescLeft">&#160;</td><td class="mdescRight">write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR  <br /></td></tr>
+<tr class="memdesc:ae43256e1eb94013f6461e8bb224c33af"><td class="mdescLeft">&#160;</td><td class="mdescRight">write bytes to Tx buffer (blocking)  <br /></td></tr>
 <tr class="separator:ae43256e1eb94013f6461e8bb224c33af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classLIN__Slave__Base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classLIN__Slave__Base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html">LIN_Slave_Base</a></td></tr>
 <tr class="memitem:aaa28023dc65ab83374119ee5054208c0 inherit pro_methods_classLIN__Slave__Base" id="r_aaa28023dc65ab83374119ee5054208c0"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aaa28023dc65ab83374119ee5054208c0">_calculatePID</a> (uint8_t ID)</td></tr>
@@ -291,7 +291,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock"><p>LIN slave node class via generic SoftwareSerial. </p>
 <p>LIN slave node class via generic SoftwareSerial. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00038">38</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00039">39</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a412539384a5239e07f85429127994e3a" name="a412539384a5239e07f85429127994e3a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a412539384a5239e07f85429127994e3a">&#9670;&#160;</a></span>LIN_Slave_SoftwareSerial()</h2>
@@ -366,12 +366,19 @@ Additional Inherited Members</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">Version</td><td>LIN protocol version (default = v2) </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">NameLIN</td><td>LIN node name (default = "Slave") </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">TimeoutRx</td><td>timeout [us] for bytes in frame (default = 1500) </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">PinTxEN</td><td>optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">PinTxEN</td><td>optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Open serial interface</p>
+<p>Open serial interface with specified baudrate </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Baudrate</td><td>communication speed [Baud] (default = 19200) </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00064">64</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00065">65</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
 
 </div>
 </div>
@@ -439,16 +446,6 @@ Additional Inherited Members</h2></td></tr>
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aada533cf43f26deebd49bc4f74056b3d">LIN_Slave_Base</a>.</p>
 
 <p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00039">39</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="../../dc/d16/classLIN__Slave__SoftwareSerial_aa8930ff60f123e8bf7ad0e356f765403_icgraph.png" border="0" usemap="#adc/d16/classLIN__Slave__SoftwareSerial_aa8930ff60f123e8bf7ad0e356f765403_icgraph" alt=""/></div>
-<map name="adc/d16/classLIN__Slave__SoftwareSerial_aa8930ff60f123e8bf7ad0e356f765403_icgraph" id="adc/d16/classLIN__Slave__SoftwareSerial_aa8930ff60f123e8bf7ad0e356f765403_icgraph">
-<area shape="rect" title="Clear break detection flag." alt="" coords="240,5,427,45"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#a7a87ffa15a03774c4866e6a38774fb13" title="Open serial interface." alt="" coords="5,5,192,45"/>
-<area shape="poly" title=" " alt="" coords="227,28,192,28,192,23,227,23"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -480,7 +477,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a523ef437485067a20d63d505dfc4d689">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00062">62</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00063">63</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -522,7 +519,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a9393507a28de9db1ae508603f2510e7b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00065">65</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00066">66</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -570,11 +567,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>write bytes to Tx buffer (blocking). Disable receive to avoid inter-byte pauses on AVR </p>
+<p>write bytes to Tx buffer (blocking) </p>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a3c5bdd74e7fdcce61767a900dd5d640b">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00068">68</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00069">69</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 
 </div>
 </div>
@@ -606,7 +603,7 @@ Here is the caller graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aedf26c9e7c42c5c859b02213cf44c338">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00091">91</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html#l00100">100</a> of file <a class="el" href="../../d5/dd4/LIN__slave__SoftwareSerial_8h_source.html">LIN_slave_SoftwareSerial.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -645,28 +642,8 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>Open serial interface. </p>
-<p>Open serial interface with specified baudrate </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">Baudrate</td><td>communication speed [Baud] (default = 19200) </td></tr>
-  </table>
-  </dd>
-</dl>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#a81d059df4642dc37656dcbabf3fb0485">LIN_Slave_Base</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00085">85</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="../../dc/d16/classLIN__Slave__SoftwareSerial_a7a87ffa15a03774c4866e6a38774fb13_cgraph.png" border="0" usemap="#adc/d16/classLIN__Slave__SoftwareSerial_a7a87ffa15a03774c4866e6a38774fb13_cgraph" alt=""/></div>
-<map name="adc/d16/classLIN__Slave__SoftwareSerial_a7a87ffa15a03774c4866e6a38774fb13_cgraph" id="adc/d16/classLIN__Slave__SoftwareSerial_a7a87ffa15a03774c4866e6a38774fb13_cgraph">
-<area shape="rect" title="Open serial interface." alt="" coords="5,35,192,75"/>
-<area shape="rect" href="../../dc/d16/classLIN__Slave__SoftwareSerial.html#aa8930ff60f123e8bf7ad0e356f765403" title="Clear break detection flag." alt="" coords="240,5,427,45"/>
-<area shape="poly" title=" " alt="" coords="192,40,226,36,227,41,192,46"/>
-<area shape="rect" href="../../d8/d65/classLIN__Slave__Base.html#a81d059df4642dc37656dcbabf3fb0485" title="Open serial interface." alt="" coords="249,70,418,95"/>
-<area shape="poly" title=" " alt="" coords="192,63,235,68,235,74,192,68"/>
-</map>
-</div>
 
 </div>
 </div>
@@ -699,7 +676,7 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#aed021e90f2f0c3bf65af6e1f57964d90">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00108">108</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00118">118</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -747,7 +724,7 @@ Here is the call graph for this function:</div>
 
 <p>Reimplemented from <a class="el" href="../../d8/d65/classLIN__Slave__Base.html#af56a13d3365d2a6e2e43816709dac0e8">LIN_Slave_Base</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00131">131</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html#l00141">141</a> of file <a class="el" href="../../d7/d93/LIN__slave__SoftwareSerial_8cpp_source.html">LIN_slave_SoftwareSerial.cpp</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">

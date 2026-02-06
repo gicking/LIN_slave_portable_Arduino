@@ -9,12 +9,11 @@
   \author   Georg Icking-Konert
 */
 
-// assert ESP8266 platform
-#if defined(ARDUINO_ARCH_ESP8266)
-
 // include files
 #include <LIN_slave_HardwareSerial_ESP8266.h>
 
+// assert ESP8266 platform
+#if defined(_LIN_SLAVE_HW_SERIAL_ESP8266_H_)
 
 
 /**************************
@@ -82,7 +81,7 @@ void LIN_Slave_HardwareSerial_ESP8266::end()
 
 } // LIN_Slave_HardwareSerial_ESP8266::end()
 
-#endif // ARDUINO_ARCH_ESP8266
+#endif // _LIN_SLAVE_HW_SERIAL_ESP8266_H_
 
 /*-----------------------------------------------------------------------------
     END OF FILE
