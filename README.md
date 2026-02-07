@@ -72,6 +72,9 @@ For a similar Arduino libary for LIN master emulation see https://github.com/gic
     
     - If that is not possible, comment out `USE_NEOSERIAL` in file `LIN_slave_NeoHWSerial_AVR.h` to use standard `HardwareSerial` with less robust synchronization
 
+  - SoftwareSerial sending is blocking on all platforms, i.e. "background operation" only applies to receiving master commands
+
+
 
 # Test Matrix
 
