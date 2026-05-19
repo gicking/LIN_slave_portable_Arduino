@@ -20,6 +20,7 @@ Tested boards:
   - Arduino Uno R4 Minima   https://docs.arduino.cc/hardware/uno-r4-minima/ 
   - Arduino Nano ESP32-S3   https://docs.arduino.cc/hardware/nano-esp32/
   - ESP32 WROOM-32UE        https://documentation.espressif.com/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf
+  - ESP32-C3 Super Mini     ttps://www.sudo.is/docs/esphome/boards/esp32c3supermini/
   - ESP8266 D1 Mini         https://www.wemos.cc/en/latest/d1/d1_mini.html
   - Nucleo-STM32L432KC      https://www.st.com/en/evaluation-tools/nucleo-l432kc.html
 
@@ -147,6 +148,28 @@ Tested boards:
     LIN_Slave_HardwareSerial_ESP32  LIN(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
   #else
     LIN_Slave_HardwareSerial_ESP32  LIN(Serial2, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave");
+  #endif
+
+
+////////////////////
+// ESP32-C3 Super Mini board settings (using Espressif ESP32 core)
+////////////////////
+#elif defined(ARDUINO_ESP32C3_DEV)
+
+  #include <LIN_slave_HardwareSerial_ESP32.h>           // matching LIN slave header
+
+  //#define PIN_TXEN            10                        // optional Tx direction pin (=DE) for RS485 physical I/F. Comment out for LIN I/F 
+  #define PIN_LIN_TX          1                         // LIN transmit pin
+  #define PIN_LIN_RX          0                         // LIN receive pin
+  #define PIN_TOGGLE          3                         // pin to show CPU idle
+  #define PIN_ERROR           8                         // LIN error status pin (high=error)
+  #define SERIAL_CONSOLE      Serial                    // serial I/F for console output (comment for no output). Enable CDC (native USB)
+
+  // setup LIN node. Parameters: interface, Rx, Tx, version, name, timeout, [TxEN]
+  #if defined(PIN_TXEN)
+    LIN_Slave_HardwareSerial_ESP32  LIN(Serial1, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave", PIN_TXEN);
+  #else
+    LIN_Slave_HardwareSerial_ESP32  LIN(Serial1, PIN_LIN_RX, PIN_LIN_TX, LIN_Slave_Base::LIN_V2, "Slave");
   #endif
 
 

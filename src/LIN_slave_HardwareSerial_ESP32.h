@@ -35,7 +35,7 @@
 #endif
 
 /// Override for boards with fewer Serial interfaces
-#ifdef ARDUINO_ESP32S2
+#if defined(ARDUINO_ESP32S2) || defined(ARDUINO_ESP32C3_DEV) || defined(ARDUINO_ESP32C2_DEV)
   #undef LIN_SLAVE_ESP32_MAX_SERIAL
   #define LIN_SLAVE_ESP32_MAX_SERIAL   2 
 #endif
