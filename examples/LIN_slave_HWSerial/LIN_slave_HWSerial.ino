@@ -198,7 +198,7 @@ Tested boards:
 ////////////////////
 #elif defined(ARDUINO_NUCLEO_L432KC)
 
-  #include <LIN_slave_HardwareSerial_STM32.h>           // matching LIN slave header
+  #include <LIN_slave_HardwareSerial_STM32.h>           // matching LIN slave header. Requires as of v3.0.0 core
 
   //#define PIN_TXEN            D5                        // optional Tx direction pin (=DE) for RS485 physical I/F. Comment out for LIN I/F 
   #define PIN_TOGGLE          D3                        // pin to show CPU idle
