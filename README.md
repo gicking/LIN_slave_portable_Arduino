@@ -94,6 +94,9 @@ Have fun!, Georg
 Revision History
 ----------------
 
+**v1.5 (2026-08-02)**
+  - account for breaking change in STM32 Core v3.0.0 (see https://github.com/stm32duino/Arduino_Core_STM32/releases/tag/3.0.0)
+
 **v1.4 (2026-05-19)**
   - add support for ESP32-C3 Super Mini board
 

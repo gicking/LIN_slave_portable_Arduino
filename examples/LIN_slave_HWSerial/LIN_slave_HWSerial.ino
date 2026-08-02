@@ -198,20 +198,20 @@ Tested boards:
 ////////////////////
 #elif defined(ARDUINO_NUCLEO_L432KC)
 
-  #include <LIN_slave_HardwareSerial.h>                 // matching LIN slave header
+  #include <LIN_slave_HardwareSerial_STM32.h>           // matching LIN slave header
 
   //#define PIN_TXEN            D5                        // optional Tx direction pin (=DE) for RS485 physical I/F. Comment out for LIN I/F 
   #define PIN_TOGGLE          D3                        // pin to show CPU idle
   #define PIN_ERROR           D4                        // LIN error status pin (high=error)
   #define SERIAL_CONSOLE      Serial                    // serial I/F for console output (comment for no output)
 
-  HardwareSerial              Serial1(D1, D0);          // Serial1 not always instantiated by default
+  Uart                        Serial1(D1, D0);          // Serial1 not always instantiated by default
 
   // setup LIN node. Parameters: interface, pause-sync, version, name, timeout, [TxEN]
   #if defined(PIN_TXEN)
-    LIN_Slave_HardwareSerial    LIN(Serial1, 1000, LIN_Slave_Base::LIN_V2, "Slave", 1000, PIN_TXEN);
+    LIN_Slave_HardwareSerial_STM32    LIN(Serial1, 1000, LIN_Slave_Base::LIN_V2, "Slave", 1000, PIN_TXEN);
   #else
-    LIN_Slave_HardwareSerial    LIN(Serial1, 1000, LIN_Slave_Base::LIN_V2, "Slave", 1000);
+    LIN_Slave_HardwareSerial_STM32    LIN(Serial1, 1000, LIN_Slave_Base::LIN_V2, "Slave", 1000);
   #endif
 
 
