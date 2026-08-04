@@ -59,7 +59,7 @@ void LIN_Slave_HardwareSerial_STM32::_resetBreakFlag()
   \param[in]  TimeoutRx       timeout [us] for bytes in frame (default = 1500)
   \param[in]  PinTxEN     optional Tx enable pin (high active) e.g. for LIN via RS485 (default = -127/none)
 */
-  LIN_Slave_HardwareSerial_STM32::LIN_Slave_HardwareSerial_STM32(Uart &Interface, uint16_t MinFramePause, 
+  LIN_Slave_HardwareSerial_STM32::LIN_Slave_HardwareSerial_STM32(HWSERIAL &Interface, uint16_t MinFramePause, 
   LIN_Slave_Base::version_t Version, const char NameLIN[], uint32_t TimeoutRx, const int8_t PinTxEN) : 
   LIN_Slave_Base::LIN_Slave_Base(Version, NameLIN, TimeoutRx, PinTxEN)
 {  

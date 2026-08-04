@@ -23,6 +23,23 @@
 
 // include required libraries
 #include <LIN_slave_Base.h>
+#include <stm32_def.h>
+
+
+/*-----------------------------------------------------------------------------
+  GLOBAL MACROS
+-----------------------------------------------------------------------------*/
+
+/// account for breaking change in v3.0.0 for Serial, see https://github.com/stm32duino/Arduino_Core_STM32/releases/tag/3.0.0
+#if defined(STM32_CORE_VERSION_MAJOR)
+  #if (STM32_CORE_VERSION_MAJOR >= 3)
+    #define HWSERIAL Uart
+  #else
+    #define HWSERIAL HardwareSerial
+  #endif
+#else
+  #error "STM32_CORE_VERSION_MAJOR not defined"
+#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -39,7 +56,7 @@ class LIN_Slave_HardwareSerial_STM32 : public LIN_Slave_Base
   // PROTECTED VARIABLES
   protected:
 
-    Uart                  *pSerial;             //!< pointer to serial interface used for LIN
+    HWSERIAL              *pSerial;             //!< pointer to serial interface used for LIN
     bool                  flagBreak;            //!< a break was detected, is set in handle
     uint16_t              minFramePause;        //!< min. inter-frame pause [us] to start new frame (not standard compliant!)
 
@@ -68,7 +85,7 @@ class LIN_Slave_HardwareSerial_STM32 : public LIN_Slave_Base
   public:
 
     /// @brief Class constructor
-    LIN_Slave_HardwareSerial_STM32(Uart &Interface, uint16_t MinFramePause=1000L, 
+    LIN_Slave_HardwareSerial_STM32(HWSERIAL &Interface, uint16_t MinFramePause=1000L, 
       LIN_Slave_Base::version_t Version = LIN_Slave_Base::LIN_V2, const char NameLIN[] = "Slave", uint32_t TimeoutRx = 1500L, const int8_t PinTxEN = INT8_MIN);
      
     /// @brief Open serial interface
